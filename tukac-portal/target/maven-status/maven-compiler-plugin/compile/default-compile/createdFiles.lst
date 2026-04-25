@@ -1,6 +1,8 @@
 com\tukac\ui\panels\ManageFinancesPanel$2.class
 com\tukac\ui\panels\FinancesPanel$2.class
 com\tukac\ui\panels\ManageEventsPanel.class
+com\tukac\ui\panels\BlogPanel.class
+com\tukac\ui\panels\ManageBlogPanel.class
 com\tukac\ui\panels\ManageFinancesPanel$1.class
 com\tukac\ui\panels\EventsPanel$1.class
 com\tukac\ui\panels\DashboardPanel.class
@@ -9,6 +11,7 @@ com\tukac\ui\ThemeManager$2.class
 com\tukac\ui\panels\DashboardPanel$1.class
 com\tukac\ui\panels\FinancesPanel.class
 com\tukac\models\User.class
+com\tukac\ui\panels\ManageBlogPanel$1.class
 com\tukac\ui\panels\ManageEventsPanel$1.class
 com\tukac\db\Database.class
 com\tukac\App.class

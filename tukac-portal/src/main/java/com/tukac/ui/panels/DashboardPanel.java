@@ -1,29 +1,12 @@
 package com.tukac.ui.panels;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridBagLayout;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-
 import com.tukac.db.Database;
 import com.tukac.models.User;
 import com.tukac.ui.ThemeManager;
+
+import javax.swing.*;
+import java.awt.*;
+import java.sql.*;
 
 public class DashboardPanel extends JPanel {
     private JPanel contentArea;
@@ -70,13 +53,13 @@ public class DashboardPanel extends JPanel {
         addMenuButton(sidebar, "\u2302  Home", () -> showHome());
         addMenuButton(sidebar, "\u2606  Events", () -> showPanel(new EventsPanel(currentUser)));
         addMenuButton(sidebar, "\u0024  Finances", () -> showPanel(new FinancesPanel(currentUser)));
-        addMenuButton(sidebar, "\u270E  Blog", () -> showPlaceholder("Blog"));
+        addMenuButton(sidebar, "\u270E  Blog", () -> showPanel(new BlogPanel(currentUser)));
 
         if (user.isExecutive()) {
             sidebar.add(Box.createVerticalStrut(15));
             addSectionLabel(sidebar, "MANAGEMENT");
             addMenuButton(sidebar, "\u2699  Manage Events", () -> showPanel(new ManageEventsPanel(currentUser)));
-            addMenuButton(sidebar, "\u2699  Manage Blog", () -> showPlaceholder("Manage Blog"));
+            addMenuButton(sidebar, "\u2699  Manage Blog", () -> showPanel(new ManageBlogPanel(currentUser)));
             addMenuButton(sidebar, "\u2699  Manage Finances", () -> showPanel(new ManageFinancesPanel(currentUser)));
         }
 
