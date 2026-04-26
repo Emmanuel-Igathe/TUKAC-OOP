@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TUKAC SPA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark tukac-navbar sticky-top">
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="#/">
+          <div class="brand-icon"><i class="bi bi-universal-access"></i></div>
+          <span class="brand-text">TUKAC</span>
+        </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto" id="nav-links">
+            <!-- Dynamic nav links injected here -->
+          </ul>
+          <ul class="navbar-nav ms-auto align-items-center" id="nav-auth">
+            <!-- Auth links injected here -->
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <div id="app-content"></div>
+
+    <!-- Footer -->
+    <footer class="tukac-footer mt-5">
+      <div class="container py-5 text-center">
+        <p class="text-muted small mb-0">&copy; 2025 TUKAC — Technical University of Kenya Ability Club. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+</html>

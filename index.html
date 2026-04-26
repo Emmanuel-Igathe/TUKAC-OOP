@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>TUKAC | Technical University of Kenya Ability Club</title>
+  <!-- Google Fonts & simple CSS reset -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <!-- Font Awesome 6 (free icons) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f4f7fc;
+      color: #1e2a3e;
+      line-height: 1.5;
+    }
+
+    /* container utility */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* header / nav */
+    .navbar {
+      background: #0b2b40;
+      color: white;
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .nav-flex {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-placeholder {
+      width: 48px;
+      height: 48px;
+      background: #ffb347;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.5rem;
+      color: #0b2b40;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .logo-text h1 {
+      font-size: 1.5rem;
+      letter-spacing: -0.3px;
+    }
+    .logo-text p {
+      font-size: 0.75rem;
+      opacity: 0.85;
+    }
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+    .nav-links a:hover, .nav-links a.active {
+      color: #ffb347;
+    }
+    /* auth status */
+    .auth-status {
+      background: #1e4a62;
+      padding: 6px 14px;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .btn-sm {
+      background: #ffb347;
+      border: none;
+      padding: 4px 12px;
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+      color: #0b2b40;
+      transition: 0.2s;
+    }
+    .btn-sm:hover {
+      background: #ffa01e;
+    }
+
+    /* main sections */
+    .section {
+      display: none;
+      padding: 2.5rem 0;
+      animation: fade 0.25s ease;
+    }
+    .active-section {
+      display: block;
+    }
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(8px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+
+    /* cards, forms */
+    .card {
+      background: white;
+      border-radius: 28px;
+      padding: 1.8rem;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+      margin-bottom: 2rem;
+    }
+    h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      border-left: 5px solid #ffb347;
+      padding-left: 1rem;
+    }
+    h3 {
+      font-size: 1.3rem;
+      margin: 1rem 0 0.8rem;
+    }
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 6px;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid #cbd5e1;
+      border-radius: 20px;
+      font-family: inherit;
+      transition: 0.2s;
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #ffb347;
+      box-shadow: 0 0 0 3px rgba(255,180,71,0.2);
+    }
+    button, .btn-primary {
+      background: #0b2b40;
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 40px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 0.95rem;
+    }
+    button:hover, .btn-primary:hover {
+      background: #1e4a62;
+    }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid #0b2b40;
+      color: #0b2b40;
+    }
+    .btn-outline:hover {
+      background: #0b2b40;
+      color: white;
+    }
+    .member-grid, .event-card, .blog-card {
+      background: #f9fafb;
+      border-radius: 24px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border: 1px solid #e2e8f0;
+    }
+    .flex-between {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .badge {
+      background: #e2e8f0;
+      padding: 4px 12px;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .badge.approved { background: #c8f0d1; color: #166534; }
+    .badge.pending { background: #fff3c4; color: #b45309; }
+    .admin-actions button {
+      padding: 5px 12px;
+      font-size: 0.8rem;
+      margin: 0 4px;
+    }
+    hr {
+      margin: 1rem 0;
+    }
+    .fee-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 0.8rem 0;
+    }
+    .footer {
+      background: #0b2b40;
+      color: #ccc;
+      text-align: center;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+    @media (max-width: 720px) {
+      .nav-flex { flex-direction: column; align-items: stretch; }
+      .auth-status { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="navbar">
+  <div class="container nav-flex">
+    <div class="logo-area">
+      <div class="logo-placeholder">
+        <i class="fas fa-universal-access"></i>
+      </div>
+      <div class="logo-text">
+        <h1>TUK Ability Club</h1>
+        <p>Inclusion & Empowerment</p>
+      </div>
+    </div>
+    <div class="nav-links">
+      <a data-nav="home">Home</a>
+      <a data-nav="about">About</a>
+      <a data-nav="events">Events</a>
+      <a data-nav="blogs">Blogs</a>
+      <a data-nav="register">Register</a>
+      <a data-nav="login" id="loginNavBtn">Login</a>
+      <a data-nav="admin" id="adminNavLink" style="display: none;">Admin</a>
+    </div>
+    <div class="auth-status" id="authStatus">
+      <span id="userDisplay">Not logged in</span>
+      <button id="logoutBtn" class="btn-sm" style="display: none;">Logout</button>
+    </div>
+  </div>
+</div>
+
+<main class="container">
+  <!-- HOME section (landing + schedule preview) -->
+  <div id="homeSection" class="section active-section">
+    <div class="card">
+      <h2><i class="fas fa-hand-sparkles"></i> Welcome to TUKAC</h2>
+      <p style="font-size:1.1rem; margin-bottom:1rem;">Empowering Persons with Disabilities at Technical University of Kenya. Join our community, access events, read inspiring blogs, and contribute to an inclusive campus.</p>
+      <div style="background:#eef2ff; border-radius: 24px; padding:1.5rem;">
+        <h3><i class="fas fa-calendar-alt"></i> Upcoming Events</h3>
+        <div id="homeEventsList">Loading events...</div>
+      </div>
+      <div style="margin-top: 1.5rem;">
+        <h3><i class="fas fa-newspaper"></i> Recent Blog Posts</h3>
+        <div id="homeBlogsList">Loading blogs...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABOUT section: constitution & history -->
+  <div id="aboutSection" class="section">
+    <div class="card">
+      <h2>📜 About TUK Ability Club</h2>
+      <h3>History</h3>
+      <p>Founded in 2018 by a group of visionary students and faculty, TUKAC was established to champion accessibility, equal opportunity, and social integration for PwDs. Over the years, the club has grown into a vibrant community hosting awareness campaigns, assistive tech workshops, and peer mentorship programs.</p>
+      <h3>Constitution</h3>
+      <p><strong>Article 1:</strong> Name – Technical University of Kenya Ability Club (TUKAC).<br>
+      <strong>Article 2:</strong> Objectives – Promote inclusion, advocate for accessible infrastructure, organize capacity-building events, and foster leadership among PwDs.<br>
+      <strong>Article 3:</strong> Membership – Open to all TUK students & staff; members pay semester contribution fees (KES 500).<br>
+      <strong>Article 4:</strong> Governance – Executive committee elected annually; advisors support operations.<br>
+      <strong>Article 5:</strong> Amendments – Changes require 2/3 majority of active members.<br>
+      <em>Full constitution available upon request.</em></p>
+    </div>
+  </div>
+
+  <!-- EVENTS section -->
+  <div id="eventsSection" class="section">
+    <div class="card">
+      <div class="flex-between"><h2>📅 Club Events</h2><div id="eventAdminActions" style="display:none;"><button id="createEventBtn" class="btn-sm">+ Create Event</button></div></div>
+      <div id="eventsListContainer">Loading events...</div>
+    </div>
+    <!-- modal-like for event form (simplified inline) -->
+    <div id="eventFormModal" style="display:none;" class="card">
+      <h3 id="eventFormTitle">Create/Edit Event</h3>
+      <input type="text" id="eventTitle" placeholder="Event title" class="form-group">
+      <textarea id="eventDesc" rows="2" placeholder="Description"></textarea>
+      <input type="datetime-local" id="eventDate">
+      <div style="margin-top:12px;"><button id="saveEventBtn">Save Event</button> <button id="cancelEventBtn">Cancel</button></div>
+    </div>
+  </div>
+
+  <!-- BLOGS section -->
+  <div id="blogsSection" class="section">
+    <div class="card">
+      <div class="flex-between"><h2>✍️ Inclusion Blogs</h2><div id="blogAdminActions" style="display:none;"><button id="createBlogBtn" class="btn-sm">+ Write Blog</button></div></div>
+      <div id="blogsListContainer">Loading blogs...</div>
+    </div>
+    <div id="blogFormModal" style="display:none;" class="card">
+      <h3 id="blogFormTitle">Blog Post</h3>
+      <input type="text" id="blogTitle" placeholder="Blog title">
+      <textarea id="blogContent" rows="4" placeholder="Content..."></textarea>
+      <button id="saveBlogBtn">Publish</button> <button id="cancelBlogBtn">Cancel</button>
+    </div>
+  </div>
+
+  <!-- REGISTER section -->
+  <div id="registerSection" class="section">
+    <div class="card">
+      <h2>📝 Membership Registration</h2>
+      <form id="registerForm">
+        <div class="form-group"><label>Full Name</label><input type="text" id="regName" required></div>
+        <div class="form-group"><label>Email (TUK preferred)</label><input type="email" id="regEmail" required></div>
+        <div class="form-group"><label>Registration Number</label><input type="text" id="regRegNo" required></div>
+        <div class="form-group"><label>Password</label><input type="password" id="regPassword" required></div>
+        <button type="submit">Register as Member</button>
+        <p style="margin-top:10px;">After registration, admin approval required for full access.</p>
+      </form>
+    </div>
+  </div>
+
+  <!-- LOGIN section -->
+  <div id="loginSection" class="section">
+    <div class="card">
+      <h2>🔐 Login</h2>
+      <form id="loginForm">
+        <div class="form-group"><label>Email</label><input type="email" id="loginEmail" required></div>
+        <div class="form-group"><label>Password</label><input type="password" id="loginPassword" required></div>
+        <button type="submit">Login</button>
+        <p>Demo admin: admin@tuk.ac.ke / admin123 . Members need approval.</p>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL section (only visible for admin role) -->
+  <div id="adminSection" class="section">
+    <div class="card">
+      <h2><i class="fas fa-user-shield"></i> Admin Dashboard</h2>
+      <div style="margin-bottom: 1rem;">
+        <button id="showMembersBtn" class="btn-outline">👥 Members & Approvals</button>
+        <button id="showFeesBtn" class="btn-outline">💰 Fee Contributions</button>
+      </div>
+      <div id="adminPanelContent">
+        <!-- members & fees dynamic -->
+      </div>
+    </div>
+  </div>
+</main>
+<footer class="footer">
+  <p>© 2025 Technical University of Kenya Ability Club — Empowering every ability</p>
+</footer>
+
+<script>
+  // ---------- MOCK DATA & STATE (simulate backend) ----------
+  let members = [
+    { id: "m1", name: "Alice Wangari", email: "alice@tuk.ac.ke", regNo: "ENG/001/22", password: "pass1", approved: true, feePaid: true, feeAmount: 500 },
+    { id: "m2", name: "Brian Otieno", email: "brian@tuk.ac.ke", regNo: "BUS/045/23", password: "pass2", approved: false, feePaid: false, feeAmount: 500 },
+    { id: "m3", name: "Catherine Muthoni", email: "cathy@tuk.ac.ke", regNo: "SCI/012/24", password: "pass3", approved: true, feePaid: false, feeAmount: 500 }
+  ];
+  let events = [
+    { id: "e1", title: "Assistive Tech Workshop", description: "Learn about screen readers and adaptive devices", date: "2025-05-15T10:00", createdBy: "admin" },
+    { id: "e2", title: "Accessibility Campus Walk", description: "Advocacy walk for inclusive infrastructure", date: "2025-06-01T09:00", createdBy: "admin" }
+  ];
+  let blogs = [
+    { id: "b1", title: "Why Accessibility Matters", content: "Inclusive design benefits everyone. At TUK, we push for ramps and digital access.", author: "Admin" },
+    { id: "b2", title: "My Journey with Visual Impairment", content: "Tech tools changed my life. Let's break barriers together.", author: "Alice W." }
+  ];
+
+  let currentUser = null;  // { email, role, memberId? }
+
+  // helpers
+  function saveToLocal() {
+    localStorage.setItem("tukac_members", JSON.stringify(members));
+    localStorage.setItem("tukac_events", JSON.stringify(events));
+    localStorage.setItem("tukac_blogs", JSON.stringify(blogs));
+  }
+  function loadFromLocal() {
+    let m = localStorage.getItem("tukac_members");
+    let e = localStorage.getItem("tukac_events");
+    let b = localStorage.getItem("tukac_blogs");
+    if(m) members = JSON.parse(m);
+    if(e) events = JSON.parse(e);
+    if(b) blogs = JSON.parse(b);
+  }
+  loadFromLocal();
+
+  // DOM elements
+  const sections = document.querySelectorAll('.section');
+  const navLinks = document.querySelectorAll('[data-nav]');
+  const authStatusSpan = document.getElementById('userDisplay');
+  const logoutBtn = document.getElementById('logoutBtn');
+  const adminNavLink = document.getElementById('adminNavLink');
+
+  function showSection(sectionId) {
+    sections.forEach(sec => sec.classList.remove('active-section'));
+    document.getElementById(`${sectionId}Section`).classList.add('active-section');
+  }
+
+  function updateUIBasedOnAuth() {
+    if(currentUser) {
+      authStatusSpan.innerText = `${currentUser.email} (${currentUser.role})`;
+      logoutBtn.style.display = 'inline-block';
+      if(currentUser.role === 'admin') {
+        adminNavLink.style.display = 'inline-block';
+        document.getElementById('adminNavLink').style.display = 'inline-block';
+        document.getElementById('eventAdminActions').style.display = 'block';
+        document.getElementById('blogAdminActions').style.display = 'block';
+      } else {
+        adminNavLink.style.display = 'none';
+        document.getElementById('eventAdminActions').style.display = 'none';
+        document.getElementById('blogAdminActions').style.display = 'none';
+      }
+      // hide login/register nav buttons? optional but fine
+    } else {
+      authStatusSpan.innerText = 'Not logged in';
+      logoutBtn.style.display = 'none';
+      adminNavLink.style.display = 'none';
+      document.getElementById('eventAdminActions').style.display = 'none';
+      document.getElementById('blogAdminActions').style.display = 'none';
+    }
+    renderEventsAndBlogsHome();
+    renderEventsList();
+    renderBlogsList();
+    if(currentUser && currentUser.role === 'admin') renderAdminPanel(); 
+  }
+
+  function renderEventsAndBlogsHome() {
+    const homeEventsDiv = document.getElementById('homeEventsList');
+    const homeBlogsDiv = document.getElementById('homeBlogsList');
+    if(homeEventsDiv) homeEventsDiv.innerHTML = events.slice(0,3).map(ev => `<div class="event-card"><strong>${ev.title}</strong><br>${ev.description.substring(0,60)}<br><small>📅 ${new Date(ev.date).toLocaleString()}</small></div>`).join('') || '<p>No events yet</p>';
+    if(homeBlogsDiv) homeBlogsDiv.innerHTML = blogs.slice(0,3).map(b => `<div class="blog-card"><strong>${b.title}</strong><p>${b.content.substring(0,80)}...</p><small>✍️ ${b.author}</small></div>`).join('') || '<p>No blogs</p>';
+  }
+
+  function renderEventsList() {
+    const container = document.getElementById('eventsListContainer');
+    if(!container) return;
+    let html = events.map(ev => `<div class="flex-between member-grid"><div><strong>${ev.title}</strong><br>${ev.description}<br><small>${new Date(ev.date).toLocaleString()}</small></div>
+    ${currentUser && currentUser.role === 'admin' ? `<div class="admin-actions"><button class="edit-event" data-id="${ev.id}">Edit</button><button class="del-event" data-id="${ev.id}">Delete</button></div>` : ''}</div>`).join('');
+    if(events.length === 0) html = '<p>No events scheduled</p>';
+    container.innerHTML = html;
+    document.querySelectorAll('.edit-event').forEach(btn => btn.addEventListener('click', (e) => { let id = btn.dataset.id; openEventForm(id); }));
+    document.querySelectorAll('.del-event').forEach(btn => btn.addEventListener('click', (e) => { let id = btn.dataset.id; if(confirm('Delete event?')) { events = events.filter(ev => ev.id !== id); saveToLocal(); renderEventsList(); renderEventsAndBlogsHome(); } }));
+  }
+
+  function renderBlogsList() {
+    const container = document.getElementById('blogsListContainer');
+    if(!container) return;
+    let html = blogs.map(blog => `<div class="flex-between member-grid"><div><strong>${blog.title}</strong><p>${blog.content.substring(0,120)}</p><small>by ${blog.author}</small></div>
+    ${currentUser && currentUser.role === 'admin' ? `<div><button class="edit-blog" data-id="${blog.id}">Edit</button><button class="del-blog" data-id="${blog.id}">Delete</button></div>` : ''}</div>`).join('');
+    container.innerHTML = html || '<p>No blog posts yet.</p>';
+    document.querySelectorAll('.edit-blog').forEach(btn => btn.addEventListener('click', () => openBlogForm(btn.dataset.id)));
+    document.querySelectorAll('.del-blog').forEach(btn => btn.addEventListener('click', () => { if(confirm('Delete blog?')) { blogs = blogs.filter(b => b.id !== btn.dataset.id); saveToLocal(); renderBlogsList(); renderEventsAndBlogsHome(); } }));
+  }
+
+  // Admin panel: members & fee follow-up
+  function renderAdminPanel() {
+    const container = document.getElementById('adminPanelContent');
+    const showMembers = () => {
+      let html = `<h3>All Members & Approval</h3>`;
+      members.forEach(m => {
+        html += `<div class="fee-row"><div><strong>${m.name}</strong> (${m.email})<br>Reg: ${m.regNo} | Status: ${m.approved ? '✅ Approved' : '⏳ Pending'}</div>
+        <div>Fee: ${m.feePaid ? 'Paid KES 500' : 'Unpaid'} 
+        ${currentUser?.role === 'admin' ? `<button class="toggle-fee" data-id="${m.id}">${m.feePaid ? 'Mark Unpaid' : 'Mark Paid'}</button>
+        ${!m.approved ? `<button class="approve-member" data-id="${m.id}">Approve</button>` : `<button class="revoke-member" data-id="${m.id}">Revoke</button>`}` : ''}
+        </div></div>`;
+      });
+      container.innerHTML = html;
+      document.querySelectorAll('.approve-member').forEach(btn => btn.addEventListener('click', () => { let mem = members.find(m => m.id === btn.dataset.id); if(mem) { mem.approved = true; saveToLocal(); renderAdminPanel(); updateUIBasedOnAuth(); } }));
+      document.querySelectorAll('.revoke-member').forEach(btn => btn.addEventListener('click', () => { let mem = members.find(m => m.id === btn.dataset.id); if(mem) { mem.approved = false; saveToLocal(); renderAdminPanel(); } }));
+      document.querySelectorAll('.toggle-fee').forEach(btn => btn.addEventListener('click', () => { let mem = members.find(m => m.id === btn.dataset.id); if(mem) { mem.feePaid = !mem.feePaid; saveToLocal(); renderAdminPanel(); } }));
+    };
+    const showFees = () => {
+      let html = `<h3>Membership Contribution Fees (KES 500 each)</h3><ul>`;
+      members.forEach(m => { html += `<li><b>${m.name}</b> - ${m.feePaid ? 'PAID ✅' : 'PENDING ❌'} ${!m.feePaid ? '<button class="record-fee" data-id="'+m.id+'">Record Payment</button>' : ''}</li>`; });
+      html += `</ul><p>Total Paid: ${members.filter(m=>m.feePaid).length} / ${members.length}</p>`;
+      container.innerHTML = html;
+      document.querySelectorAll('.record-fee').forEach(btn => btn.addEventListener('click', () => { let mem = members.find(m=>m.id===btn.dataset.id); if(mem) { mem.feePaid = true; saveToLocal(); renderAdminPanel(); } }));
+    };
+    document.getElementById('showMembersBtn').onclick = showMembers;
+    document.getElementById('showFeesBtn').onclick = showFees;
+    showMembers(); // default
+  }
+
+  // event form
+  let editingEventId = null;
+  function openEventForm(id=null) {
+    document.getElementById('eventFormModal').style.display = 'block';
+    if(id) { let ev = events.find(e=>e.id===id); if(ev) { document.getElementById('eventTitle').value = ev.title; document.getElementById('eventDesc').value = ev.description; document.getElementById('eventDate').value = ev.date; editingEventId = id; } }
+    else { document.getElementById('eventTitle').value = ''; document.getElementById('eventDesc').value = ''; document.getElementById('eventDate').value = ''; editingEventId = null; }
+  }
+  document.getElementById('createEventBtn')?.addEventListener('click',()=>openEventForm());
+  document.getElementById('saveEventBtn')?.addEventListener('click',()=>{
+    let title = document.getElementById('eventTitle').value.trim();
+    let desc = document.getElementById('eventDesc').value.trim();
+    let date = document.getElementById('eventDate').value;
+    if(!title || !date) return alert("Title and date required");
+    if(editingEventId) {
+      let idx = events.findIndex(e=>e.id===editingEventId);
+      if(idx!==-1) { events[idx] = {...events[idx], title, description: desc, date}; }
+    } else {
+      events.push({ id: Date.now().toString(), title, description: desc, date, createdBy: currentUser?.email });
+    }
+    saveToLocal(); renderEventsList(); renderEventsAndBlogsHome(); document.getElementById('eventFormModal').style.display = 'none';
+  });
+  document.getElementById('cancelEventBtn')?.addEventListener('click',()=>document.getElementById('eventFormModal').style.display='none');
+  // blog form
+  let editingBlogId = null;
+  function openBlogForm(id=null) {
+    document.getElementById('blogFormModal').style.display = 'block';
+    if(id) { let b = blogs.find(b=>b.id===id); if(b) { document.getElementById('blogTitle').value = b.title; document.getElementById('blogContent').value = b.content; editingBlogId = id; } }
+    else { document.getElementById('blogTitle').value = ''; document.getElementById('blogContent').value = ''; editingBlogId = null; }
+  }
+  document.getElementById('createBlogBtn')?.addEventListener('click',()=>openBlogForm());
+  document.getElementById('saveBlogBtn')?.addEventListener('click',()=>{
+    let title = document.getElementById('blogTitle').value.trim();
+    let content = document.getElementById('blogContent').value.trim();
+    if(!title || !content) return alert("Title and content required");
+    if(editingBlogId) {
+      let idx = blogs.findIndex(b=>b.id===editingBlogId);
+      if(idx!==-1) blogs[idx] = {...blogs[idx], title, content};
+    } else {
+      blogs.push({ id: Date.now().toString(), title, content, author: currentUser?.email || "Admin" });
+    }
+    saveToLocal(); renderBlogsList(); renderEventsAndBlogsHome(); document.getElementById('blogFormModal').style.display = 'none';
+  });
+  document.getElementById('cancelBlogBtn')?.addEventListener('click',()=>document.getElementById('blogFormModal').style.display='none');
+
+  // Auth handlers
+  document.getElementById('registerForm')?.addEventListener('submit',(e)=>{
+    e.preventDefault();
+    let name = document.getElementById('regName').value, email = document.getElementById('regEmail').value, regNo = document.getElementById('regRegNo').value, pwd = document.getElementById('regPassword').value;
+    if(members.find(m=>m.email === email)) return alert("Email already registered");
+    let newMember = { id: Date.now().toString(), name, email, regNo, password: pwd, approved: false, feePaid: false, feeAmount: 500 };
+    members.push(newMember); saveToLocal();
+    alert("Registration successful! Wait for admin approval.");
+    showSection('login');
+  });
+  document.getElementById('loginForm')?.addEventListener('submit',(e)=>{
+    e.preventDefault();
+    let email = document.getElementById('loginEmail').value, pwd = document.getElementById('loginPassword').value;
+    if(email === 'admin@tuk.ac.ke' && pwd === 'admin123') { currentUser = { email, role: 'admin' }; saveToLocal(); updateUIBasedOnAuth(); showSection('home'); alert("Admin logged in"); return; }
+    let member = members.find(m=>m.email === email && m.password === pwd);
+    if(member && member.approved) { currentUser = { email, role: 'member', memberId: member.id }; updateUIBasedOnAuth(); showSection('home'); alert(`Welcome ${member.name}`); }
+    else if(member && !member.approved) alert("Your account is pending admin approval.");
+    else alert("Invalid credentials or not approved");
+  });
+  logoutBtn.addEventListener('click',()=>{ currentUser = null; updateUIBasedOnAuth(); showSection('home'); });
+  navLinks.forEach(link => link.addEventListener('click',(e)=>{
+    let navId = link.dataset.nav;
+    if(navId === 'admin' && (!currentUser || currentUser.role !== 'admin')) { alert("Admin access only"); return; }
+    if(navId === 'login') { if(currentUser) alert("Already logged in"); else showSection('login'); return; }
+    if(navId === 'register') { showSection('register'); return; }
+    if(navId === 'home') showSection('home');
+    if(navId === 'about') showSection('about');
+    if(navId === 'events') showSection('events');
+    if(navId === 'blogs') showSection('blogs');
+    if(navId === 'admin' && currentUser?.role === 'admin') { showSection('admin'); renderAdminPanel(); }
+  }));
+  updateUIBasedOnAuth();
+  renderEventsList(); renderBlogsList(); renderEventsAndBlogsHome();
+  if(document.getElementById('showMembersBtn')) document.getElementById('showMembersBtn')?.addEventListener('click',()=>renderAdminPanel());
+</script>
+</body>
+</html>
