@@ -165,7 +165,7 @@ tukac-portal/
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/your-username/TUKAC-OOP.git
+   git clone https://github.com/Emmanuel-Igathe/TUKAC-OOP
    cd TUKAC-OOP/tukac-portal
    ```
 
