@@ -1,12 +1,28 @@
 package com.tukac.ui.panels;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+
 import com.tukac.db.Database;
 import com.tukac.models.User;
 import com.tukac.ui.ThemeManager;
-
-import javax.swing.*;
-import java.awt.*;
-import java.sql.*;
 
 public class DashboardPanel extends JPanel {
     private JPanel contentArea;
@@ -52,8 +68,12 @@ public class DashboardPanel extends JPanel {
         addSectionLabel(sidebar, "MAIN MENU");
         addMenuButton(sidebar, "\u2302  Home", () -> showHome());
         addMenuButton(sidebar, "\u2606  Events", () -> showPanel(new EventsPanel(currentUser)));
+        addMenuButton(sidebar, "\u2665  My RSVPs", () -> showPanel(new MyRsvpsPanel(currentUser)));
         addMenuButton(sidebar, "\u0024  Finances", () -> showPanel(new FinancesPanel(currentUser)));
         addMenuButton(sidebar, "\u270E  Blog", () -> showPanel(new BlogPanel(currentUser)));
+        addMenuButton(sidebar, "\u263A  Members", () -> showPanel(new MemberDirectoryPanel(currentUser)));
+        addMenuButton(sidebar, "\u2139  About", () -> showPanel(new AboutPanel()));
+        addMenuButton(sidebar, "\u003F  Help", () -> showPanel(new HelpPanel()));
 
         if (user.isExecutive()) {
             sidebar.add(Box.createVerticalStrut(15));
@@ -66,10 +86,16 @@ public class DashboardPanel extends JPanel {
         if (user.isAdmin()) {
             sidebar.add(Box.createVerticalStrut(15));
             addSectionLabel(sidebar, "ADMIN");
-            addMenuButton(sidebar, "\u263A  Manage Users", () -> showPlaceholder("Manage Users"));
+            addMenuButton(sidebar, "\u26A0  Manage Users", () -> showPanel(new ManageUsersPanel(currentUser)));
         }
 
         sidebar.add(Box.createVerticalGlue());
+
+        // Account section
+        addSectionLabel(sidebar, "ACCOUNT");
+        addMenuButton(sidebar, "\u263A  My Profile", () -> showPanel(new UserProfilePanel(currentUser)));
+
+        sidebar.add(Box.createVerticalStrut(8));
 
         JButton logoutBtn = new JButton("\u2190  Logout");
         logoutBtn.setMaximumSize(new Dimension(200, 40));
@@ -175,6 +201,7 @@ public class DashboardPanel extends JPanel {
 
         int eventCount = getCount("SELECT COUNT(*) FROM events");
         int blogCount = getCount("SELECT COUNT(*) FROM blog_posts");
+        int memberCount = getCount("SELECT COUNT(*) FROM users WHERE is_approved = 1");
         double balance = getBalance();
 
         cardsRow.add(ThemeManager.createStatCard("Upcoming Events", String.valueOf(eventCount), ThemeManager.PRIMARY));
@@ -182,6 +209,26 @@ public class DashboardPanel extends JPanel {
         cardsRow.add(ThemeManager.createStatCard("Club Balance", "KES " + String.format("%,.2f", balance), ThemeManager.PURPLE));
 
         homePanel.add(cardsRow);
+
+        homePanel.add(Box.createVerticalStrut(20));
+
+        // Second row
+        JPanel cardsRow2 = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
+        cardsRow2.setBackground(ThemeManager.BG_MAIN);
+        cardsRow2.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        int myRsvps = getCount("SELECT COUNT(*) FROM event_registrations WHERE user_id = " + currentUser.getId());
+        int pendingUsers = getCount("SELECT COUNT(*) FROM users WHERE is_approved = 0");
+
+        cardsRow2.add(ThemeManager.createStatCard("Active Members", String.valueOf(memberCount), new Color(234, 179, 8)));
+        cardsRow2.add(ThemeManager.createStatCard("My RSVPs", String.valueOf(myRsvps), new Color(6, 182, 212)));
+
+        if (currentUser.isAdmin()) {
+            cardsRow2.add(ThemeManager.createStatCard("Pending Approvals", String.valueOf(pendingUsers),
+                pendingUsers > 0 ? ThemeManager.DANGER : ThemeManager.SUCCESS));
+        }
+
+        homePanel.add(cardsRow2);
 
         contentArea.add(homePanel, BorderLayout.NORTH);
         contentArea.revalidate();
@@ -215,35 +262,6 @@ public class DashboardPanel extends JPanel {
     private void showPanel(JPanel panel) {
         contentArea.removeAll();
         contentArea.add(panel, BorderLayout.CENTER);
-        contentArea.revalidate();
-        contentArea.repaint();
-    }
-
-    private void showPlaceholder(String moduleName) {
-        contentArea.removeAll();
-
-        JPanel placeholder = new JPanel(new GridBagLayout());
-        placeholder.setBackground(ThemeManager.BG_MAIN);
-
-        JLabel label = new JLabel(moduleName);
-        label.setFont(ThemeManager.FONT_HEADING);
-        label.setForeground(ThemeManager.TEXT_SECONDARY);
-
-        JLabel sub = new JLabel("This module is coming soon...");
-        sub.setFont(ThemeManager.FONT_BODY);
-        sub.setForeground(ThemeManager.TEXT_LIGHT);
-
-        JPanel inner = new JPanel();
-        inner.setLayout(new BoxLayout(inner, BoxLayout.Y_AXIS));
-        inner.setBackground(ThemeManager.BG_MAIN);
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        sub.setAlignmentX(Component.CENTER_ALIGNMENT);
-        inner.add(label);
-        inner.add(Box.createVerticalStrut(8));
-        inner.add(sub);
-
-        placeholder.add(inner);
-        contentArea.add(placeholder, BorderLayout.CENTER);
         contentArea.revalidate();
         contentArea.repaint();
     }
