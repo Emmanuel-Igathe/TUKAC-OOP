@@ -4,7 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,7 +18,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -43,22 +42,20 @@ public class ManageEventsPanel extends JPanel {
 
     public ManageEventsPanel(User user) {
         this.currentUser = user;
-        setLayout(new BorderLayout(15, 15));
+        setLayout(new BorderLayout(10, 10));
         setBackground(ThemeManager.BG_MAIN);
 
         // Header
         JLabel header = new JLabel("Manage Events");
         header.setFont(ThemeManager.FONT_HEADING);
         header.setForeground(ThemeManager.TEXT_PRIMARY);
-        header.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
         add(header, BorderLayout.NORTH);
 
-        // Split pane
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        splitPane.setDividerLocation(340);
-        splitPane.setBorder(null);
+        // Split: form left, table right
+        JPanel mainPanel = new JPanel(new BorderLayout(12, 0));
+        mainPanel.setBackground(ThemeManager.BG_MAIN);
 
-        // ===== FORM =====
+        // ===== FORM (scroll) =====
         JPanel formCard = ThemeManager.createCard();
         formCard.setLayout(new BoxLayout(formCard, BoxLayout.Y_AXIS));
 
@@ -67,78 +64,95 @@ public class ManageEventsPanel extends JPanel {
         formTitle.setForeground(ThemeManager.TEXT_PRIMARY);
         formTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
         formCard.add(formTitle);
-        formCard.add(Box.createVerticalStrut(15));
+        formCard.add(Box.createVerticalStrut(12));
 
-        addFormField(formCard, "Title");
+        addFormLabel(formCard, "Title *");
         titleField = ThemeManager.createTextField(20);
-        titleField.setMaximumSize(new Dimension(300, 36));
+        titleField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 36));
         titleField.setAlignmentX(Component.LEFT_ALIGNMENT);
         formCard.add(titleField);
-        formCard.add(Box.createVerticalStrut(10));
+        formCard.add(Box.createVerticalStrut(8));
 
-        addFormField(formCard, "Description");
+        addFormLabel(formCard, "Description");
         descriptionField = new JTextArea(3, 20);
         descriptionField.setFont(ThemeManager.FONT_BODY);
         descriptionField.setLineWrap(true);
+        descriptionField.setWrapStyleWord(true);
         JScrollPane descScroll = new JScrollPane(descriptionField);
-        descScroll.setMaximumSize(new Dimension(300, 80));
+        descScroll.setMaximumSize(new Dimension(Integer.MAX_VALUE, 70));
         descScroll.setAlignmentX(Component.LEFT_ALIGNMENT);
         formCard.add(descScroll);
-        formCard.add(Box.createVerticalStrut(10));
+        formCard.add(Box.createVerticalStrut(8));
 
-        addFormField(formCard, "Date (YYYY-MM-DD)");
+        addFormLabel(formCard, "Date * (YYYY-MM-DD)");
         dateField = ThemeManager.createTextField(20);
-        dateField.setMaximumSize(new Dimension(300, 36));
+        dateField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 36));
         dateField.setAlignmentX(Component.LEFT_ALIGNMENT);
         formCard.add(dateField);
-        formCard.add(Box.createVerticalStrut(10));
+        formCard.add(Box.createVerticalStrut(8));
 
-        addFormField(formCard, "Time (HH:MM)");
+        addFormLabel(formCard, "Time (HH:MM)");
         timeField = ThemeManager.createTextField(20);
-        timeField.setMaximumSize(new Dimension(300, 36));
+        timeField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 36));
         timeField.setAlignmentX(Component.LEFT_ALIGNMENT);
         formCard.add(timeField);
-        formCard.add(Box.createVerticalStrut(10));
+        formCard.add(Box.createVerticalStrut(8));
 
-        addFormField(formCard, "Location");
+        addFormLabel(formCard, "Location");
         locationField = ThemeManager.createTextField(20);
-        locationField.setMaximumSize(new Dimension(300, 36));
+        locationField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 36));
         locationField.setAlignmentX(Component.LEFT_ALIGNMENT);
         formCard.add(locationField);
-        formCard.add(Box.createVerticalStrut(10));
+        formCard.add(Box.createVerticalStrut(8));
 
-        addFormField(formCard, "Capacity");
+        addFormLabel(formCard, "Capacity");
         capacityField = ThemeManager.createTextField(20);
-        capacityField.setMaximumSize(new Dimension(300, 36));
+        capacityField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 36));
         capacityField.setAlignmentX(Component.LEFT_ALIGNMENT);
         formCard.add(capacityField);
-        formCard.add(Box.createVerticalStrut(20));
+        formCard.add(Box.createVerticalStrut(15));
 
-        // Buttons
-        JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
-        btnPanel.setBackground(ThemeManager.BG_CARD);
-        btnPanel.setMaximumSize(new Dimension(300, 45));
-        btnPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        // Buttons — two rows for breathing room
+        JPanel btnRow1 = new JPanel(new GridLayout(1, 2, 8, 0));
+        btnRow1.setBackground(ThemeManager.BG_CARD);
+        btnRow1.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        btnRow1.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JButton addBtn = ThemeManager.createButton("Add", ThemeManager.SUCCESS);
+        JButton addBtn = ThemeManager.createButton("  Add Event  ", ThemeManager.SUCCESS);
+        addBtn.setPreferredSize(new Dimension(0, 38));
         addBtn.addActionListener(e -> addEvent());
-        btnPanel.add(addBtn);
+        btnRow1.add(addBtn);
 
-        JButton updateBtn = ThemeManager.createButton("Update", ThemeManager.PRIMARY);
+        JButton updateBtn = ThemeManager.createButton("  Update  ", ThemeManager.PRIMARY);
+        updateBtn.setPreferredSize(new Dimension(0, 38));
         updateBtn.addActionListener(e -> updateEvent());
-        btnPanel.add(updateBtn);
+        btnRow1.add(updateBtn);
 
-        JButton deleteBtn = ThemeManager.createButton("Delete", ThemeManager.DANGER);
+        formCard.add(btnRow1);
+        formCard.add(Box.createVerticalStrut(8));
+
+        JPanel btnRow2 = new JPanel(new GridLayout(1, 2, 8, 0));
+        btnRow2.setBackground(ThemeManager.BG_CARD);
+        btnRow2.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        btnRow2.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JButton deleteBtn = ThemeManager.createButton("  Delete  ", ThemeManager.DANGER);
+        deleteBtn.setPreferredSize(new Dimension(0, 38));
         deleteBtn.addActionListener(e -> deleteEvent());
-        btnPanel.add(deleteBtn);
+        btnRow2.add(deleteBtn);
 
-        JButton clearBtn = ThemeManager.createButton("Clear", new Color(107, 114, 128));
+        JButton clearBtn = ThemeManager.createButton("  Clear  ", new Color(107, 114, 128));
+        clearBtn.setPreferredSize(new Dimension(0, 38));
         clearBtn.addActionListener(e -> clearForm());
-        btnPanel.add(clearBtn);
+        btnRow2.add(clearBtn);
 
-        formCard.add(btnPanel);
+        formCard.add(btnRow2);
 
-        splitPane.setLeftComponent(formCard);
+        JScrollPane formScroll = new JScrollPane(formCard);
+        formScroll.setPreferredSize(new Dimension(320, 0));
+        formScroll.setBorder(null);
+        formScroll.getVerticalScrollBar().setUnitIncrement(16);
+        mainPanel.add(formScroll, BorderLayout.WEST);
 
         // ===== TABLE =====
         String[] columns = {"ID", "Title", "Date", "Time", "Location", "Capacity"};
@@ -159,26 +173,27 @@ public class ManageEventsPanel extends JPanel {
             if (!e.getValueIsAdjusting()) {
                 int row = eventsTable.getSelectedRow();
                 if (row >= 0) {
-                    titleField.setText((String) tableModel.getValueAt(row, 1));
-                    dateField.setText((String) tableModel.getValueAt(row, 2));
-                    timeField.setText(String.valueOf(tableModel.getValueAt(row, 3)));
-                    locationField.setText(String.valueOf(tableModel.getValueAt(row, 4)));
-                    capacityField.setText(String.valueOf(tableModel.getValueAt(row, 5)));
+                    titleField.setText(str(tableModel.getValueAt(row, 1)));
+                    dateField.setText(str(tableModel.getValueAt(row, 2)));
+                    timeField.setText(str(tableModel.getValueAt(row, 3)));
+                    locationField.setText(str(tableModel.getValueAt(row, 4)));
+                    capacityField.setText(str(tableModel.getValueAt(row, 5)));
                 }
             }
         });
 
         JScrollPane tableScroll = new JScrollPane(eventsTable);
         tableScroll.setBorder(BorderFactory.createLineBorder(ThemeManager.BORDER));
-        splitPane.setRightComponent(tableScroll);
+        mainPanel.add(tableScroll, BorderLayout.CENTER);
 
-        add(splitPane, BorderLayout.CENTER);
-
+        add(mainPanel, BorderLayout.CENTER);
         loadEvents();
     }
 
-    private void addFormField(JPanel panel, String labelText) {
-        JLabel label = ThemeManager.createLabel(labelText);
+    private String str(Object val) { return val == null ? "" : String.valueOf(val); }
+
+    private void addFormLabel(JPanel panel, String text) {
+        JLabel label = ThemeManager.createLabel(text);
         label.setAlignmentX(Component.LEFT_ALIGNMENT);
         panel.add(label);
         panel.add(Box.createVerticalStrut(3));
@@ -191,28 +206,20 @@ public class ManageEventsPanel extends JPanel {
             ResultSet rs = stmt.executeQuery("SELECT * FROM events ORDER BY event_date ASC");
             while (rs.next()) {
                 tableModel.addRow(new Object[]{
-                    rs.getInt("id"),
-                    rs.getString("title"),
-                    rs.getString("event_date"),
-                    rs.getString("event_time"),
-                    rs.getString("location"),
-                    rs.getInt("capacity")
+                    rs.getInt("id"), rs.getString("title"), rs.getString("event_date"),
+                    rs.getString("event_time"), rs.getString("location"), rs.getInt("capacity")
                 });
             }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
-        }
+        } catch (SQLException e) { JOptionPane.showMessageDialog(this, "Error: " + e.getMessage()); }
     }
 
     private void addEvent() {
         if (titleField.getText().trim().isEmpty() || dateField.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Title and Date are required.");
-            return;
+            JOptionPane.showMessageDialog(this, "Title and Date are required."); return;
         }
         try {
             PreparedStatement pstmt = Database.getConnection().prepareStatement(
-                "INSERT INTO events (title, description, event_date, event_time, location, capacity, created_by) VALUES (?,?,?,?,?,?,?)"
-            );
+                "INSERT INTO events (title, description, event_date, event_time, location, capacity, created_by) VALUES (?,?,?,?,?,?,?)");
             pstmt.setString(1, titleField.getText().trim());
             pstmt.setString(2, descriptionField.getText().trim());
             pstmt.setString(3, dateField.getText().trim());
@@ -221,12 +228,8 @@ public class ManageEventsPanel extends JPanel {
             pstmt.setInt(6, Integer.parseInt(capacityField.getText().trim().isEmpty() ? "0" : capacityField.getText().trim()));
             pstmt.setInt(7, currentUser.getId());
             pstmt.executeUpdate();
-            JOptionPane.showMessageDialog(this, "Event added!");
-            clearForm();
-            loadEvents();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
-        }
+            JOptionPane.showMessageDialog(this, "Event added!"); clearForm(); loadEvents();
+        } catch (Exception e) { JOptionPane.showMessageDialog(this, "Error: " + e.getMessage()); }
     }
 
     private void updateEvent() {
@@ -235,8 +238,7 @@ public class ManageEventsPanel extends JPanel {
         int eventId = (int) tableModel.getValueAt(row, 0);
         try {
             PreparedStatement pstmt = Database.getConnection().prepareStatement(
-                "UPDATE events SET title=?, description=?, event_date=?, event_time=?, location=?, capacity=? WHERE id=?"
-            );
+                "UPDATE events SET title=?, description=?, event_date=?, event_time=?, location=?, capacity=? WHERE id=?");
             pstmt.setString(1, titleField.getText().trim());
             pstmt.setString(2, descriptionField.getText().trim());
             pstmt.setString(3, dateField.getText().trim());
@@ -245,39 +247,26 @@ public class ManageEventsPanel extends JPanel {
             pstmt.setInt(6, Integer.parseInt(capacityField.getText().trim().isEmpty() ? "0" : capacityField.getText().trim()));
             pstmt.setInt(7, eventId);
             pstmt.executeUpdate();
-            JOptionPane.showMessageDialog(this, "Event updated!");
-            clearForm();
-            loadEvents();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
-        }
+            JOptionPane.showMessageDialog(this, "Event updated!"); clearForm(); loadEvents();
+        } catch (Exception e) { JOptionPane.showMessageDialog(this, "Error: " + e.getMessage()); }
     }
 
     private void deleteEvent() {
         int row = eventsTable.getSelectedRow();
         if (row == -1) { JOptionPane.showMessageDialog(this, "Select an event to delete."); return; }
-        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this event?", "Confirm", JOptionPane.YES_NO_OPTION);
-        if (confirm != JOptionPane.YES_OPTION) return;
+        if (JOptionPane.showConfirmDialog(this, "Delete this event?", "Confirm", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) return;
         int eventId = (int) tableModel.getValueAt(row, 0);
         try {
             Statement stmt = Database.getConnection().createStatement();
             stmt.execute("DELETE FROM event_registrations WHERE event_id = " + eventId);
             stmt.execute("DELETE FROM events WHERE id = " + eventId);
-            JOptionPane.showMessageDialog(this, "Event deleted!");
-            clearForm();
-            loadEvents();
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
-        }
+            JOptionPane.showMessageDialog(this, "Event deleted!"); clearForm(); loadEvents();
+        } catch (SQLException e) { JOptionPane.showMessageDialog(this, "Error: " + e.getMessage()); }
     }
 
     private void clearForm() {
-        titleField.setText("");
-        descriptionField.setText("");
-        dateField.setText("");
-        timeField.setText("");
-        locationField.setText("");
-        capacityField.setText("");
+        titleField.setText(""); descriptionField.setText(""); dateField.setText("");
+        timeField.setText(""); locationField.setText(""); capacityField.setText("");
         eventsTable.clearSelection();
     }
 }

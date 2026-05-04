@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,7 +20,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
@@ -43,10 +43,10 @@ public class ManageFinancesPanel extends JPanel {
 
     public ManageFinancesPanel(User user) {
         this.currentUser = user;
-        setLayout(new BorderLayout(15, 15));
+        setLayout(new BorderLayout(10, 10));
         setBackground(ThemeManager.BG_MAIN);
 
-        // Header with summary
+        // Header + summary
         JPanel headerPanel = new JPanel(new BorderLayout(0, 10));
         headerPanel.setBackground(ThemeManager.BG_MAIN);
 
@@ -55,25 +55,20 @@ public class ManageFinancesPanel extends JPanel {
         header.setForeground(ThemeManager.TEXT_PRIMARY);
         headerPanel.add(header, BorderLayout.NORTH);
 
-        // Summary cards
         JPanel cardsRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
         cardsRow.setBackground(ThemeManager.BG_MAIN);
-
         double totalIncome = getTotal("income");
         double totalExpense = getTotal("expense");
         double balance = totalIncome - totalExpense;
-
         cardsRow.add(ThemeManager.createStatCard("Income", "KES " + String.format("%,.2f", totalIncome), ThemeManager.SUCCESS));
         cardsRow.add(ThemeManager.createStatCard("Expenses", "KES " + String.format("%,.2f", totalExpense), ThemeManager.DANGER));
         cardsRow.add(ThemeManager.createStatCard("Balance", "KES " + String.format("%,.2f", balance), ThemeManager.PRIMARY));
-
         headerPanel.add(cardsRow, BorderLayout.CENTER);
         add(headerPanel, BorderLayout.NORTH);
 
-        // Split pane
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        splitPane.setDividerLocation(340);
-        splitPane.setBorder(null);
+        // Main split
+        JPanel mainPanel = new JPanel(new BorderLayout(12, 0));
+        mainPanel.setBackground(ThemeManager.BG_MAIN);
 
         // ===== FORM =====
         JPanel formCard = ThemeManager.createCard();
@@ -84,78 +79,89 @@ public class ManageFinancesPanel extends JPanel {
         formTitle.setForeground(ThemeManager.TEXT_PRIMARY);
         formTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
         formCard.add(formTitle);
-        formCard.add(Box.createVerticalStrut(15));
+        formCard.add(Box.createVerticalStrut(12));
 
-        // Type dropdown
-        addFormLabel(formCard, "Type");
+        addFormLabel(formCard, "Type *");
         typeCombo = new JComboBox<>(new String[]{"income", "expense"});
         typeCombo.setFont(ThemeManager.FONT_BODY);
-        typeCombo.setMaximumSize(new Dimension(300, 36));
+        typeCombo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 36));
         typeCombo.setAlignmentX(Component.LEFT_ALIGNMENT);
         formCard.add(typeCombo);
-        formCard.add(Box.createVerticalStrut(10));
+        formCard.add(Box.createVerticalStrut(8));
 
-        // Description
-        addFormLabel(formCard, "Description");
+        addFormLabel(formCard, "Description *");
         descriptionField = ThemeManager.createTextField(20);
-        descriptionField.setMaximumSize(new Dimension(300, 36));
+        descriptionField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 36));
         descriptionField.setAlignmentX(Component.LEFT_ALIGNMENT);
         formCard.add(descriptionField);
-        formCard.add(Box.createVerticalStrut(10));
+        formCard.add(Box.createVerticalStrut(8));
 
-        // Amount
-        addFormLabel(formCard, "Amount (KES)");
+        addFormLabel(formCard, "Amount (KES) *");
         amountField = ThemeManager.createTextField(20);
-        amountField.setMaximumSize(new Dimension(300, 36));
+        amountField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 36));
         amountField.setAlignmentX(Component.LEFT_ALIGNMENT);
         formCard.add(amountField);
-        formCard.add(Box.createVerticalStrut(10));
+        formCard.add(Box.createVerticalStrut(8));
 
-        // Category dropdown
         addFormLabel(formCard, "Category");
         categoryCombo = new JComboBox<>(new String[]{
             "Donations", "Membership Fees", "Fundraising", "Sponsorship",
             "Supplies", "Venue", "Transport", "Catering", "Printing", "Other"
         });
         categoryCombo.setFont(ThemeManager.FONT_BODY);
-        categoryCombo.setMaximumSize(new Dimension(300, 36));
+        categoryCombo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 36));
         categoryCombo.setAlignmentX(Component.LEFT_ALIGNMENT);
         formCard.add(categoryCombo);
-        formCard.add(Box.createVerticalStrut(10));
+        formCard.add(Box.createVerticalStrut(8));
 
-        // Date
-        addFormLabel(formCard, "Date (YYYY-MM-DD)");
+        addFormLabel(formCard, "Date * (YYYY-MM-DD)");
         dateField = ThemeManager.createTextField(20);
-        dateField.setMaximumSize(new Dimension(300, 36));
+        dateField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 36));
         dateField.setAlignmentX(Component.LEFT_ALIGNMENT);
         formCard.add(dateField);
-        formCard.add(Box.createVerticalStrut(20));
+        formCard.add(Box.createVerticalStrut(15));
 
         // Buttons
-        JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
-        btnPanel.setBackground(ThemeManager.BG_CARD);
-        btnPanel.setMaximumSize(new Dimension(300, 45));
-        btnPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        JPanel btnRow1 = new JPanel(new GridLayout(1, 2, 8, 0));
+        btnRow1.setBackground(ThemeManager.BG_CARD);
+        btnRow1.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        btnRow1.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JButton addBtn = ThemeManager.createButton("Add", ThemeManager.SUCCESS);
+        JButton addBtn = ThemeManager.createButton("  Add Transaction  ", ThemeManager.SUCCESS);
+        addBtn.setPreferredSize(new Dimension(0, 38));
         addBtn.addActionListener(e -> addTransaction());
-        btnPanel.add(addBtn);
+        btnRow1.add(addBtn);
 
-        JButton updateBtn = ThemeManager.createButton("Update", ThemeManager.PRIMARY);
+        JButton updateBtn = ThemeManager.createButton("  Update  ", ThemeManager.PRIMARY);
+        updateBtn.setPreferredSize(new Dimension(0, 38));
         updateBtn.addActionListener(e -> updateTransaction());
-        btnPanel.add(updateBtn);
+        btnRow1.add(updateBtn);
 
-        JButton deleteBtn = ThemeManager.createButton("Delete", ThemeManager.DANGER);
+        formCard.add(btnRow1);
+        formCard.add(Box.createVerticalStrut(8));
+
+        JPanel btnRow2 = new JPanel(new GridLayout(1, 2, 8, 0));
+        btnRow2.setBackground(ThemeManager.BG_CARD);
+        btnRow2.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        btnRow2.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JButton deleteBtn = ThemeManager.createButton("  Delete  ", ThemeManager.DANGER);
+        deleteBtn.setPreferredSize(new Dimension(0, 38));
         deleteBtn.addActionListener(e -> deleteTransaction());
-        btnPanel.add(deleteBtn);
+        btnRow2.add(deleteBtn);
 
-        JButton clearBtn = ThemeManager.createButton("Clear", new Color(107, 114, 128));
+        JButton clearBtn = ThemeManager.createButton("  Clear  ", new Color(107, 114, 128));
+        clearBtn.setPreferredSize(new Dimension(0, 38));
         clearBtn.addActionListener(e -> clearForm());
-        btnPanel.add(clearBtn);
+        btnRow2.add(clearBtn);
 
-        formCard.add(btnPanel);
+        formCard.add(btnRow2);
 
-        splitPane.setLeftComponent(formCard);
+        JScrollPane formScroll = new JScrollPane(formCard);
+        formScroll.setPreferredSize(new Dimension(320, 0));
+        formScroll.setBorder(null);
+        formScroll.getVerticalScrollBar().setUnitIncrement(16);
+        mainPanel.add(formScroll, BorderLayout.WEST);
 
         // ===== TABLE =====
         String[] columns = {"ID", "Type", "Description", "Amount", "Category", "Date"};
@@ -163,7 +169,6 @@ public class ManageFinancesPanel extends JPanel {
             @Override
             public boolean isCellEditable(int row, int column) { return false; }
         };
-
         transactionsTable = new JTable(tableModel);
         transactionsTable.setRowHeight(32);
         transactionsTable.setFont(ThemeManager.FONT_BODY);
@@ -173,31 +178,24 @@ public class ManageFinancesPanel extends JPanel {
         transactionsTable.getColumnModel().getColumn(0).setMaxWidth(40);
         transactionsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        // Color code type
         transactionsTable.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable t, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 Component c = super.getTableCellRendererComponent(t, value, isSelected, hasFocus, row, column);
                 setHorizontalAlignment(JLabel.CENTER);
                 if (!isSelected) {
-                    String type = (String) value;
-                    if ("INCOME".equalsIgnoreCase(type)) {
-                        setForeground(ThemeManager.SUCCESS);
-                    } else {
-                        setForeground(ThemeManager.DANGER);
-                    }
+                    if ("INCOME".equalsIgnoreCase((String) value)) setForeground(ThemeManager.SUCCESS);
+                    else setForeground(ThemeManager.DANGER);
                 }
                 return c;
             }
         });
 
-        // Click row to populate form
         transactionsTable.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 int row = transactionsTable.getSelectedRow();
                 if (row >= 0) {
-                    String type = ((String) tableModel.getValueAt(row, 1)).toLowerCase();
-                    typeCombo.setSelectedItem(type);
+                    typeCombo.setSelectedItem(((String) tableModel.getValueAt(row, 1)).toLowerCase());
                     descriptionField.setText((String) tableModel.getValueAt(row, 2));
                     amountField.setText(((String) tableModel.getValueAt(row, 3)).replace(",", ""));
                     categoryCombo.setSelectedItem(tableModel.getValueAt(row, 4));
@@ -208,10 +206,9 @@ public class ManageFinancesPanel extends JPanel {
 
         JScrollPane tableScroll = new JScrollPane(transactionsTable);
         tableScroll.setBorder(BorderFactory.createLineBorder(ThemeManager.BORDER));
-        splitPane.setRightComponent(tableScroll);
+        mainPanel.add(tableScroll, BorderLayout.CENTER);
 
-        add(splitPane, BorderLayout.CENTER);
-
+        add(mainPanel, BorderLayout.CENTER);
         loadTransactions();
     }
 
@@ -224,15 +221,11 @@ public class ManageFinancesPanel extends JPanel {
 
     private double getTotal(String type) {
         try {
-            PreparedStatement pstmt = Database.getConnection().prepareStatement(
-                "SELECT COALESCE(SUM(amount), 0) as total FROM transactions WHERE type = ?"
-            );
+            PreparedStatement pstmt = Database.getConnection().prepareStatement("SELECT COALESCE(SUM(amount), 0) FROM transactions WHERE type = ?");
             pstmt.setString(1, type);
             ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) return rs.getDouble("total");
-        } catch (SQLException e) {
-            System.err.println("Error: " + e.getMessage());
-        }
+            if (rs.next()) return rs.getDouble(1);
+        } catch (SQLException e) { System.err.println("Error: " + e.getMessage()); }
         return 0;
     }
 
@@ -243,28 +236,20 @@ public class ManageFinancesPanel extends JPanel {
             ResultSet rs = stmt.executeQuery("SELECT * FROM transactions ORDER BY transaction_date DESC");
             while (rs.next()) {
                 tableModel.addRow(new Object[]{
-                    rs.getInt("id"),
-                    rs.getString("type").toUpperCase(),
-                    rs.getString("description"),
-                    String.format("%,.2f", rs.getDouble("amount")),
-                    rs.getString("category"),
-                    rs.getString("transaction_date")
+                    rs.getInt("id"), rs.getString("type").toUpperCase(), rs.getString("description"),
+                    String.format("%,.2f", rs.getDouble("amount")), rs.getString("category"), rs.getString("transaction_date")
                 });
             }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
-        }
+        } catch (SQLException e) { JOptionPane.showMessageDialog(this, "Error: " + e.getMessage()); }
     }
 
     private void addTransaction() {
         if (descriptionField.getText().trim().isEmpty() || amountField.getText().trim().isEmpty() || dateField.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Description, Amount, and Date are required.");
-            return;
+            JOptionPane.showMessageDialog(this, "Description, Amount, and Date are required."); return;
         }
         try {
             PreparedStatement pstmt = Database.getConnection().prepareStatement(
-                "INSERT INTO transactions (type, description, amount, category, transaction_date, created_by) VALUES (?,?,?,?,?,?)"
-            );
+                "INSERT INTO transactions (type, description, amount, category, transaction_date, created_by) VALUES (?,?,?,?,?,?)");
             pstmt.setString(1, (String) typeCombo.getSelectedItem());
             pstmt.setString(2, descriptionField.getText().trim());
             pstmt.setDouble(3, Double.parseDouble(amountField.getText().trim()));
@@ -272,15 +257,9 @@ public class ManageFinancesPanel extends JPanel {
             pstmt.setString(5, dateField.getText().trim());
             pstmt.setInt(6, currentUser.getId());
             pstmt.executeUpdate();
-
-            JOptionPane.showMessageDialog(this, "Transaction added!");
-            clearForm();
-            refreshAll();
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Amount must be a valid number.");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
-        }
+            JOptionPane.showMessageDialog(this, "Transaction added!"); clearForm(); refreshAll();
+        } catch (NumberFormatException e) { JOptionPane.showMessageDialog(this, "Amount must be a valid number.");
+        } catch (Exception e) { JOptionPane.showMessageDialog(this, "Error: " + e.getMessage()); }
     }
 
     private void updateTransaction() {
@@ -289,8 +268,7 @@ public class ManageFinancesPanel extends JPanel {
         int id = (int) tableModel.getValueAt(row, 0);
         try {
             PreparedStatement pstmt = Database.getConnection().prepareStatement(
-                "UPDATE transactions SET type=?, description=?, amount=?, category=?, transaction_date=? WHERE id=?"
-            );
+                "UPDATE transactions SET type=?, description=?, amount=?, category=?, transaction_date=? WHERE id=?");
             pstmt.setString(1, (String) typeCombo.getSelectedItem());
             pstmt.setString(2, descriptionField.getText().trim());
             pstmt.setDouble(3, Double.parseDouble(amountField.getText().trim()));
@@ -298,50 +276,32 @@ public class ManageFinancesPanel extends JPanel {
             pstmt.setString(5, dateField.getText().trim());
             pstmt.setInt(6, id);
             pstmt.executeUpdate();
-
-            JOptionPane.showMessageDialog(this, "Transaction updated!");
-            clearForm();
-            refreshAll();
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Amount must be a valid number.");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
-        }
+            JOptionPane.showMessageDialog(this, "Transaction updated!"); clearForm(); refreshAll();
+        } catch (NumberFormatException e) { JOptionPane.showMessageDialog(this, "Amount must be a valid number.");
+        } catch (Exception e) { JOptionPane.showMessageDialog(this, "Error: " + e.getMessage()); }
     }
 
     private void deleteTransaction() {
         int row = transactionsTable.getSelectedRow();
         if (row == -1) { JOptionPane.showMessageDialog(this, "Select a transaction to delete."); return; }
-        int confirm = JOptionPane.showConfirmDialog(this, "Delete this transaction?", "Confirm", JOptionPane.YES_NO_OPTION);
-        if (confirm != JOptionPane.YES_OPTION) return;
+        if (JOptionPane.showConfirmDialog(this, "Delete this transaction?", "Confirm", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) return;
         int id = (int) tableModel.getValueAt(row, 0);
         try {
-            Statement stmt = Database.getConnection().createStatement();
-            stmt.execute("DELETE FROM transactions WHERE id = " + id);
-            JOptionPane.showMessageDialog(this, "Transaction deleted!");
-            clearForm();
-            refreshAll();
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
-        }
+            Database.getConnection().createStatement().execute("DELETE FROM transactions WHERE id = " + id);
+            JOptionPane.showMessageDialog(this, "Transaction deleted!"); clearForm(); refreshAll();
+        } catch (SQLException e) { JOptionPane.showMessageDialog(this, "Error: " + e.getMessage()); }
     }
 
     private void refreshAll() {
-        // Rebuild the whole panel to update the summary cards
         removeAll();
         ManageFinancesPanel fresh = new ManageFinancesPanel(currentUser);
         setLayout(new BorderLayout());
         add(fresh, BorderLayout.CENTER);
-        revalidate();
-        repaint();
+        revalidate(); repaint();
     }
 
     private void clearForm() {
-        typeCombo.setSelectedIndex(0);
-        descriptionField.setText("");
-        amountField.setText("");
-        categoryCombo.setSelectedIndex(0);
-        dateField.setText("");
-        transactionsTable.clearSelection();
+        typeCombo.setSelectedIndex(0); descriptionField.setText(""); amountField.setText("");
+        categoryCombo.setSelectedIndex(0); dateField.setText(""); transactionsTable.clearSelection();
     }
 }
