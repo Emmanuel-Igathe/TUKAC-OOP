@@ -5,17 +5,13 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -28,37 +24,12 @@ public class DashboardPanel extends JPanel {
     private JPanel contentArea;
     private User currentUser;
     private JButton activeButton = null;
-    private JFrame parentFrame;
+    private MainFrame mainFrame;
 
-    public DashboardPanel(JFrame parentFrame, User user) {
+    public DashboardPanel(MainFrame mainFrame, User user) {
         this.currentUser = user;
-        this.parentFrame = parentFrame;
+        this.mainFrame = mainFrame;
         setLayout(new BorderLayout());
-
-        // ===== TOP BAR =====
-        JPanel topBar = new JPanel(new BorderLayout());
-        topBar.setBackground(ThemeManager.BG_TOPBAR);
-        topBar.setPreferredSize(new Dimension(0, 55));
-        topBar.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-
-        JLabel appTitle = new JLabel("TUK Ability Club Portal");
-        appTitle.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        appTitle.setForeground(ThemeManager.TEXT_WHITE);
-        topBar.add(appTitle, BorderLayout.WEST);
-
-        JPanel userPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
-        userPanel.setOpaque(false);
-        JLabel userIcon = new JLabel("\u25CF ");
-        userIcon.setForeground(ThemeManager.SUCCESS);
-        userIcon.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-        userPanel.add(userIcon);
-        JLabel userInfo = new JLabel(user.getName() + "  |  " + user.getRole().toUpperCase());
-        userInfo.setForeground(ThemeManager.TEXT_WHITE);
-        userInfo.setFont(ThemeManager.FONT_BODY);
-        userPanel.add(userInfo);
-        topBar.add(userPanel, BorderLayout.EAST);
-
-        add(topBar, BorderLayout.NORTH);
 
         // ===== SIDEBAR =====
         JPanel sidebar = new JPanel();
@@ -67,40 +38,35 @@ public class DashboardPanel extends JPanel {
         sidebar.setPreferredSize(new Dimension(200, 0));
         sidebar.setBorder(BorderFactory.createEmptyBorder(15, 0, 15, 0));
 
-        addSectionLabel(sidebar, "MAIN MENU");
-        addMenuButton(sidebar, "\u2302  Home", () -> showHome());
-        addMenuButton(sidebar, "\u2606  Events", () -> showPanel(new EventsPanel(currentUser)));
-        addMenuButton(sidebar, "\u2665  My RSVPs", () -> showPanel(new MyRsvpsPanel(currentUser)));
-        addMenuButton(sidebar, "\u0024  Finances", () -> showPanel(new FinancesPanel(currentUser)));
-        addMenuButton(sidebar, "\u270E  Blog", () -> showPanel(new BlogPanel(currentUser)));
-        addMenuButton(sidebar, "\u263A  Members", () -> showPanel(new MemberDirectoryPanel(currentUser)));
-        addMenuButton(sidebar, "\u2139  About", () -> showPanel(new AboutPanel()));
-        addMenuButton(sidebar, "\u003F  Help", () -> showPanel(new HelpPanel()));
+        // Back to website button
+        JButton backBtn = new JButton("\u2190  Back to Website");
+        backBtn.setMaximumSize(new Dimension(200, 38));
+        backBtn.setAlignmentX(Component.LEFT_ALIGNMENT);
+        backBtn.setBackground(ThemeManager.PRIMARY);
+        backBtn.setForeground(ThemeManager.TEXT_WHITE);
+        backBtn.setFont(ThemeManager.FONT_BUTTON);
+        backBtn.setBorderPainted(false);
+        backBtn.setFocusPainted(false);
+        backBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        backBtn.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        backBtn.addActionListener(e -> mainFrame.navigateTo("Home"));
+        sidebar.add(backBtn);
+        sidebar.add(Box.createVerticalStrut(15));
 
-        if (user.isExecutive()) {
-            sidebar.add(Box.createVerticalStrut(15));
-            addSectionLabel(sidebar, "MANAGEMENT");
-            addMenuButton(sidebar, "\u2699  Manage Events", () -> showPanel(new ManageEventsPanel(currentUser)));
-            addMenuButton(sidebar, "\u2699  Manage Blog", () -> showPanel(new ManageBlogPanel(currentUser)));
-            addMenuButton(sidebar, "\u2699  Manage Finances", () -> showPanel(new ManageFinancesPanel(currentUser)));
-        }
+        addSectionLabel(sidebar, "MANAGEMENT");
+        addMenuButton(sidebar, "\u2699  Manage Events", () -> showPanel(new ManageEventsPanel(currentUser)));
+        addMenuButton(sidebar, "\u2699  Manage Blog", () -> showPanel(new ManageBlogPanel(currentUser)));
+        addMenuButton(sidebar, "\u2699  Manage Finances", () -> showPanel(new ManageFinancesPanel(currentUser)));
 
         if (user.isAdmin()) {
             sidebar.add(Box.createVerticalStrut(15));
             addSectionLabel(sidebar, "ADMIN");
-
-            // Manage Users with pending badge
             int pending = getCount("SELECT COUNT(*) FROM users WHERE is_approved = 0");
             String label = pending > 0 ? "\u26A0  Manage Users (" + pending + ")" : "\u26A0  Manage Users";
             addMenuButton(sidebar, label, () -> showPanel(new ManageUsersPanel(currentUser)));
         }
 
         sidebar.add(Box.createVerticalGlue());
-
-        addSectionLabel(sidebar, "ACCOUNT");
-        addMenuButton(sidebar, "\u263A  My Profile", () -> showPanel(new UserProfilePanel(currentUser)));
-
-        sidebar.add(Box.createVerticalStrut(8));
 
         JButton logoutBtn = new JButton("\u2190  Logout");
         logoutBtn.setMaximumSize(new Dimension(200, 40));
@@ -112,12 +78,7 @@ public class DashboardPanel extends JPanel {
         logoutBtn.setFocusPainted(false);
         logoutBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         logoutBtn.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-        logoutBtn.addActionListener(e -> {
-            parentFrame.getContentPane().removeAll();
-            parentFrame.getContentPane().add(new WelcomeScreen(parentFrame));
-            parentFrame.revalidate();
-            parentFrame.repaint();
-        });
+        logoutBtn.addActionListener(e -> mainFrame.logout());
         sidebar.add(logoutBtn);
 
         add(sidebar, BorderLayout.WEST);
@@ -128,7 +89,8 @@ public class DashboardPanel extends JPanel {
         contentArea.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
         add(contentArea, BorderLayout.CENTER);
 
-        showHome();
+        // Show manage events by default
+        showPanel(new ManageEventsPanel(currentUser));
     }
 
     private void addSectionLabel(JPanel sidebar, String text) {
@@ -154,166 +116,16 @@ public class DashboardPanel extends JPanel {
         btn.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 15));
 
         btn.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent e) {
-                if (btn != activeButton) btn.setBackground(ThemeManager.SIDEBAR_HOVER);
-            }
-            public void mouseExited(java.awt.event.MouseEvent e) {
-                if (btn != activeButton) btn.setBackground(ThemeManager.BG_SIDEBAR);
-            }
+            public void mouseEntered(java.awt.event.MouseEvent e) { if (btn != activeButton) btn.setBackground(ThemeManager.SIDEBAR_HOVER); }
+            public void mouseExited(java.awt.event.MouseEvent e) { if (btn != activeButton) btn.setBackground(ThemeManager.BG_SIDEBAR); }
         });
 
         btn.addActionListener(e -> {
-            if (activeButton != null) {
-                activeButton.setBackground(ThemeManager.BG_SIDEBAR);
-                activeButton.setForeground(new Color(209, 213, 219));
-            }
-            btn.setBackground(ThemeManager.SIDEBAR_ACTIVE);
-            btn.setForeground(ThemeManager.TEXT_WHITE);
-            activeButton = btn;
+            if (activeButton != null) { activeButton.setBackground(ThemeManager.BG_SIDEBAR); activeButton.setForeground(new Color(209, 213, 219)); }
+            btn.setBackground(ThemeManager.SIDEBAR_ACTIVE); btn.setForeground(ThemeManager.TEXT_WHITE); activeButton = btn;
             action.run();
         });
-
         sidebar.add(btn);
-    }
-
-    private void showHome() {
-        contentArea.removeAll();
-
-        JPanel homePanel = new JPanel();
-        homePanel.setLayout(new BoxLayout(homePanel, BoxLayout.Y_AXIS));
-        homePanel.setBackground(ThemeManager.BG_MAIN);
-
-        JLabel welcome = new JLabel("Welcome back, " + currentUser.getName() + "!");
-        welcome.setFont(ThemeManager.FONT_TITLE);
-        welcome.setForeground(ThemeManager.TEXT_PRIMARY);
-        welcome.setAlignmentX(Component.LEFT_ALIGNMENT);
-        homePanel.add(welcome);
-
-        homePanel.add(Box.createVerticalStrut(5));
-
-        JLabel role = new JLabel("Role: " + currentUser.getRole().toUpperCase() + "  \u2022  TUK Ability Club Dashboard");
-        role.setFont(ThemeManager.FONT_BODY);
-        role.setForeground(ThemeManager.TEXT_SECONDARY);
-        role.setAlignmentX(Component.LEFT_ALIGNMENT);
-        homePanel.add(role);
-
-        homePanel.add(Box.createVerticalStrut(30));
-
-        // Live stats row 1
-        JPanel cardsRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
-        cardsRow.setBackground(ThemeManager.BG_MAIN);
-        cardsRow.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        int eventCount = getCount("SELECT COUNT(*) FROM events");
-        int blogCount = getCount("SELECT COUNT(*) FROM blog_posts");
-        double balance = getBalance();
-
-        cardsRow.add(ThemeManager.createStatCard("Upcoming Events", String.valueOf(eventCount), ThemeManager.PRIMARY));
-        cardsRow.add(ThemeManager.createStatCard("Blog Posts", String.valueOf(blogCount), ThemeManager.SUCCESS));
-        cardsRow.add(ThemeManager.createStatCard("Club Balance", "KES " + String.format("%,.2f", balance), ThemeManager.PURPLE));
-
-        homePanel.add(cardsRow);
-        homePanel.add(Box.createVerticalStrut(20));
-
-        // Live stats row 2
-        JPanel cardsRow2 = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
-        cardsRow2.setBackground(ThemeManager.BG_MAIN);
-        cardsRow2.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        int memberCount = getCount("SELECT COUNT(*) FROM users WHERE is_approved = 1");
-        int myRsvps = getCount("SELECT COUNT(*) FROM event_registrations WHERE user_id = " + currentUser.getId());
-
-        cardsRow2.add(ThemeManager.createStatCard("Active Members", String.valueOf(memberCount), new Color(234, 179, 8)));
-        cardsRow2.add(ThemeManager.createStatCard("My RSVPs", String.valueOf(myRsvps), new Color(6, 182, 212)));
-
-        if (currentUser.isAdmin()) {
-            int pendingUsers = getCount("SELECT COUNT(*) FROM users WHERE is_approved = 0");
-
-            // Clickable pending card
-            JPanel pendingCard = ThemeManager.createStatCard("Pending Approvals", String.valueOf(pendingUsers),
-                pendingUsers > 0 ? ThemeManager.DANGER : ThemeManager.SUCCESS);
-            pendingCard.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            pendingCard.setToolTipText("Click to manage users");
-            pendingCard.addMouseListener(new java.awt.event.MouseAdapter() {
-                public void mouseClicked(java.awt.event.MouseEvent e) {
-                    showPanel(new ManageUsersPanel(currentUser));
-                }
-                public void mouseEntered(java.awt.event.MouseEvent e) {
-                    pendingCard.setBorder(BorderFactory.createCompoundBorder(
-                        BorderFactory.createMatteBorder(3, 0, 0, 0, ThemeManager.DANGER),
-                        BorderFactory.createCompoundBorder(
-                            BorderFactory.createLineBorder(ThemeManager.DANGER, 1),
-                            BorderFactory.createEmptyBorder(15, 18, 15, 18)
-                        )
-                    ));
-                }
-                public void mouseExited(java.awt.event.MouseEvent e) {
-                    pendingCard.setBorder(BorderFactory.createCompoundBorder(
-                        BorderFactory.createMatteBorder(3, 0, 0, 0, pendingUsers > 0 ? ThemeManager.DANGER : ThemeManager.SUCCESS),
-                        BorderFactory.createCompoundBorder(
-                            BorderFactory.createLineBorder(ThemeManager.BORDER, 1),
-                            BorderFactory.createEmptyBorder(15, 18, 15, 18)
-                        )
-                    ));
-                }
-            });
-            cardsRow2.add(pendingCard);
-
-            // Alert banner if pending > 0
-            if (pendingUsers > 0) {
-                homePanel.add(cardsRow2);
-                homePanel.add(Box.createVerticalStrut(20));
-
-                JPanel alertBanner = new JPanel(new BorderLayout());
-                alertBanner.setBackground(new Color(254, 243, 199));
-                alertBanner.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(new Color(234, 179, 8), 1),
-                    BorderFactory.createEmptyBorder(12, 18, 12, 18)
-                ));
-                alertBanner.setAlignmentX(Component.LEFT_ALIGNMENT);
-                alertBanner.setMaximumSize(new Dimension(Integer.MAX_VALUE, 55));
-
-                JLabel alertText = new JLabel("\u26A0  " + pendingUsers + " user(s) waiting for approval");
-                alertText.setFont(new Font("Segoe UI", Font.BOLD, 13));
-                alertText.setForeground(new Color(146, 64, 14));
-                alertBanner.add(alertText, BorderLayout.WEST);
-
-                JButton reviewBtn = ThemeManager.createButton("Review Now", new Color(234, 179, 8));
-                reviewBtn.setForeground(new Color(69, 26, 3));
-                reviewBtn.addActionListener(e -> showPanel(new ManageUsersPanel(currentUser)));
-                alertBanner.add(reviewBtn, BorderLayout.EAST);
-
-                homePanel.add(alertBanner);
-            } else {
-                homePanel.add(cardsRow2);
-            }
-        } else {
-            homePanel.add(cardsRow2);
-        }
-
-        contentArea.add(homePanel, BorderLayout.NORTH);
-        contentArea.revalidate();
-        contentArea.repaint();
-    }
-
-    private int getCount(String sql) {
-        try {
-            Statement stmt = Database.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) return rs.getInt(1);
-        } catch (SQLException e) { System.err.println("Error: " + e.getMessage()); }
-        return 0;
-    }
-
-    private double getBalance() {
-        try {
-            Statement stmt = Database.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery(
-                "SELECT COALESCE(SUM(CASE WHEN type='income' THEN amount ELSE -amount END), 0) FROM transactions"
-            );
-            if (rs.next()) return rs.getDouble(1);
-        } catch (SQLException e) { System.err.println("Error: " + e.getMessage()); }
-        return 0;
     }
 
     private void showPanel(JPanel panel) {
@@ -321,5 +133,9 @@ public class DashboardPanel extends JPanel {
         contentArea.add(panel, BorderLayout.CENTER);
         contentArea.revalidate();
         contentArea.repaint();
+    }
+
+    private int getCount(String sql) {
+        try { ResultSet rs = Database.getConnection().createStatement().executeQuery(sql); if (rs.next()) return rs.getInt(1); } catch (SQLException e) {} return 0;
     }
 }
