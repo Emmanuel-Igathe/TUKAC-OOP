@@ -1,10 +1,12 @@
 package com.tukac;
 
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+
 import com.formdev.flatlaf.FlatLightLaf;
 import com.tukac.db.Database;
-import com.tukac.ui.panels.LoginPanel;
-
-import javax.swing.*;
+import com.tukac.ui.panels.WelcomeScreen;
 
 public class App {
     public static void main(String[] args) {
@@ -31,8 +33,8 @@ public class App {
             frame.setSize(1000, 650);
             frame.setLocationRelativeTo(null);
 
-            // Start with the login screen
-            frame.add(new LoginPanel(frame));
+            // Start with the welcome screen (guest view)
+            frame.add(new WelcomeScreen(frame));
 
             frame.setVisible(true);
         });

@@ -28,9 +28,11 @@ public class DashboardPanel extends JPanel {
     private JPanel contentArea;
     private User currentUser;
     private JButton activeButton = null;
+    private JFrame parentFrame;
 
     public DashboardPanel(JFrame parentFrame, User user) {
         this.currentUser = user;
+        this.parentFrame = parentFrame;
         setLayout(new BorderLayout());
 
         // ===== TOP BAR =====
@@ -86,12 +88,15 @@ public class DashboardPanel extends JPanel {
         if (user.isAdmin()) {
             sidebar.add(Box.createVerticalStrut(15));
             addSectionLabel(sidebar, "ADMIN");
-            addMenuButton(sidebar, "\u26A0  Manage Users", () -> showPanel(new ManageUsersPanel(currentUser)));
+
+            // Manage Users with pending badge
+            int pending = getCount("SELECT COUNT(*) FROM users WHERE is_approved = 0");
+            String label = pending > 0 ? "\u26A0  Manage Users (" + pending + ")" : "\u26A0  Manage Users";
+            addMenuButton(sidebar, label, () -> showPanel(new ManageUsersPanel(currentUser)));
         }
 
         sidebar.add(Box.createVerticalGlue());
 
-        // Account section
         addSectionLabel(sidebar, "ACCOUNT");
         addMenuButton(sidebar, "\u263A  My Profile", () -> showPanel(new UserProfilePanel(currentUser)));
 
@@ -109,7 +114,7 @@ public class DashboardPanel extends JPanel {
         logoutBtn.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         logoutBtn.addActionListener(e -> {
             parentFrame.getContentPane().removeAll();
-            parentFrame.getContentPane().add(new LoginPanel(parentFrame));
+            parentFrame.getContentPane().add(new WelcomeScreen(parentFrame));
             parentFrame.revalidate();
             parentFrame.repaint();
         });
@@ -194,14 +199,13 @@ public class DashboardPanel extends JPanel {
 
         homePanel.add(Box.createVerticalStrut(30));
 
-        // Live stats
+        // Live stats row 1
         JPanel cardsRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
         cardsRow.setBackground(ThemeManager.BG_MAIN);
         cardsRow.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         int eventCount = getCount("SELECT COUNT(*) FROM events");
         int blogCount = getCount("SELECT COUNT(*) FROM blog_posts");
-        int memberCount = getCount("SELECT COUNT(*) FROM users WHERE is_approved = 1");
         double balance = getBalance();
 
         cardsRow.add(ThemeManager.createStatCard("Upcoming Events", String.valueOf(eventCount), ThemeManager.PRIMARY));
@@ -209,26 +213,83 @@ public class DashboardPanel extends JPanel {
         cardsRow.add(ThemeManager.createStatCard("Club Balance", "KES " + String.format("%,.2f", balance), ThemeManager.PURPLE));
 
         homePanel.add(cardsRow);
-
         homePanel.add(Box.createVerticalStrut(20));
 
-        // Second row
+        // Live stats row 2
         JPanel cardsRow2 = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
         cardsRow2.setBackground(ThemeManager.BG_MAIN);
         cardsRow2.setAlignmentX(Component.LEFT_ALIGNMENT);
 
+        int memberCount = getCount("SELECT COUNT(*) FROM users WHERE is_approved = 1");
         int myRsvps = getCount("SELECT COUNT(*) FROM event_registrations WHERE user_id = " + currentUser.getId());
-        int pendingUsers = getCount("SELECT COUNT(*) FROM users WHERE is_approved = 0");
 
         cardsRow2.add(ThemeManager.createStatCard("Active Members", String.valueOf(memberCount), new Color(234, 179, 8)));
         cardsRow2.add(ThemeManager.createStatCard("My RSVPs", String.valueOf(myRsvps), new Color(6, 182, 212)));
 
         if (currentUser.isAdmin()) {
-            cardsRow2.add(ThemeManager.createStatCard("Pending Approvals", String.valueOf(pendingUsers),
-                pendingUsers > 0 ? ThemeManager.DANGER : ThemeManager.SUCCESS));
-        }
+            int pendingUsers = getCount("SELECT COUNT(*) FROM users WHERE is_approved = 0");
 
-        homePanel.add(cardsRow2);
+            // Clickable pending card
+            JPanel pendingCard = ThemeManager.createStatCard("Pending Approvals", String.valueOf(pendingUsers),
+                pendingUsers > 0 ? ThemeManager.DANGER : ThemeManager.SUCCESS);
+            pendingCard.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            pendingCard.setToolTipText("Click to manage users");
+            pendingCard.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseClicked(java.awt.event.MouseEvent e) {
+                    showPanel(new ManageUsersPanel(currentUser));
+                }
+                public void mouseEntered(java.awt.event.MouseEvent e) {
+                    pendingCard.setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createMatteBorder(3, 0, 0, 0, ThemeManager.DANGER),
+                        BorderFactory.createCompoundBorder(
+                            BorderFactory.createLineBorder(ThemeManager.DANGER, 1),
+                            BorderFactory.createEmptyBorder(15, 18, 15, 18)
+                        )
+                    ));
+                }
+                public void mouseExited(java.awt.event.MouseEvent e) {
+                    pendingCard.setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createMatteBorder(3, 0, 0, 0, pendingUsers > 0 ? ThemeManager.DANGER : ThemeManager.SUCCESS),
+                        BorderFactory.createCompoundBorder(
+                            BorderFactory.createLineBorder(ThemeManager.BORDER, 1),
+                            BorderFactory.createEmptyBorder(15, 18, 15, 18)
+                        )
+                    ));
+                }
+            });
+            cardsRow2.add(pendingCard);
+
+            // Alert banner if pending > 0
+            if (pendingUsers > 0) {
+                homePanel.add(cardsRow2);
+                homePanel.add(Box.createVerticalStrut(20));
+
+                JPanel alertBanner = new JPanel(new BorderLayout());
+                alertBanner.setBackground(new Color(254, 243, 199));
+                alertBanner.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(new Color(234, 179, 8), 1),
+                    BorderFactory.createEmptyBorder(12, 18, 12, 18)
+                ));
+                alertBanner.setAlignmentX(Component.LEFT_ALIGNMENT);
+                alertBanner.setMaximumSize(new Dimension(Integer.MAX_VALUE, 55));
+
+                JLabel alertText = new JLabel("\u26A0  " + pendingUsers + " user(s) waiting for approval");
+                alertText.setFont(new Font("Segoe UI", Font.BOLD, 13));
+                alertText.setForeground(new Color(146, 64, 14));
+                alertBanner.add(alertText, BorderLayout.WEST);
+
+                JButton reviewBtn = ThemeManager.createButton("Review Now", new Color(234, 179, 8));
+                reviewBtn.setForeground(new Color(69, 26, 3));
+                reviewBtn.addActionListener(e -> showPanel(new ManageUsersPanel(currentUser)));
+                alertBanner.add(reviewBtn, BorderLayout.EAST);
+
+                homePanel.add(alertBanner);
+            } else {
+                homePanel.add(cardsRow2);
+            }
+        } else {
+            homePanel.add(cardsRow2);
+        }
 
         contentArea.add(homePanel, BorderLayout.NORTH);
         contentArea.revalidate();
@@ -240,9 +301,7 @@ public class DashboardPanel extends JPanel {
             Statement stmt = Database.getConnection().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) return rs.getInt(1);
-        } catch (SQLException e) {
-            System.err.println("Error: " + e.getMessage());
-        }
+        } catch (SQLException e) { System.err.println("Error: " + e.getMessage()); }
         return 0;
     }
 
@@ -253,9 +312,7 @@ public class DashboardPanel extends JPanel {
                 "SELECT COALESCE(SUM(CASE WHEN type='income' THEN amount ELSE -amount END), 0) FROM transactions"
             );
             if (rs.next()) return rs.getDouble(1);
-        } catch (SQLException e) {
-            System.err.println("Error: " + e.getMessage());
-        }
+        } catch (SQLException e) { System.err.println("Error: " + e.getMessage()); }
         return 0;
     }
 

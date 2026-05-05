@@ -1,13 +1,25 @@
 package com.tukac.ui.panels;
 
-import com.tukac.db.Database;
-import com.tukac.ui.ThemeManager;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
+import com.tukac.db.Database;
+import com.tukac.ui.ThemeManager;
 
 public class LoginPanel extends JPanel {
     private JTextField emailField;
@@ -18,77 +30,65 @@ public class LoginPanel extends JPanel {
         setLayout(new GridBagLayout());
         setBackground(ThemeManager.BG_MAIN);
 
-        // Center card
         JPanel card = ThemeManager.createCard();
         card.setLayout(new GridBagLayout());
-        card.setPreferredSize(new Dimension(420, 420));
+        card.setPreferredSize(new Dimension(420, 460));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(6, 20, 6, 20);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Logo / Title
+        JButton backBtn = ThemeManager.createLinkButton("\u2190 Back to Home");
+        backBtn.addActionListener(e -> {
+            parentFrame.getContentPane().removeAll();
+            parentFrame.getContentPane().add(new WelcomeScreen(parentFrame));
+            parentFrame.revalidate();
+            parentFrame.repaint();
+        });
+        gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.WEST;
+        card.add(backBtn, gbc);
+
         JLabel titleLabel = new JLabel("TUK Ability Club", SwingConstants.CENTER);
         titleLabel.setFont(ThemeManager.FONT_TITLE);
         titleLabel.setForeground(ThemeManager.PRIMARY);
-        gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2;
+        gbc.gridy = 1; gbc.anchor = GridBagConstraints.CENTER;
         card.add(titleLabel, gbc);
 
-        // Subtitle
         JLabel subtitleLabel = new JLabel("Sign in to your account", SwingConstants.CENTER);
         subtitleLabel.setFont(ThemeManager.FONT_BODY);
         subtitleLabel.setForeground(ThemeManager.TEXT_SECONDARY);
-        gbc.gridy = 1;
+        gbc.gridy = 2;
         card.add(subtitleLabel, gbc);
 
-        gbc.gridy = 2;
-        card.add(Box.createVerticalStrut(10), gbc);
+        gbc.gridy = 3; card.add(Box.createVerticalStrut(10), gbc);
 
-        // Email label
-        gbc.gridy = 3; gbc.gridwidth = 2;
-        JLabel emailLabel = ThemeManager.createLabel("Email or Student ID");
-        card.add(emailLabel, gbc);
-
-        // Email field
-        emailField = ThemeManager.createTextField(20);
         gbc.gridy = 4;
-        card.add(emailField, gbc);
+        card.add(ThemeManager.createLabel("Email or Student ID"), gbc);
+        emailField = ThemeManager.createTextField(20);
+        gbc.gridy = 5; card.add(emailField, gbc);
 
-        // Password label
-        gbc.gridy = 5;
-        JLabel passLabel = ThemeManager.createLabel("Password");
-        card.add(passLabel, gbc);
-
-        // Password field
-        passwordField = ThemeManager.createPasswordField(20);
         gbc.gridy = 6;
-        card.add(passwordField, gbc);
+        card.add(ThemeManager.createLabel("Password"), gbc);
+        passwordField = ThemeManager.createPasswordField(20);
+        gbc.gridy = 7; card.add(passwordField, gbc);
 
-        gbc.gridy = 7;
-        card.add(Box.createVerticalStrut(8), gbc);
+        gbc.gridy = 8; card.add(Box.createVerticalStrut(8), gbc);
 
-        // Login button
         JButton loginButton = ThemeManager.createButton("Sign In", ThemeManager.PRIMARY);
         loginButton.setPreferredSize(new Dimension(250, 40));
-        gbc.gridy = 8;
-        card.add(loginButton, gbc);
+        gbc.gridy = 9; card.add(loginButton, gbc);
 
-        // Register link
         JButton registerButton = ThemeManager.createLinkButton("Don't have an account? Register here");
-        gbc.gridy = 9;
-        card.add(registerButton, gbc);
+        gbc.gridy = 10; card.add(registerButton, gbc);
 
-        // Message label
         messageLabel = new JLabel("", SwingConstants.CENTER);
         messageLabel.setFont(ThemeManager.FONT_SMALL);
         messageLabel.setForeground(ThemeManager.DANGER);
-        gbc.gridy = 10;
-        card.add(messageLabel, gbc);
+        gbc.gridy = 11; card.add(messageLabel, gbc);
 
-        // Add card to center
         add(card);
 
-        // Actions
         loginButton.addActionListener(e -> handleLogin(parentFrame));
         registerButton.addActionListener(e -> {
             parentFrame.getContentPane().removeAll();
@@ -123,7 +123,7 @@ public class LoginPanel extends JPanel {
             if (rs.next()) {
                 int isApproved = rs.getInt("is_approved");
                 if (isApproved == 0) {
-                    messageLabel.setForeground(ThemeManager.WARNING);
+                    messageLabel.setForeground(new Color(234, 179, 8));
                     messageLabel.setText("Account pending admin approval.");
                     return;
                 }
@@ -132,9 +132,20 @@ public class LoginPanel extends JPanel {
                 String role = rs.getString("role");
                 int userId = rs.getInt("id");
 
-                com.tukac.models.User user = new com.tukac.models.User(userId, userName, emailOrId, rs.getString("email"), role);
+                com.tukac.models.User user = new com.tukac.models.User(
+                    userId, userName, emailOrId, rs.getString("email"), role
+                );
+
                 parentFrame.getContentPane().removeAll();
-                parentFrame.getContentPane().add(new DashboardPanel(parentFrame, user));
+
+                // ROUTE BY ROLE — Members get their own interface
+                if (user.isMember()) {
+                    parentFrame.getContentPane().add(new MemberHomePanel(parentFrame, user));
+                } else {
+                    // Executives and Admins get the dashboard with sidebar
+                    parentFrame.getContentPane().add(new DashboardPanel(parentFrame, user));
+                }
+
                 parentFrame.revalidate();
                 parentFrame.repaint();
 

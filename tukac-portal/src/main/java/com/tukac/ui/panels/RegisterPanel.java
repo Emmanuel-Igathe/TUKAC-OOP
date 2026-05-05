@@ -1,12 +1,23 @@
 package com.tukac.ui.panels;
 
-import com.tukac.db.Database;
-import com.tukac.ui.ThemeManager;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
+import com.tukac.db.Database;
+import com.tukac.ui.ThemeManager;
 
 public class RegisterPanel extends JPanel {
     private JTextField nameField;
@@ -23,90 +34,103 @@ public class RegisterPanel extends JPanel {
         // Center card
         JPanel card = ThemeManager.createCard();
         card.setLayout(new GridBagLayout());
-        card.setPreferredSize(new Dimension(420, 520));
+        card.setPreferredSize(new Dimension(420, 560));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(4, 20, 4, 20);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridwidth = 2;
 
+        // Back button
+        JButton backBtn = ThemeManager.createLinkButton("\u2190 Back to Home");
+        backBtn.addActionListener(e -> {
+            parentFrame.getContentPane().removeAll();
+            parentFrame.getContentPane().add(new WelcomeScreen(parentFrame));
+            parentFrame.revalidate();
+            parentFrame.repaint();
+        });
+        gbc.gridx = 0; gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        card.add(backBtn, gbc);
+
         // Title
         JLabel titleLabel = new JLabel("Create Account", SwingConstants.CENTER);
         titleLabel.setFont(ThemeManager.FONT_TITLE);
         titleLabel.setForeground(ThemeManager.PRIMARY);
-        gbc.gridx = 0; gbc.gridy = 0;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.CENTER;
         card.add(titleLabel, gbc);
 
         JLabel subtitleLabel = new JLabel("Join the TUK Ability Club", SwingConstants.CENTER);
         subtitleLabel.setFont(ThemeManager.FONT_BODY);
         subtitleLabel.setForeground(ThemeManager.TEXT_SECONDARY);
-        gbc.gridy = 1;
+        gbc.gridy = 2;
         card.add(subtitleLabel, gbc);
 
-        gbc.gridy = 2;
+        gbc.gridy = 3;
         card.add(Box.createVerticalStrut(8), gbc);
 
         // Full Name
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         card.add(ThemeManager.createLabel("Full Name"), gbc);
         nameField = ThemeManager.createTextField(20);
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         card.add(nameField, gbc);
 
         // Student ID
-        gbc.gridy = 5;
+        gbc.gridy = 6;
         card.add(ThemeManager.createLabel("Student ID"), gbc);
         studentIdField = ThemeManager.createTextField(20);
-        gbc.gridy = 6;
+        gbc.gridy = 7;
         card.add(studentIdField, gbc);
 
         // Email
-        gbc.gridy = 7;
+        gbc.gridy = 8;
         card.add(ThemeManager.createLabel("Email"), gbc);
         emailField = ThemeManager.createTextField(20);
-        gbc.gridy = 8;
+        gbc.gridy = 9;
         card.add(emailField, gbc);
 
         // Password
-        gbc.gridy = 9;
+        gbc.gridy = 10;
         card.add(ThemeManager.createLabel("Password"), gbc);
         passwordField = ThemeManager.createPasswordField(20);
-        gbc.gridy = 10;
+        gbc.gridy = 11;
         card.add(passwordField, gbc);
 
         // Confirm Password
-        gbc.gridy = 11;
+        gbc.gridy = 12;
         card.add(ThemeManager.createLabel("Confirm Password"), gbc);
         confirmPasswordField = ThemeManager.createPasswordField(20);
-        gbc.gridy = 12;
+        gbc.gridy = 13;
         card.add(confirmPasswordField, gbc);
 
-        gbc.gridy = 13;
+        gbc.gridy = 14;
         card.add(Box.createVerticalStrut(8), gbc);
 
         // Register button
         JButton registerButton = ThemeManager.createButton("Create Account", ThemeManager.SUCCESS);
         registerButton.setPreferredSize(new Dimension(250, 40));
-        gbc.gridy = 14;
+        gbc.gridy = 15;
         card.add(registerButton, gbc);
 
         // Back to login
-        JButton backButton = ThemeManager.createLinkButton("Already have an account? Sign in");
-        gbc.gridy = 15;
-        card.add(backButton, gbc);
+        JButton loginButton = ThemeManager.createLinkButton("Already have an account? Sign in");
+        gbc.gridy = 16;
+        card.add(loginButton, gbc);
 
         // Message label
         messageLabel = new JLabel("", SwingConstants.CENTER);
         messageLabel.setFont(ThemeManager.FONT_SMALL);
         messageLabel.setForeground(ThemeManager.DANGER);
-        gbc.gridy = 16;
+        gbc.gridy = 17;
         card.add(messageLabel, gbc);
 
         add(card);
 
         // Actions
         registerButton.addActionListener(e -> handleRegister());
-        backButton.addActionListener(e -> {
+        loginButton.addActionListener(e -> {
             parentFrame.getContentPane().removeAll();
             parentFrame.getContentPane().add(new LoginPanel(parentFrame));
             parentFrame.revalidate();

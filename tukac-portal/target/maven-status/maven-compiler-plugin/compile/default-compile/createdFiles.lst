@@ -1,8 +1,10 @@
 com\tukac\ui\panels\ManageFinancesPanel$2.class
+com\tukac\ui\panels\MemberHomePanel$3.class
 com\tukac\ui\panels\BlogPanel.class
 com\tukac\ui\panels\ManageBlogPanel.class
 com\tukac\ui\panels\ManageUsersPanel$2.class
 com\tukac\ui\panels\DashboardPanel.class
+com\tukac\ui\panels\MemberHomePanel.class
 com\tukac\ui\ThemeManager$2.class
 com\tukac\ui\panels\DashboardPanel$1.class
 com\tukac\ui\panels\FinancesPanel.class
@@ -15,6 +17,7 @@ com\tukac\ui\panels\FinancesPanel$1.class
 com\tukac\ui\ThemeManager.class
 com\tukac\ui\panels\EventsPanel.class
 com\tukac\ui\panels\MemberDirectoryPanel$1.class
+com\tukac\ui\panels\MemberHomePanel$1.class
 com\tukac\ui\panels\ManageFinancesPanel.class
 com\tukac\ui\panels\ManageUsersPanel$1.class
 com\tukac\ui\panels\FinancesPanel$2.class
@@ -23,6 +26,7 @@ com\tukac\ui\panels\ManageUsersPanel.class
 com\tukac\ui\panels\ManageFinancesPanel$1.class
 com\tukac\ui\panels\EventsPanel$1.class
 com\tukac\ui\panels\UserProfilePanel.class
+com\tukac\ui\panels\MemberHomePanel$4.class
 com\tukac\ui\ThemeManager$1.class
 com\tukac\ui\panels\MyRsvpsPanel$1.class
 com\tukac\ui\panels\MemberDirectoryPanel$2.class
@@ -30,6 +34,9 @@ com\tukac\ui\panels\AboutPanel.class
 com\tukac\ui\panels\ManageEventsPanel$1.class
 com\tukac\db\Database.class
 com\tukac\ui\panels\HelpPanel.class
+com\tukac\ui\panels\DashboardPanel$2.class
+com\tukac\ui\panels\WelcomeScreen.class
 com\tukac\ui\panels\LoginPanel.class
+com\tukac\ui\panels\MemberHomePanel$2.class
 com\tukac\ui\panels\RegisterPanel.class
 com\tukac\ui\panels\ManageUsersPanel$3.class
