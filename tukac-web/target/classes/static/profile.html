@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Profile | TUKAC Portal</title>
+  <meta name="description" content="View and edit your TUKAC profile."/>
+  <link rel="stylesheet" href="/css/style.css"/>
+  <style>
+    .profile-card { background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:24px; margin-bottom:24px; }
+    .profile-header { display:flex; align-items:center; gap:20px; border-bottom:1px solid var(--border); padding-bottom:20px; margin-bottom:20px; }
+    .profile-avatar-wrap { position:relative; width:100px; height:100px; }
+    .profile-avatar { width:100px; height:100px; border-radius:50%; object-fit:cover; border:3px solid var(--navy); }
+    .profile-avatar-fallback { width:100px; height:100px; border-radius:50%; background:linear-gradient(135deg,var(--navy),var(--green)); display:flex; align-items:center; justify-content:center; color:#fff; font-size:36px; font-weight:800; border:3px solid var(--navy); }
+    
+    .avatar-edit-btn {
+      position:absolute; bottom:0; right:0; background:var(--gold); color:#fff; border:none; width:32px; height:32px;
+      border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:14px;
+      box-shadow:var(--shadow); transition:var(--transition);
+    }
+    .avatar-edit-btn:hover { background:var(--gold-dark); transform:scale(1.05); }
+
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    @media(max-width:768px) { .form-grid { grid-template-columns:1fr; } }
+    
+    .section-title { font-size:16px; font-weight:700; color:var(--navy); margin-bottom:16px; }
+  </style>
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <div class="brand-icon"><img src="/logo.svg" alt="TUKAC Logo"/></div>
+        <div><div class="brand-text">TUKAC</div><div class="brand-subtitle">Ability Club Portal</div></div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main Menu</div>
+      <a href="/dashboard.html" class="nav-item" data-page="dashboard.html"><span class="nav-icon">🏠</span> Dashboard</a>
+      <a href="/events.html" class="nav-item" data-page="events.html"><span class="nav-icon">📅</span> Events</a>
+      <a href="/finances.html" class="nav-item" data-page="finances.html"><span class="nav-icon">💰</span> Finances</a>
+      <a href="/blog.html" class="nav-item" data-page="blog.html"><span class="nav-icon">✍️</span> Blog</a>
+      <a href="/about.html" class="nav-item" data-page="about.html"><span class="nav-icon">ℹ️</span> About</a>
+      <a href="/profile.html" class="nav-item" data-page="profile.html"><span class="nav-icon">👤</span> My Profile</a>
+      <div id="execSection" class="hidden">
+        <div class="nav-section-label">Management</div>
+        <a href="/events.html" class="nav-item"><span class="nav-icon">⚙️</span> Manage Events</a>
+        <a href="/finances.html" class="nav-item"><span class="nav-icon">⚙️</span> Manage Finances</a>
+        <a href="/blog.html" class="nav-item"><span class="nav-icon">⚙️</span> Manage Blog</a>
+      </div>
+      <div id="adminSection" class="hidden">
+        <div class="nav-section-label">Admin</div>
+        <a href="/admin.html" class="nav-item" data-page="admin.html"><span class="nav-icon">👥</span> Manage Users</a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info-box">
+        <div class="user-avatar" id="userAvatar">?</div>
+        <div><div class="user-name" id="userName">...</div><div class="user-role" id="userRole">member</div></div>
+      </div>
+      <button class="btn btn-danger w-full btn-sm" onclick="logout()">← Logout</button>
+    </div>
+  </aside>
+
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div>
+        <div class="topbar-title">My Profile</div>
+        <div class="topbar-subtitle">Manage your account details and password</div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div id="pageAlert" class="alert hidden"></div>
+
+      <!-- Profile Form -->
+      <div class="profile-card">
+        <form id="profileForm" onsubmit="handleProfileUpdate(event)">
+          <div class="profile-header">
+            <div class="profile-avatar-wrap">
+              <div id="avatarContainer"></div>
+              <button type="button" class="avatar-edit-btn" onclick="document.getElementById('photoInput').click()" title="Change Photo">✏️</button>
+              <input type="file" id="photoInput" accept="image/jpeg,image/png" style="display:none;" onchange="handlePhotoSelect(event)"/>
+              <input type="hidden" id="photoData"/>
+            </div>
+            <div>
+              <h2 style="font-size:22px;color:var(--navy);font-weight:800;margin-bottom:4px;" id="hdrName">Loading...</h2>
+              <div style="font-size:13px;color:var(--text-muted);" id="hdrId"></div>
+              <div style="margin-top:6px;"><span class="badge badge-primary" id="hdrRole"></span></div>
+            </div>
+          </div>
+
+          <div class="section-title">Personal Information</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" id="profName" class="form-control" required/>
+            </div>
+            <div class="form-group">
+              <label>Student ID</label>
+              <input type="text" id="profId" class="form-control" disabled style="background:#f9f9f9;cursor:not-allowed;"/>
+            </div>
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" id="profEmail" class="form-control" required/>
+            </div>
+            <div class="form-group">
+              <label>Phone / Contact</label>
+              <input type="text" id="profContact" class="form-control"/>
+            </div>
+          </div>
+
+          <div style="border-top:1px solid var(--border);margin:24px 0;"></div>
+
+          <div class="section-title">Disability Information</div>
+          <div style="background:rgba(0,51,102,0.03);padding:16px;border-radius:var(--radius-sm);border:1px solid var(--border);">
+            <div class="form-group" style="margin-bottom:12px;">
+              <label style="display:flex;align-items:center;gap:8px;font-weight:600;">
+                <input type="checkbox" id="profHasDisability" style="width:16px;height:16px;accent-color:var(--navy);" onchange="toggleDisabilityFields()"/>
+                I have a disability
+              </label>
+            </div>
+            <div class="form-grid hidden" id="disabilityFields">
+              <div class="form-group">
+                <label>Type of Disability</label>
+                <select id="profDisabilityType" class="form-control">
+                  <option value="">— Select —</option>
+                  <option value="Physical / Motor">Physical / Motor</option>
+                  <option value="Visual Impairment">Visual Impairment</option>
+                  <option value="Hearing Impairment">Hearing Impairment</option>
+                  <option value="Speech / Communication">Speech / Communication</option>
+                  <option value="Intellectual / Cognitive">Intellectual / Cognitive</option>
+                  <option value="Psychosocial / Mental Health">Psychosocial / Mental Health</option>
+                  <option value="Multiple Disabilities">Multiple Disabilities</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>NCPwD Certificate Number</label>
+                <input type="text" id="profNcpwd" class="form-control"/>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:24px;">
+            <button type="submit" id="saveProfileBtn" class="btn btn-primary">Save Changes</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Password Form -->
+      <div class="profile-card">
+        <div class="section-title">Change Password</div>
+        <form id="passwordForm" onsubmit="handlePasswordUpdate(event)">
+          <div id="pwdAlert" class="alert hidden"></div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Current Password</label>
+              <input type="password" id="pwdCurrent" class="form-control" required/>
+            </div>
+            <div class="form-group">
+              <label>New Password</label>
+              <input type="password" id="pwdNew" class="form-control" required minlength="6"/>
+            </div>
+          </div>
+          <div style="margin-top:12px;">
+            <button type="submit" id="savePwdBtn" class="btn btn-outline">Update Password</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- My Transactions -->
+      <div class="profile-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <div class="section-title" style="margin:0;">My Transactions</div>
+          <button class="btn btn-primary btn-sm" onclick="document.getElementById('txModal').classList.remove('hidden')">+ Record Payment</button>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>Date</th><th>Description</th><th>Type</th><th>Amount</th></tr></thead>
+            <tbody id="myTxTableBody"><tr><td colspan="4"><div class="loading"><div class="spinner"></div></div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- Transaction Modal -->
+<div class="modal-overlay hidden" id="txModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Record Payment</div>
+      <button class="modal-close" onclick="document.getElementById('txModal').classList.add('hidden')">✕</button>
+    </div>
+    <div id="txAlert" class="alert hidden"></div>
+    <form id="txForm" onsubmit="handleMyTxSubmit(event)">
+      <input type="hidden" id="txType" value="income"/>
+      <div class="form-group">
+        <label>Payment Purpose *</label>
+        <input type="text" id="txDesc" class="form-control" placeholder="e.g. Registration Fee, Monthly Dues" required/>
+      </div>
+      <div class="form-group">
+        <label>Amount (KES) *</label>
+        <input type="number" id="txAmount" class="form-control" step="0.01" min="0.01" required/>
+      </div>
+      <div class="form-group">
+        <label>Date *</label>
+        <input type="date" id="txDate" class="form-control" required/>
+      </div>
+      <div class="flex gap-2" style="margin-top:16px;">
+        <button type="submit" class="btn btn-primary" id="txSubmitBtn">Submit</button>
+        <button type="button" class="btn btn-outline" onclick="document.getElementById('txModal').classList.add('hidden')">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="/js/api.js"></script>
+<script>
+  if (!requireAuth()) {}
+  
+  document.addEventListener('DOMContentLoaded', () => {
+    initSidebar();
+    loadProfile();
+    loadMyTransactions();
+    document.getElementById('txDate').value = new Date().toISOString().split('T')[0];
+  });
+
+  async function loadProfile() {
+    const res = await api.get('/profile');
+    if (!res || !res.data.success) {
+      showAlert(document.getElementById('pageAlert'), 'error', 'Failed to load profile.');
+      return;
+    }
+    const u = res.data.data;
+    
+    // Header
+    document.getElementById('hdrName').textContent = u.name;
+    document.getElementById('hdrId').textContent = u.studentId;
+    document.getElementById('hdrRole').textContent = u.role.toUpperCase();
+    
+    // Photo
+    document.getElementById('photoData').value = u.passportPhoto || '';
+    renderAvatar(u.passportPhoto, u.name);
+
+    // Form
+    document.getElementById('profName').value = u.name;
+    document.getElementById('profId').value = u.studentId;
+    document.getElementById('profEmail').value = u.email;
+    document.getElementById('profContact').value = u.contact || '';
+    
+    document.getElementById('profHasDisability').checked = !!u.hasDisability;
+    document.getElementById('profDisabilityType').value = u.disabilityType || '';
+    document.getElementById('profNcpwd').value = u.ncpwdNumber || '';
+    
+    toggleDisabilityFields();
+  }
+
+  function renderAvatar(photoUrl, name) {
+    const c = document.getElementById('avatarContainer');
+    if (photoUrl) {
+      c.innerHTML = `<img src="${photoUrl}" class="profile-avatar"/>`;
+    } else {
+      c.innerHTML = `<div class="profile-avatar-fallback">${name.charAt(0).toUpperCase()}</div>`;
+    }
+  }
+
+  function handlePhotoSelect(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      showAlert(document.getElementById('pageAlert'), 'error', 'Photo must be less than 5MB.');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      document.getElementById('photoData').value = e.target.result;
+      renderAvatar(e.target.result, document.getElementById('profName').value || 'U');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function toggleDisabilityFields() {
+    const hasDis = document.getElementById('profHasDisability').checked;
+    const f = document.getElementById('disabilityFields');
+    if (hasDis) {
+      f.classList.remove('hidden');
+      document.getElementById('profDisabilityType').required = true;
+      document.getElementById('profNcpwd').required = true;
+    } else {
+      f.classList.add('hidden');
+      document.getElementById('profDisabilityType').required = false;
+      document.getElementById('profNcpwd').required = false;
+    }
+  }
+
+  async function handleProfileUpdate(e) {
+    e.preventDefault();
+    const btn = document.getElementById('saveProfileBtn');
+    btn.disabled = true; btn.textContent = 'Saving...';
+    document.getElementById('pageAlert').classList.add('hidden');
+
+    const hasDisability = document.getElementById('profHasDisability').checked;
+    const payload = {
+      name: document.getElementById('profName').value.trim(),
+      email: document.getElementById('profEmail').value.trim(),
+      contact: document.getElementById('profContact').value.trim(),
+      hasDisability,
+      disabilityType: hasDisability ? document.getElementById('profDisabilityType').value : null,
+      ncpwdNumber: hasDisability ? document.getElementById('profNcpwd').value.trim() : null,
+      passportPhoto: document.getElementById('photoData').value || null
+    };
+
+    const res = await api.put('/profile', payload);
+    btn.disabled = false; btn.textContent = 'Save Changes';
+
+    if (res && res.data.success) {
+      showAlert(document.getElementById('pageAlert'), 'success', 'Profile updated successfully.');
+      document.getElementById('hdrName').textContent = payload.name;
+      // Update sidebar
+      const session = JSON.parse(localStorage.getItem('tukac_user'));
+      session.name = payload.name;
+      localStorage.setItem('tukac_user', JSON.stringify(session));
+      initSidebar(); // Refresh sidebar name
+    } else {
+      showAlert(document.getElementById('pageAlert'), 'error', res?.data?.message || 'Failed to update profile.');
+    }
+  }
+
+  async function handlePasswordUpdate(e) {
+    e.preventDefault();
+    const btn = document.getElementById('savePwdBtn');
+    const alert = document.getElementById('pwdAlert');
+    btn.disabled = true; btn.textContent = 'Updating...';
+    alert.classList.add('hidden');
+
+    const res = await api.put('/profile/password', {
+      currentPassword: document.getElementById('pwdCurrent').value,
+      newPassword: document.getElementById('pwdNew').value
+    });
+
+    btn.disabled = false; btn.textContent = 'Update Password';
+
+    if (res && res.data.success) {
+      showAlert(alert, 'success', 'Password updated successfully.');
+      document.getElementById('passwordForm').reset();
+    } else {
+      showAlert(alert, 'error', res?.data?.message || 'Failed to update password.');
+    }
+  }
+
+  // Transactions
+  async function loadMyTransactions() {
+    const res = await api.get('/profile/transactions');
+    if (!res || !res.data.success) return;
+    const txs = res.data.data;
+    const tbody = document.getElementById('myTxTableBody');
+    if (!txs.length) { 
+      tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state"><div class="empty-icon">💸</div><h3>No transactions found</h3></div></td></tr>`; 
+      return; 
+    }
+    tbody.innerHTML = txs.map(t => `
+      <tr>
+        <td>${t.transactionDate}</td>
+        <td style="font-weight:600;">${t.description||'—'}</td>
+        <td><span class="badge ${t.type==='income'?'badge-success':'badge-danger'}">${t.type}</span></td>
+        <td class="${t.type==='income'?'text-success':'text-danger'}" style="font-weight:600">${t.type==='income'?'+':'-'}${formatCurrency(t.amount)}</td>
+      </tr>`).join('');
+  }
+
+  async function handleMyTxSubmit(e) {
+    e.preventDefault();
+    const btn = document.getElementById('txSubmitBtn');
+    btn.disabled = true; btn.textContent = 'Submitting...';
+    
+    const payload = {
+      type: document.getElementById('txType').value,
+      description: document.getElementById('txDesc').value.trim(),
+      amount: parseFloat(document.getElementById('txAmount').value),
+      transactionDate: document.getElementById('txDate').value,
+      category: 'Member Payment'
+    };
+
+    const res = await api.post('/transactions', payload);
+    btn.disabled = false; btn.textContent = 'Submit';
+    
+    if (res && res.data.success) {
+      document.getElementById('txModal').classList.add('hidden');
+      document.getElementById('txForm').reset();
+      document.getElementById('txDate').value = new Date().toISOString().split('T')[0];
+      showAlert(document.getElementById('pageAlert'), 'success', 'Payment recorded successfully!');
+      loadMyTransactions();
+    } else {
+      showAlert(document.getElementById('txAlert'), 'error', res?.data?.message || 'Failed to record transaction');
+    }
+  }
+</script>
+</body>
+</html>

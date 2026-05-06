@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard | TUKAC Portal</title>
+  <meta name="description" content="TUK Ability Club dashboard showing live stats for events, blog posts, and club finances."/>
+  <link rel="stylesheet" href="/css/style.css"/>
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <div class="brand-icon"><img src="/logo.svg" alt="TUKAC Logo"/></div>
+        <div>
+          <div class="brand-text">TUKAC</div>
+          <div class="brand-subtitle">Ability Club Portal</div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main Menu</div>
+      <a href="/dashboard.html" class="nav-item" data-page="dashboard.html">
+        <span class="nav-icon">🏠</span> Dashboard
+      </a>
+      <a href="/events.html" class="nav-item" data-page="events.html">
+        <span class="nav-icon">📅</span> Events
+      </a>
+      <a href="/finances.html" class="nav-item" data-page="finances.html">
+        <span class="nav-icon">💰</span> Finances
+      </a>
+      <a href="/blog.html" class="nav-item" data-page="blog.html">
+        <span class="nav-icon">✍️</span> Blog
+      </a>
+      <a href="/about.html" class="nav-item" data-page="about.html"><span class="nav-icon">ℹ️</span> About</a>
+      <a href="/profile.html" class="nav-item" data-page="profile.html"><span class="nav-icon">👤</span> My Profile</a>
+
+      <div id="execSection" class="hidden">
+        <div class="nav-section-label">Management</div>
+        <a href="/events.html" class="nav-item" data-page="events.html">
+          <span class="nav-icon">⚙️</span> Manage Events
+        </a>
+        <a href="/finances.html" class="nav-item" data-page="finances.html">
+          <span class="nav-icon">⚙️</span> Manage Finances
+        </a>
+        <a href="/blog.html" class="nav-item" data-page="blog.html">
+          <span class="nav-icon">⚙️</span> Manage Blog
+        </a>
+      </div>
+
+      <div id="adminSection" class="hidden">
+        <div class="nav-section-label">Admin</div>
+        <a href="/admin.html" class="nav-item" data-page="admin.html">
+          <span class="nav-icon">👥</span> Manage Users
+        </a>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-info-box">
+        <div class="user-avatar" id="userAvatar">?</div>
+        <div>
+          <div class="user-name" id="userName">Loading...</div>
+          <div class="user-role" id="userRole">member</div>
+        </div>
+      </div>
+      <button class="btn btn-danger w-full btn-sm" onclick="logout()">← Logout</button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div>
+        <div class="topbar-title">Dashboard</div>
+        <div class="topbar-subtitle">Welcome back, <span id="welcomeName">...</span>!</div>
+      </div>
+      <div class="flex gap-2">
+        <span id="topbarDate" class="text-sm text-muted"></span>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="page-header">
+        <h1>Overview</h1>
+        <p>Live statistics for TUK Ability Club</p>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid" id="statsGrid">
+        <div class="loading"><div class="spinner"></div>Loading stats...</div>
+      </div>
+
+      <!-- Quick Info Row -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px;" id="quickInfo">
+        <!-- Upcoming events quick list -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">📅 Recent Events</div>
+              <div class="card-subtitle">Next upcoming events</div>
+            </div>
+            <a href="/events.html" class="btn btn-outline btn-sm">View All</a>
+          </div>
+          <div class="card-body" id="recentEvents">
+            <div class="loading"><div class="spinner"></div></div>
+          </div>
+        </div>
+
+        <!-- Recent transactions -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">💰 Recent Transactions</div>
+              <div class="card-subtitle">Latest financial activity</div>
+            </div>
+            <a href="/finances.html" class="btn btn-outline btn-sm">View All</a>
+          </div>
+          <div class="card-body" id="recentTx">
+            <div class="loading"><div class="spinner"></div></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="/js/api.js"></script>
+<script>
+  if (!requireAuth()) { /* redirect happens inside */ }
+
+  const user = getUser();
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    initSidebar();
+
+    const welcomeName = document.getElementById('welcomeName');
+    if (welcomeName) welcomeName.textContent = user?.name || 'User';
+
+    const dateEl = document.getElementById('topbarDate');
+    if (dateEl) dateEl.textContent = new Date().toLocaleDateString('en-KE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+    await loadStats();
+    await loadRecentEvents();
+    await loadRecentTransactions();
+  });
+
+  async function loadStats() {
+    const res = await api.get('/dashboard/stats');
+    const grid = document.getElementById('statsGrid');
+    if (!res || !res.data.success) {
+      grid.innerHTML = `<div class="alert alert-error">Failed to load stats.</div>`;
+      return;
+    }
+    const { eventCount, blogCount, balance, memberCount } = res.data.data;
+    grid.innerHTML = `
+      <a href="/events.html" class="stat-card primary" style="text-decoration:none;display:block;cursor:pointer;">
+        <div class="stat-icon primary">📅</div>
+        <div class="stat-value">${eventCount}</div>
+        <div class="stat-label">Total Events</div>
+        <div style="font-size:11px;color:var(--navy-light);margin-top:6px;font-weight:600;">View Events →</div>
+      </a>
+      <a href="/finances.html" class="stat-card success" style="text-decoration:none;display:block;cursor:pointer;">
+        <div class="stat-icon success">💰</div>
+        <div class="stat-value">${formatCurrency(balance)}</div>
+        <div class="stat-label">Club Balance</div>
+        <div style="font-size:11px;color:var(--green);margin-top:6px;font-weight:600;">View Finances →</div>
+      </a>
+      <a href="/blog.html" class="stat-card warning" style="text-decoration:none;display:block;cursor:pointer;">
+        <div class="stat-icon warning">✍️</div>
+        <div class="stat-value">${blogCount}</div>
+        <div class="stat-label">Blog Posts</div>
+        <div style="font-size:11px;color:var(--gold);margin-top:6px;font-weight:600;">View Blog →</div>
+      </a>
+      <a href="/admin.html" class="stat-card info" style="text-decoration:none;display:block;cursor:pointer;">
+        <div class="stat-icon info">👥</div>
+        <div class="stat-value">${memberCount}</div>
+        <div class="stat-label">Members</div>
+        <div style="font-size:11px;color:var(--info);margin-top:6px;font-weight:600;">Manage Users →</div>
+      </a>`;
+  }
+
+  async function loadRecentEvents() {
+    const res = await api.get('/events');
+    const el = document.getElementById('recentEvents');
+    if (!res || !res.data.success || !res.data.data.length) {
+      el.innerHTML = '<p class="text-muted text-sm">No events found.</p>';
+      return;
+    }
+    const events = res.data.data.slice(0, 4);
+    el.innerHTML = events.map(e => `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--navy);">${e.title}</div>
+          <div style="font-size:11px;color:var(--text-muted);">📍 ${e.location || 'TBA'} &bull; ${e.eventDate}</div>
+        </div>
+        <span class="badge badge-primary">${e.rsvpCount} RSVPs</span>
+      </div>`).join('');
+  }
+
+  async function loadRecentTransactions() {
+    const res = await api.get('/transactions');
+    const el = document.getElementById('recentTx');
+    if (!res || !res.data.success || !res.data.data.transactions.length) {
+      el.innerHTML = '<p class="text-muted text-sm">No transactions yet.</p>';
+      return;
+    }
+    const txs = res.data.data.transactions.slice(0, 4);
+    el.innerHTML = txs.map(t => `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);">
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--navy);">${t.description || t.category || 'Transaction'}</div>
+          <div style="font-size:11px;color:var(--text-muted);">${t.transactionDate}</div>
+        </div>
+        <span class="${t.type === 'income' ? 'text-success' : 'text-danger'}" style="font-weight:700;font-size:13px;">
+          ${t.type === 'income' ? '+' : '-'}${formatCurrency(t.amount)}
+        </span>
+      </div>`).join('');
+  }
+</script>
+</body>
+</html>

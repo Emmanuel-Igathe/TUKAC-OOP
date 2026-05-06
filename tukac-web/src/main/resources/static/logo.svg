@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 220" width="200" height="220">
+  <!-- Flame -->
+  <g transform="translate(100,18)">
+    <path d="M0,-14 C-4,-8 -8,0 -5,6 C-2,10 2,10 5,6 C8,0 4,-8 0,-14 Z" fill="#C8921A"/>
+    <path d="M0,-8 C-2,-4 -4,0 -2.5,3 C-1,5 1,5 2.5,3 C4,0 2,-4 0,-8 Z" fill="#E5A820"/>
+  </g>
+
+  <!-- Shield outline (dark green border) -->
+  <path d="M100,28 L170,52 L170,120 C170,165 100,195 100,195 C100,195 30,165 30,120 L30,52 Z"
+        fill="#1A6B3C" />
+
+  <!-- Shield inner (white gap) -->
+  <path d="M100,34 L164,56 L164,120 C164,160 100,188 100,188 C100,188 36,160 36,120 L36,56 Z"
+        fill="white"/>
+
+  <!-- Top-left quadrant: Gold (wheelchair icon) -->
+  <path d="M100,34 L36,56 L36,120 L36,111 L100,111 Z" fill="#C8921A"/>
+  <!-- Top-right quadrant: Navy (ear icon) -->
+  <path d="M100,34 L164,56 L164,111 L100,111 Z" fill="#003366"/>
+  <!-- Bottom-left quadrant: Navy (braille dots) -->
+  <path d="M36,111 L100,111 L100,188 C100,188 36,160 36,120 Z" fill="#003366"/>
+  <!-- Bottom-right quadrant: Gold (brain icon) -->
+  <path d="M100,111 L164,111 L164,120 C164,160 100,188 100,188 Z" fill="#C8921A"/>
+
+  <!-- Dividing lines -->
+  <line x1="100" y1="37" x2="100" y2="186" stroke="white" stroke-width="2.5"/>
+  <line x1="37" y1="111" x2="163" y2="111" stroke="white" stroke-width="2.5"/>
+
+  <!-- Wheelchair icon (top-left, gold quad) -->
+  <g transform="translate(55,65)" fill="white">
+    <!-- head -->
+    <circle cx="12" cy="3" r="3"/>
+    <!-- body/seat -->
+    <path d="M9,7 L9,17 L16,17 L19,23" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <!-- wheel -->
+    <circle cx="11" cy="23" r="4" stroke="white" stroke-width="1.8" fill="none"/>
+    <!-- arm -->
+    <path d="M9,12 L17,12" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- Ear icon (top-right, navy quad) -->
+  <g transform="translate(110,62)" fill="none" stroke="white" stroke-width="1.8">
+    <path d="M10,3 C16,3 21,8 21,14 C21,20 17,23 15,25 C13,27 13,30 13,30 L10,30"/>
+    <path d="M10,23 C12,23 14,21 14,18 C14,15 12,13 10,13"/>
+    <line x1="7" y1="3" x2="4" y2="8" stroke-width="2" stroke-linecap="round"/>
+  </g>
+
+  <!-- Braille dots (bottom-left, navy quad) -->
+  <g fill="white">
+    <circle cx="57" cy="128" r="3"/><circle cx="57" cy="140" r="3"/><circle cx="57" cy="152" r="3"/>
+    <circle cx="68" cy="128" r="3"/><circle cx="68" cy="140" r="3"/><circle cx="68" cy="152" r="3"/>
+    <circle cx="79" cy="128" r="3"/><circle cx="79" cy="140" r="3"/>
+    <circle cx="90" cy="128" r="3"/><circle cx="90" cy="152" r="3"/>
+  </g>
+
+  <!-- Brain/head icon (bottom-right, gold quad) -->
+  <g transform="translate(108,120)" fill="none" stroke="white" stroke-width="1.7">
+    <!-- head silhouette -->
+    <path d="M15,55 C8,55 3,49 3,40 C3,30 10,22 15,22 C20,22 27,30 27,40 C27,49 22,55 15,55 Z"/>
+    <!-- brain squiggle -->
+    <path d="M8,35 C10,32 12,36 14,33 C16,30 18,34 20,32"/>
+    <path d="M8,41 C10,38 13,42 16,39 C18,37 20,40 22,38"/>
+    <!-- neck -->
+    <line x1="11" y1="55" x2="11" y2="62"/><line x1="19" y1="55" x2="19" y2="62"/>
+    <line x1="8" y1="62" x2="22" y2="62"/>
+  </g>
+</svg>
