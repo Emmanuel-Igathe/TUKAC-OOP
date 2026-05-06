@@ -42,6 +42,15 @@ public class User {
     @Column(name = "updated_at")
     private Long updatedAt;
 
+    // Legacy constructor for backward compatibility with Swing UI
+    public User(int id, String name, String studentId, String email, String role) {
+        this.id = (long) id;
+        this.name = name;
+        this.studentId = studentId;
+        this.email = email;
+        this.role = role;
+    }
+
     @PrePersist
     protected void onCreate() {
         createdAt = System.currentTimeMillis();
