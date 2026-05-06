@@ -6,6 +6,7 @@ com\tukac\ui\ThemeManager$2.class
 com\tukac\ui\panels\MemberDirectoryPanel.class
 com\tukac\ui\panels\SiteLoginPage.class
 com\tukac\ui\panels\MainFrame$2.class
+com\tukac\App.class
 com\tukac\ui\panels\SiteAboutPage.class
 com\tukac\ui\panels\EventsPanel.class
 com\tukac\ui\panels\MemberDirectoryPanel$1.class
@@ -17,6 +18,7 @@ com\tukac\ui\panels\MemberHomePanel$4.class
 com\tukac\ui\panels\AboutPanel.class
 com\tukac\ui\panels\ManageEventsPanel$1.class
 com\tukac\db\Database.class
+com\tukac\App$1.class
 com\tukac\ui\panels\MainFrame$1.class
 com\tukac\ui\panels\MemberHomePanel$3.class
 com\tukac\ui\panels\BlogPanel.class
