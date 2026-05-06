@@ -143,7 +143,7 @@ public class LoginPanel extends JPanel {
                     parentFrame.getContentPane().add(new MemberHomePanel(parentFrame, user));
                 } else {
                     // Executives and Admins get the dashboard with sidebar
-                    parentFrame.getContentPane().add(new DashboardPanel(parentFrame, user));
+                    parentFrame.getContentPane().add(new DashboardPanel((MainFrame)parentFrame, user));
                 }
 
                 parentFrame.revalidate();
