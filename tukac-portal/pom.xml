@@ -44,13 +44,6 @@
             <artifactId>sqlite-jdbc</artifactId>
             <version>3.46.0.0</version>
         </dependency>
-    
-        <!-- SQLite Dialect for Hibernate -->
-        <dependency>
-            <groupId>org.hibernate.dialect</groupId>
-            <artifactId>hibernate-dialect</artifactId>
-            <version>3.0.0</version>
-        </dependency>
 
         <!-- Lombok for reducing boilerplate -->
         <dependency>

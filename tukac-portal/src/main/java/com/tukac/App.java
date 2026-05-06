@@ -1,17 +1,12 @@
 package com.tukac;
 
-import com.tukac.ui.panels.MainFrame;
-import javax.swing.SwingUtilities;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+@SpringBootApplication
 public class App {
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                MainFrame frame = new MainFrame();
-                frame.setVisible(true);
-            }
-        });
+        SpringApplication.run(App.class, args);
     }
 }
