@@ -130,9 +130,10 @@ public class LoginPanel extends JPanel {
 
                 String userName = rs.getString("name");
                 String role = rs.getString("role");
-                int userId = rs.getInt("id");
+                Long userId = rs.getLong("id");
+                String studentId = rs.getString("student_id");
 
-                com.tukac.models.User user = new com.tukac.models.User(userId, userName, emailOrId, rs.getString("email"), role);
+                com.tukac.models.User user = new com.tukac.models.User(userId, userName, studentId, rs.getString("email"), role);
                 parentFrame.getContentPane().removeAll();
                 parentFrame.getContentPane().add(new DashboardPanel(parentFrame, user));
                 parentFrame.revalidate();

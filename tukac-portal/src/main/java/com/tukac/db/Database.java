@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Database {
-    private static final String URL = "jdbc:sqlite:tukac.db";
+    private static final String URL = "jdbc:sqlite:../tukac.db";
     private static Connection connection;
 
     public static Connection getConnection() throws SQLException {
@@ -29,6 +29,10 @@ public class Database {
                     role TEXT DEFAULT 'member',
                     is_approved INTEGER DEFAULT 0,
                     contact TEXT,
+                    has_disability INTEGER DEFAULT 0,
+                    disability_type TEXT,
+                    ncpwd_number TEXT,
+                    passport_photo TEXT,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             """);
@@ -100,7 +104,7 @@ public class Database {
             // Default admin
             stmt.execute("""
                 INSERT OR IGNORE INTO users (name, student_id, email, password, role, is_approved)
-                VALUES ('Admin', 'ADMIN001', 'admin@tukac.com', 'admin123', 'admin', 1)
+                VALUES ('Admin', 'ADMIN001', 'admin@tukac.com', 'admin123', 'chairperson', 1)
             """);
 
             System.out.println("Database initialized successfully.");

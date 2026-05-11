@@ -270,7 +270,7 @@ public class ManageFinancesPanel extends JPanel {
             pstmt.setDouble(3, Double.parseDouble(amountField.getText().trim()));
             pstmt.setString(4, (String) categoryCombo.getSelectedItem());
             pstmt.setString(5, dateField.getText().trim());
-            pstmt.setInt(6, currentUser.getId());
+            pstmt.setLong(6, currentUser.getId());
             pstmt.executeUpdate();
 
             JOptionPane.showMessageDialog(this, "Transaction added!");

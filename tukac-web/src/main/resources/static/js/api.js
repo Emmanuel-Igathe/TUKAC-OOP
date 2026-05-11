@@ -25,7 +25,7 @@ function clearSession() {
 
 function requireAuth() {
   if (!getToken()) {
-    window.location.href = '/index.html';
+    window.location.href = '/login.html';
     return false;
   }
   return true;
@@ -57,7 +57,7 @@ async function apiCall(endpoint, options = {}) {
     // Handle 401 - token expired
     if (response.status === 401) {
       clearSession();
-      window.location.href = '/index.html';
+      window.location.href = '/login.html';
       return null;
     }
 
@@ -165,5 +165,5 @@ function initSidebar() {
 
 function logout() {
   clearSession();
-  window.location.href = '/index.html';
+  window.location.href = '/login.html';
 }

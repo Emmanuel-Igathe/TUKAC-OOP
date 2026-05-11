@@ -199,7 +199,7 @@ public class ManageEventsPanel extends JPanel {
             pstmt.setString(4, timeField.getText().trim());
             pstmt.setString(5, locationField.getText().trim());
             pstmt.setInt(6, Integer.parseInt(capacityField.getText().trim().isEmpty() ? "0" : capacityField.getText().trim()));
-            pstmt.setInt(7, currentUser.getId());
+            pstmt.setLong(7, currentUser.getId());
             pstmt.executeUpdate();
             JOptionPane.showMessageDialog(this, "Event added!");
             clearForm();

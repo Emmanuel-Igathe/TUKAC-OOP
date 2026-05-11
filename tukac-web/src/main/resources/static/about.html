@@ -131,7 +131,9 @@
       <a href="/events.html"    class="nav-item" data-page="events.html"><span class="nav-icon">📅</span> Events</a>
       <a href="/finances.html"  class="nav-item" data-page="finances.html"><span class="nav-icon">💰</span> Finances</a>
       <a href="/blog.html"      class="nav-item" data-page="blog.html"><span class="nav-icon">✍️</span> Blog</a>
-      <a href="/about.html"     class="nav-item" data-page="about.html"><span class="nav-icon">ℹ️</span> About</a>`n      <a href="/profile.html" class="nav-item" data-page="profile.html"><span class="nav-icon">??</span> My Profile</a>
+      <a href="/forum.html"     class="nav-item" data-page="forum.html"><span class="nav-icon">💬</span> Forum</a>
+      <a href="/about.html"     class="nav-item" data-page="about.html"><span class="nav-icon">ℹ️</span> About</a>
+      <a href="/profile.html" class="nav-item" data-page="profile.html"><span class="nav-icon">👤</span> My Profile</a>
       <div id="execSection" class="hidden">
         <div class="nav-section-label">Management</div>
         <a href="/events.html"   class="nav-item"><span class="nav-icon">⚙️</span> Manage Events</a>
@@ -190,13 +192,19 @@
   const isChair = user && user.role === 'chairperson';
 
   let aboutData = null;
+  let executivesData = [];
 
   document.addEventListener('DOMContentLoaded', async () => {
     initSidebar();
     if (isChair) document.getElementById('editAboutBtn').classList.remove('hidden');
-    await loadAbout();
+    await Promise.all([loadAbout(), loadExecutives()]);
   });
 
+  async function loadExecutives() {
+    const res = await fetch('/api/public/executives');
+    const data = await res.json();
+    if (data.success) executivesData = data.data;
+  }
   async function loadAbout() {
     const res = await api.get('/about');
     if (!res || !res.data.success) {
@@ -273,50 +281,40 @@
           <div class="section-title">📞 Contact Information</div>
         </div>
         <div class="contact-grid">
+          <!-- Club Email (manually set by admin) -->
           <div class="contact-card">
             <div class="contact-icon navy">✉️</div>
             <div>
               <div class="contact-label">Club Email</div>
-              <div class="contact-value"><a href="mailto:${escHtml(contact.email||'')}" style="color:var(--navy);">${escHtml(contact.email || '—')}</a></div>
+              <div class="contact-value"><a href="mailto:${escHtml(contact.email||'')}" style="color:var(--navy);">${escHtml(contact.email || 'Not set yet')}</a></div>
             </div>
           </div>
-          <div class="contact-card">
-            <div class="contact-icon gold">👤</div>
-            <div>
-              <div class="contact-label">Chairperson</div>
-              <div class="contact-value">${escHtml(contact.chairperson?.name || '—')}</div>
-              <div class="contact-sub">📞 ${escHtml(contact.chairperson?.phone || '—')}</div>
-            </div>
-          </div>
-          <div class="contact-card">
-            <div class="contact-icon green">👤</div>
-            <div>
-              <div class="contact-label">Vice Chairperson</div>
-              <div class="contact-value">${escHtml(contact.viceChairperson?.name || '—')}</div>
-              <div class="contact-sub">📞 ${escHtml(contact.viceChairperson?.phone || '—')}</div>
-            </div>
-          </div>
-          <div class="contact-card">
-            <div class="contact-icon navy">📋</div>
-            <div>
-              <div class="contact-label">Secretary</div>
-              <div class="contact-value">${escHtml(contact.secretary?.name || '—')}</div>
-              ${contact.secretary?.phone ? `<div class="contact-sub">📞 ${escHtml(contact.secretary.phone)}</div>` : ''}
-            </div>
-          </div>
-          <div class="contact-card">
-            <div class="contact-icon gold">💰</div>
-            <div>
-              <div class="contact-label">Treasurer</div>
-              <div class="contact-value">${escHtml(contact.treasurer?.name || '—')}</div>
-              ${contact.treasurer?.phone ? `<div class="contact-sub">📞 ${escHtml(contact.treasurer.phone)}</div>` : ''}
-            </div>
-          </div>
+          <!-- Dynamic executives from DB -->
+          ${executivesData.length ? executivesData.map(e => {
+            const roleIcons = { 'chairperson': '👑', 'vice-chairperson': '🤝', 'secretary': '📋', 'treasurer': '💰' };
+            const roleColors = { 'chairperson': 'gold', 'vice-chairperson': 'green', 'secretary': 'navy', 'treasurer': 'gold' };
+            const roleLabel = e.role.replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+            return `
+            <div class="contact-card">
+              <div class="contact-icon ${roleColors[e.role] || 'navy'}">${roleIcons[e.role] || '👤'}</div>
+              <div>
+                <div class="contact-label">${escHtml(roleLabel)}</div>
+                <div class="contact-value">${escHtml(e.name)}</div>
+                ${e.contact ? `<div class="contact-sub">📞 ${escHtml(e.contact)}</div>` : ''}
+                ${e.email ? `<div class="contact-sub">✉️ <a href="mailto:${escHtml(e.email)}" style="color:var(--text-muted);">${escHtml(e.email)}</a></div>` : ''}
+              </div>
+            </div>`;
+          }).join('') : '<div class="contact-card"><div class="contact-icon navy">ℹ️</div><div><div class="contact-label">Executives</div><div class="contact-value">Not yet assigned</div></div></div>'}
+          <!-- Location (manually set) -->
           <div class="contact-card">
             <div class="contact-icon green">📍</div>
             <div>
               <div class="contact-label">Location</div>
-              <div class="contact-value" style="font-size:13px;">${escHtml(contact.location || 'Technical University of Kenya, Nairobi')}</div>
+              <div class="contact-value" style="font-size:13px;">
+                <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contact.location || 'Technical University of Kenya, Nairobi')}" target="_blank" rel="noopener noreferrer" style="color:var(--navy); text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 2px;" title="View on Google Maps">
+                  ${escHtml(contact.location || 'Technical University of Kenya, Nairobi')}
+                </a>
+              </div>
             </div>
           </div>
         </div>

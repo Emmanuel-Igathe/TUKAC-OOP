@@ -41,7 +41,7 @@ public class TransactionController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('CHAIRPERSON','VICE-CHAIRPERSON','TREASURER','MEMBER')")
+    @PreAuthorize("hasAnyRole('CHAIRPERSON','VICE-CHAIRPERSON','TREASURER')")
     public ResponseEntity<ApiResponse<Transaction>> createTransaction(
             @RequestBody Transaction transaction, Authentication auth) {
         Long userId = (Long) auth.getCredentials();

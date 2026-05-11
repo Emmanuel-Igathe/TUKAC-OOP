@@ -26,8 +26,8 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 // Public endpoints
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/", "/index.html", "/*.html", "/css/**", "/js/**", "/favicon.ico", "/logo.svg").permitAll()
+                .requestMatchers("/api/auth/**", "/api/public/**").permitAll()
+                .requestMatchers("/", "/index.html", "/login.html", "/home.html", "/*.html", "/css/**", "/js/**", "/favicon.ico", "/logo.svg").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/about").authenticated()
 
                 // Chairperson only — user management
@@ -36,6 +36,7 @@ public class SecurityConfig {
                 // GET requests — any authenticated user can read
                 .requestMatchers(HttpMethod.GET, "/api/events", "/api/events/**").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/blog", "/api/blog/**").authenticated()
+                .requestMatchers(HttpMethod.GET, "/api/forum", "/api/forum/**").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/transactions").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/dashboard/**").authenticated()
 

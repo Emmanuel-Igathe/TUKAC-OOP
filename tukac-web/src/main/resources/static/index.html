@@ -3,368 +3,386 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>TUKAC - Sign In | TUK Ability Club Portal</title>
-  <meta name="description" content="Sign in or register for the TUK Ability Club portal."/>
+  <title>TUKAC – TUK Ability Club | Empowering Students With Disabilities</title>
+  <meta name="description" content="The Technical University of Kenya Ability Club (TUKAC) empowers students with disabilities through advocacy, events, and a vibrant community."/>
   <link rel="stylesheet" href="/css/style.css"/>
   <style>
-    /* ── Passport photo upload ── */
-    .photo-upload-area {
-      border: 2px dashed var(--border); border-radius: var(--radius-sm);
-      padding: 18px; text-align: center; cursor: pointer;
-      transition: var(--transition); color: var(--text-muted); font-size: 13px;
-      position: relative;
+    /* ── Landing-page overrides ── */
+    body { background: #fff; }
+
+    /* NAV */
+    .lp-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px; height: 68px;
+      background: rgba(0,34,68,0.92); backdrop-filter: blur(10px);
+      border-bottom: 2px solid rgba(200,146,26,0.4);
+      transition: all 0.3s ease;
     }
-    .photo-upload-area:hover { border-color: var(--primary); color: var(--primary); }
-    .photo-upload-area.has-photo { border-color: var(--success); padding: 6px; }
-    .photo-preview-wrap {
-      display: none; position: relative; width: 90px; height: 90px;
-      margin: 0 auto;
+    .lp-nav-brand { display: flex; align-items: center; gap: 12px; }
+    .lp-nav-brand img { width: 40px; height: 40px; }
+    .lp-nav-brand span { font-size: 18px; font-weight: 800; color: #fff; letter-spacing: .02em; }
+    .lp-nav-links { display: flex; align-items: center; gap: 8px; }
+    .lp-nav-links a {
+      color: rgba(255,255,255,0.75); font-size: 14px; font-weight: 500;
+      padding: 8px 14px; border-radius: 8px; transition: all 0.2s ease;
+      text-decoration: none;
     }
-    .photo-preview-wrap img {
-      width: 90px; height: 90px; border-radius: 50%; object-fit: cover;
-      border: 3px solid var(--success);
+    .lp-nav-links a:hover { color: #fff; background: rgba(255,255,255,0.1); }
+    .lp-nav-links .btn-nav {
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: #fff !important; font-weight: 700;
+      box-shadow: 0 4px 12px rgba(200,146,26,0.35);
     }
-    .photo-preview-wrap .remove-photo {
-      position: absolute; top: -4px; right: -4px;
-      background: var(--danger); color: #fff; border: none;
-      border-radius: 50%; width: 22px; height: 22px; font-size: 12px;
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
+    .lp-nav-links .btn-nav:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(200,146,26,0.45); background: rgba(255,255,255,0.1); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      background: linear-gradient(145deg, var(--navy-dark) 0%, var(--navy) 45%, #0a4a2a 100%);
+      display: flex; align-items: center; justify-content: center;
+      text-align: center; padding: 120px 24px 80px;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background:
+        radial-gradient(circle at 20% 50%, rgba(200,146,26,0.12) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(26,107,60,0.18) 0%, transparent 45%),
+        radial-gradient(circle at 60% 80%, rgba(0,51,102,0.3) 0%, transparent 50%);
+    }
+    .hero-orb {
+      position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.25;
+    }
+    .hero-orb-1 { width: 400px; height: 400px; background: var(--gold); top: -100px; right: -100px; animation: float 8s ease-in-out infinite; }
+    .hero-orb-2 { width: 300px; height: 300px; background: var(--green); bottom: -80px; left: -80px; animation: float 10s ease-in-out infinite reverse; }
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-30px); } }
+
+    .hero-content { position: relative; z-index: 1; max-width: 780px; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(200,146,26,0.15); border: 1px solid rgba(200,146,26,0.4);
+      color: var(--gold-light); font-size: 12px; font-weight: 700;
+      padding: 6px 16px; border-radius: 999px; margin-bottom: 28px;
+      text-transform: uppercase; letter-spacing: .08em;
+      animation: fadeIn 0.6s ease;
+    }
+    .hero h1 {
+      font-size: clamp(2.4rem, 6vw, 4rem); font-weight: 800; color: #fff;
+      line-height: 1.1; margin-bottom: 20px;
+      animation: slideUp 0.7s ease;
+    }
+    .hero h1 span { color: var(--gold-light); }
+    .hero p {
+      font-size: clamp(1rem, 2vw, 1.2rem); color: rgba(255,255,255,0.75);
+      line-height: 1.7; max-width: 580px; margin: 0 auto 40px;
+      animation: slideUp 0.8s ease;
+    }
+    .hero-cta { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; animation: slideUp 0.9s ease; }
+    .btn-hero-primary {
+      padding: 15px 36px; border-radius: 10px; font-size: 15px; font-weight: 700;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: #fff; border: none; cursor: pointer; text-decoration: none;
+      box-shadow: 0 8px 24px rgba(200,146,26,0.4); transition: all 0.25s ease;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-hero-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(200,146,26,0.5); color: #fff; }
+    .btn-hero-outline {
+      padding: 15px 36px; border-radius: 10px; font-size: 15px; font-weight: 700;
+      background: rgba(255,255,255,0.1); border: 1.5px solid rgba(255,255,255,0.35);
+      color: #fff; cursor: pointer; text-decoration: none; transition: all 0.25s ease;
+      display: inline-flex; align-items: center; gap: 8px; backdrop-filter: blur(8px);
+    }
+    .btn-hero-outline:hover { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.6); color: #fff; transform: translateY(-2px); }
+
+    .hero-scroll {
+      position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+      color: rgba(255,255,255,0.4); font-size: 12px; text-align: center;
+      animation: bounce 2s ease-in-out infinite;
+    }
+    @keyframes bounce { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(8px); } }
+
+    /* STATS STRIP */
+    .stats-strip {
+      background: var(--navy-dark);
+      border-bottom: 3px solid var(--gold);
+    }
+    .stats-strip-inner {
+      max-width: 900px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(4,1fr);
+      padding: 32px 24px;
+    }
+    .strip-stat { text-align: center; padding: 8px; }
+    .strip-stat-val { font-size: 32px; font-weight: 800; color: var(--gold-light); line-height: 1; }
+    .strip-stat-lbl { font-size: 12px; color: rgba(255,255,255,0.55); margin-top: 6px; text-transform: uppercase; letter-spacing: .07em; font-weight: 600; }
+    .strip-divider { border-right: 1px solid rgba(255,255,255,0.1); }
+
+    /* SECTION BASE */
+    .lp-section { padding: 90px 24px; }
+    .lp-section-inner { max-width: 1080px; margin: 0 auto; }
+    .section-label {
+      font-size: 11px; font-weight: 800; color: var(--gold);
+      text-transform: uppercase; letter-spacing: .1em; margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 800;
+      color: var(--navy); line-height: 1.2; margin-bottom: 16px;
+    }
+    .section-sub { font-size: 15px; color: var(--text-muted); max-width: 560px; line-height: 1.7; }
+
+    /* ABOUT */
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    .about-visual {
+      border-radius: 20px; overflow: hidden; position: relative;
+      background: linear-gradient(145deg, var(--navy-dark), var(--green-dark));
+      min-height: 380px; display: flex; align-items: center; justify-content: center;
+    }
+    .about-visual-inner { text-align: center; padding: 48px 32px; }
+    .about-visual-icon { font-size: 80px; margin-bottom: 20px; }
+    .about-visual h3 { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 10px; }
+    .about-visual p  { font-size: 14px; color: rgba(255,255,255,0.65); line-height: 1.6; }
+    .about-visual::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+      height: 4px; background: linear-gradient(90deg, var(--gold), var(--green-light));
+    }
+    .about-features { list-style: none; margin-top: 28px; display: flex; flex-direction: column; gap: 14px; }
+    .about-features li {
+      display: flex; align-items: flex-start; gap: 12px;
+      font-size: 14px; color: var(--text-secondary); line-height: 1.5;
+    }
+    .about-features li span.icon {
+      font-size: 20px; flex-shrink: 0; margin-top: 1px;
     }
 
-    /* ── Disability section ── */
-    .disability-section {
-      background: rgba(0,51,102,0.04); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); padding: 16px; margin-top: 4px;
+    /* PILLARS */
+    .pillars-section { background: var(--bg-page); }
+    .pillars-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; margin-top: 48px; }
+    .pillar-card {
+      background: #fff; border: 1px solid var(--border);
+      border-radius: 16px; padding: 32px 24px;
+      transition: all 0.25s ease; position: relative; overflow: hidden;
     }
-    .disability-fields { display: none; margin-top: 14px; }
-    .disability-fields.visible { display: block; }
-    .radio-group { display: flex; gap: 16px; margin-top: 6px; }
-    .radio-option {
-      display: flex; align-items: center; gap: 6px;
-      font-size: 13px; font-weight: 600; cursor: pointer;
+    .pillar-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
     }
-    .radio-option input[type="radio"] { accent-color: var(--navy); width: 16px; height: 16px; }
+    .pillar-card.navy::before { background: linear-gradient(90deg, var(--navy), var(--navy-light)); }
+    .pillar-card.gold::before { background: linear-gradient(90deg, var(--gold), var(--gold-light)); }
+    .pillar-card.green::before { background: linear-gradient(90deg, var(--green), var(--green-light)); }
+    .pillar-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(0,0,0,0.1); }
+    .pillar-icon {
+      width: 56px; height: 56px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px; margin-bottom: 20px;
+    }
+    .pillar-icon.navy { background: rgba(0,51,102,0.1); }
+    .pillar-icon.gold { background: rgba(200,146,26,0.12); }
+    .pillar-icon.green { background: rgba(26,107,60,0.1); }
+    .pillar-card h3 { font-size: 17px; font-weight: 700; color: var(--navy); margin-bottom: 10px; }
+    .pillar-card p  { font-size: 13px; color: var(--text-muted); line-height: 1.65; }
 
-    /* Multi-step indicator */
-    .step-indicator {
-      display: flex; gap: 6px; justify-content: center; margin-bottom: 20px;
+    /* CTA SECTION */
+    .cta-section {
+      background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 60%, #0a4a2a 100%);
+      position: relative; overflow: hidden;
     }
-    .step-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: var(--border); transition: var(--transition);
+    .cta-section::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(circle at 70% 50%, rgba(200,146,26,0.15), transparent 60%);
     }
-    .step-dot.active { background: var(--navy); width: 24px; border-radius: 4px; }
-    .step-dot.done { background: var(--green); }
+    .cta-inner { position: relative; z-index: 1; text-align: center; max-width: 640px; margin: 0 auto; }
+    .cta-inner h2 { font-size: clamp(1.8rem,4vw,2.8rem); font-weight: 800; color: #fff; margin-bottom: 16px; }
+    .cta-inner p  { font-size: 15px; color: rgba(255,255,255,0.7); line-height: 1.7; margin-bottom: 36px; }
+    .cta-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
 
-    /* Form steps */
-    .form-step { display: none; }
-    .form-step.active { display: block; animation: fadeIn 0.25s ease; }
-    .step-nav { display: flex; gap: 8px; margin-top: 16px; }
+    /* FOOTER */
+    .lp-footer {
+      background: var(--navy-dark);
+      border-top: 3px solid var(--gold);
+      padding: 40px 24px;
+    }
+    .lp-footer-inner {
+      max-width: 1080px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;
+    }
+    .lp-footer-brand { display: flex; align-items: center; gap: 12px; }
+    .lp-footer-brand img { width: 36px; height: 36px; }
+    .lp-footer-brand span { font-size: 15px; font-weight: 700; color: rgba(255,255,255,0.8); }
+    .lp-footer p { font-size: 12px; color: rgba(255,255,255,0.4); }
 
-    .auth-card { max-width: 480px; }
+    /* Responsive */
+    @media (max-width: 768px) {
+      .lp-nav { padding: 0 20px; }
+      .lp-nav-links .lp-nav-label { display: none; }
+      .about-grid { grid-template-columns: 1fr; }
+      .pillars-grid { grid-template-columns: 1fr; }
+      .stats-strip-inner { grid-template-columns: repeat(2,1fr); }
+      .strip-divider:nth-child(2) { border-right: none; }
+    }
   </style>
 </head>
 <body>
-<div class="auth-wrapper">
-  <div class="auth-card">
-    <div class="auth-logo">
-      <div class="logo-icon" style="width:80px;height:80px;background:transparent;border-radius:0;box-shadow:none;">
-        <img src="/logo.svg" alt="TUKAC Logo" style="width:80px;height:80px;object-fit:contain;"/>
-      </div>
-      <h1>TUK Ability Club</h1>
-      <p>Technical University of Kenya</p>
+
+<!-- NAV -->
+<nav class="lp-nav">
+  <div class="lp-nav-brand">
+    <img src="/logo.svg" alt="TUKAC Logo"/>
+    <span>TUKAC</span>
+  </div>
+  <div class="lp-nav-links">
+    <a href="#about">About</a>
+    <a href="#pillars">Our Mission</a>
+    <a href="/login.html" class="btn-nav">Member Portal →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-content">
+    <div class="hero-badge">🏫 Technical University of Kenya</div>
+    <h1>Empowering Students<br/>with <span>Disabilities</span></h1>
+    <p>TUKAC is a student-led club dedicated to inclusion, advocacy, and building a supportive community for persons with disabilities at TUK.</p>
+    <div class="hero-cta">
+      <a href="/login.html" class="btn-hero-primary">🚀 Join TUKAC</a>
+      <a href="#about" class="btn-hero-outline">Learn More ↓</a>
     </div>
+  </div>
+  <div class="hero-scroll">▼ scroll</div>
+</section>
 
-    <!-- Tabs -->
-    <div class="auth-tabs">
-      <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">Sign In</button>
-      <button class="auth-tab" id="tab-register" onclick="switchTab('register')">Register</button>
+<!-- STATS STRIP -->
+<div class="stats-strip">
+  <div class="stats-strip-inner">
+    <div class="strip-stat strip-divider">
+      <div class="strip-stat-val" id="statMembers">500+</div>
+      <div class="strip-stat-lbl">Members</div>
     </div>
-
-    <!-- Alert -->
-    <div id="authAlert" class="alert hidden"></div>
-
-    <!-- ══ LOGIN FORM ══════════════════════════════════════════════ -->
-    <form id="loginForm" onsubmit="handleLogin(event)">
-      <div class="form-group">
-        <label for="loginId">Email or Student ID</label>
-        <input type="text" id="loginId" class="form-control" placeholder="e.g. admin@tukac.com" required autocomplete="username"/>
-      </div>
-      <div class="form-group">
-        <label for="loginPassword">Password</label>
-        <input type="password" id="loginPassword" class="form-control" placeholder="Enter your password" required autocomplete="current-password"/>
-      </div>
-      <div class="form-group" style="margin-top:8px;">
-        <button type="submit" id="loginBtn" class="btn btn-primary btn-lg">Sign In</button>
-      </div>
-      <p class="text-center text-sm text-muted" style="margin-top:12px;">
-        Default admin: <strong>admin@tukac.com</strong> / <strong>admin123</strong>
-      </p>
-    </form>
-
-    <!-- ══ REGISTER FORM (multi-step) ═════════════════════════════ -->
-    <div id="registerForm" class="hidden">
-      <!-- Step indicators -->
-      <div class="step-indicator">
-        <div class="step-dot active" id="dot-0"></div>
-        <div class="step-dot" id="dot-1"></div>
-        <div class="step-dot" id="dot-2"></div>
-      </div>
-
-      <!-- STEP 1: Basic Info -->
-      <div class="form-step active" id="step-0">
-        <div style="font-size:12px;font-weight:700;color:var(--text-muted);margin-bottom:14px;text-transform:uppercase;letter-spacing:.06em;">Step 1 of 3 — Personal Information</div>
-        <div class="form-group">
-          <label for="regName">Full Name *</label>
-          <input type="text" id="regName" class="form-control" placeholder="e.g. Jane Wanjiku" required/>
-        </div>
-        <div class="form-group">
-          <label for="regStudentId">Student ID *</label>
-          <input type="text" id="regStudentId" class="form-control" placeholder="e.g. C022-01-1234/2023" required/>
-        </div>
-        <div class="form-group">
-          <label for="regEmail">Email Address *</label>
-          <input type="email" id="regEmail" class="form-control" placeholder="student@students.tukenya.ac.ke" required/>
-        </div>
-        <div class="form-group">
-          <label for="regContact">Phone Number</label>
-          <input type="text" id="regContact" class="form-control" placeholder="e.g. 0712345678"/>
-        </div>
-        <div class="form-group">
-          <label for="regPassword">Password *</label>
-          <input type="password" id="regPassword" class="form-control" placeholder="Choose a strong password" required/>
-        </div>
-        <div class="step-nav">
-          <button type="button" class="btn btn-primary" style="flex:1;" onclick="goStep(1)">Next →</button>
-        </div>
-      </div>
-
-      <!-- STEP 2: Disability Info -->
-      <div class="form-step" id="step-1">
-        <div style="font-size:12px;font-weight:700;color:var(--text-muted);margin-bottom:14px;text-transform:uppercase;letter-spacing:.06em;">Step 2 of 3 — Disability Information</div>
-        <div class="disability-section">
-          <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px;">♿ Do you have a disability?</div>
-          <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">TUKAC is open to all students. This information helps us provide the right support and resources.</p>
-          <div class="radio-group">
-            <label class="radio-option">
-              <input type="radio" name="hasDisability" id="disYes" value="yes" onchange="toggleDisabilityFields(true)"/> Yes
-            </label>
-            <label class="radio-option">
-              <input type="radio" name="hasDisability" id="disNo" value="no" checked onchange="toggleDisabilityFields(false)"/> No
-            </label>
-          </div>
-
-          <!-- Shown only when Yes -->
-          <div class="disability-fields" id="disabilityFields">
-            <div class="form-group" style="margin-top:12px;">
-              <label for="disabilityType">Type of Disability *</label>
-              <select id="disabilityType" class="form-control">
-                <option value="">— Select disability type —</option>
-                <option value="Physical / Motor">Physical / Motor</option>
-                <option value="Visual Impairment">Visual Impairment</option>
-                <option value="Hearing Impairment">Hearing Impairment</option>
-                <option value="Speech / Communication">Speech / Communication</option>
-                <option value="Intellectual / Cognitive">Intellectual / Cognitive</option>
-                <option value="Psychosocial / Mental Health">Psychosocial / Mental Health</option>
-                <option value="Multiple Disabilities">Multiple Disabilities</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="ncpwdNumber">NCPwD Certificate Number *</label>
-              <input type="text" id="ncpwdNumber" class="form-control" placeholder="e.g. NCPWD/2023/12345"/>
-              <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">National Council for Persons with Disabilities registration number.</div>
-            </div>
-          </div>
-        </div>
-        <div class="step-nav">
-          <button type="button" class="btn btn-outline" onclick="goStep(0)">← Back</button>
-          <button type="button" class="btn btn-primary" style="flex:1;" onclick="goStep(2)">Next →</button>
-        </div>
-      </div>
-
-      <!-- STEP 3: Passport Photo -->
-      <div class="form-step" id="step-2">
-        <div style="font-size:12px;font-weight:700;color:var(--text-muted);margin-bottom:14px;text-transform:uppercase;letter-spacing:.06em;">Step 3 of 3 — Passport Photo</div>
-        <div class="form-group">
-          <label>Upload Passport Photo *</label>
-          <div class="photo-upload-area" id="photoUploadArea" onclick="document.getElementById('passportPhotoInput').click()">
-            <div id="photoUploadPlaceholder">
-              <div style="font-size:32px;margin-bottom:8px;">📷</div>
-              <div style="font-weight:600;">Click to upload your photo</div>
-              <div style="font-size:11px;margin-top:4px;">JPG or PNG, max 5MB. Clear face photo on white background preferred.</div>
-            </div>
-            <div class="photo-preview-wrap" id="photoPreviewWrap">
-              <img id="photoPreviewImg" src="" alt="Passport photo preview"/>
-              <button type="button" class="remove-photo" onclick="event.stopPropagation();removePhoto()">✕</button>
-            </div>
-          </div>
-          <input type="file" id="passportPhotoInput" accept="image/jpeg,image/png,image/jpg" style="display:none;" onchange="handlePhotoSelect(event)"/>
-          <input type="hidden" id="passportPhotoData"/>
-        </div>
-        <p style="font-size:12px;color:var(--text-muted);margin-bottom:16px;">Your photo will be used for identification by club administrators. It will not be shared publicly.</p>
-        <div class="step-nav">
-          <button type="button" class="btn btn-outline" onclick="goStep(1)">← Back</button>
-          <button type="button" class="btn btn-primary" style="flex:1;" id="registerBtn" onclick="handleRegister()">Create Account ✓</button>
-        </div>
-        <p class="text-center text-sm text-muted" style="margin-top:12px;">Registration requires admin approval before login.</p>
-      </div>
+    <div class="strip-stat strip-divider">
+      <div class="strip-stat-val" id="statEvents">50+</div>
+      <div class="strip-stat-lbl">Events Hosted</div>
     </div>
-
+    <div class="strip-stat strip-divider">
+      <div class="strip-stat-val" id="statYears">8+</div>
+      <div class="strip-stat-lbl">Years Active</div>
+    </div>
+    <div class="strip-stat">
+      <div class="strip-stat-val">100%</div>
+      <div class="strip-stat-lbl">Inclusive</div>
+    </div>
   </div>
 </div>
 
-<script src="/js/api.js"></script>
+<!-- ABOUT -->
+<section class="lp-section" id="about">
+  <div class="lp-section-inner">
+    <div class="about-grid">
+      <div class="about-visual">
+        <div class="about-visual-inner">
+          <div class="about-visual-icon">♿</div>
+          <h3>Ability Above All</h3>
+          <p>We believe every student has the right to a full, enriching campus experience regardless of their disability.</p>
+        </div>
+      </div>
+      <div>
+        <div class="section-label">Who We Are</div>
+        <h2 class="section-title">A Community Built on Inclusion & Strength</h2>
+        <p class="section-sub">The TUK Ability Club (TUKAC) was founded to create a safe, empowering space for students with physical, sensory, cognitive, and psychosocial disabilities at the Technical University of Kenya.</p>
+        <ul class="about-features">
+          <li><span class="icon">🤝</span><div><strong>Peer Support Network</strong> — Connect with fellow students who understand your journey and share resources.</div></li>
+          <li><span class="icon">📣</span><div><strong>Advocacy & Rights</strong> — We work with university management to improve accessibility and disability-inclusive policies.</div></li>
+          <li><span class="icon">🎓</span><div><strong>Academic Empowerment</strong> — Study groups, tutoring links, and academic accommodation guidance.</div></li>
+          <li><span class="icon">🏅</span><div><strong>Events & Competitions</strong> — Sports, cultural events, and leadership opportunities open to all members.</div></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PILLARS -->
+<section class="lp-section pillars-section" id="pillars">
+  <div class="lp-section-inner">
+    <div style="text-align:center; max-width:560px; margin: 0 auto;">
+      <div class="section-label">Our Mission Pillars</div>
+      <h2 class="section-title">Three Pillars of Everything We Do</h2>
+      <p class="section-sub" style="margin: 0 auto;">Every initiative, event, and decision at TUKAC is guided by these core commitments.</p>
+    </div>
+    <div class="pillars-grid">
+      <div class="pillar-card navy">
+        <div class="pillar-icon navy">🛡️</div>
+        <h3>Advocacy</h3>
+        <p>We actively push for accessible infrastructure, inclusive policies, and fair treatment for students with disabilities across the university.</p>
+      </div>
+      <div class="pillar-card gold">
+        <div class="pillar-icon gold">🌟</div>
+        <h3>Empowerment</h3>
+        <p>Through skill-building workshops, mentorship, and leadership programs, we help every member unlock their full potential.</p>
+      </div>
+      <div class="pillar-card green">
+        <div class="pillar-icon green">🤲</div>
+        <h3>Community</h3>
+        <p>Belonging matters. We foster genuine friendships, peer support systems, and a culture where no student feels alone.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="lp-section cta-section">
+  <div class="lp-section-inner">
+    <div class="cta-inner">
+      <h2>Ready to Be Part of Something Meaningful?</h2>
+      <p>Join hundreds of students who have found community, support, and opportunity through TUKAC. Registration is free and open to all TUK students.</p>
+      <div class="cta-btns">
+        <a href="/login.html" class="btn-hero-primary">🚀 Register Now</a>
+        <a href="/login.html" class="btn-hero-outline">Sign In →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="lp-footer">
+  <div class="lp-footer-inner">
+    <div class="lp-footer-brand">
+      <img src="/logo.svg" alt="TUKAC"/>
+      <span>TUK Ability Club</span>
+    </div>
+    <p>© 2025 TUKAC — Technical University of Kenya. All rights reserved.</p>
+    <a href="/login.html" style="font-size:13px; color:var(--gold-light); font-weight:600;">Member Portal →</a>
+  </div>
+</footer>
+
 <script>
-  // Redirect if already logged in
-  if (getToken()) window.location.href = '/dashboard.html';
-
-  // ── Tab switching ─────────────────────────────────────────────
-  function switchTab(tab) {
-    const isLogin = tab === 'login';
-    document.getElementById('loginForm').classList.toggle('hidden', !isLogin);
-    document.getElementById('registerForm').classList.toggle('hidden', isLogin);
-    document.getElementById('tab-login').classList.toggle('active', isLogin);
-    document.getElementById('tab-register').classList.toggle('active', !isLogin);
-    document.getElementById('authAlert').classList.add('hidden');
-    if (!isLogin) goStep(0);
-  }
-
-  // ── Multi-step registration ───────────────────────────────────
-  let currentStep = 0;
-  const totalSteps = 3;
-
-  function goStep(step) {
-    // Validate current step before advancing
-    if (step > currentStep && !validateStep(currentStep)) return;
-
-    document.querySelectorAll('.form-step').forEach((el, i) => {
-      el.classList.toggle('active', i === step);
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' });
     });
-    for (let i = 0; i < totalSteps; i++) {
-      const dot = document.getElementById('dot-' + i);
-      dot.classList.toggle('active', i === step);
-      dot.classList.toggle('done', i < step);
-    }
-    currentStep = step;
-    document.getElementById('authAlert').classList.add('hidden');
-  }
+  });
 
-  function validateStep(step) {
-    const alert = document.getElementById('authAlert');
-    if (step === 0) {
-      const name     = document.getElementById('regName').value.trim();
-      const sid      = document.getElementById('regStudentId').value.trim();
-      const email    = document.getElementById('regEmail').value.trim();
-      const password = document.getElementById('regPassword').value;
-      if (!name)     { showAlert(alert, 'error', 'Full name is required.'); return false; }
-      if (!sid)      { showAlert(alert, 'error', 'Student ID is required.'); return false; }
-      if (!email)    { showAlert(alert, 'error', 'Email is required.'); return false; }
-      if (!email.includes('@')) { showAlert(alert, 'error', 'Please enter a valid email address.'); return false; }
-      if (password.length < 6) { showAlert(alert, 'error', 'Password must be at least 6 characters.'); return false; }
-    }
-    if (step === 1) {
-      const hasDisability = document.getElementById('disYes').checked;
-      if (hasDisability) {
-        const type = document.getElementById('disabilityType').value;
-        const ncpwd = document.getElementById('ncpwdNumber').value.trim();
-        if (!type) { showAlert(alert, 'error', 'Please select your disability type.'); return false; }
-        if (!ncpwd) { showAlert(alert, 'error', 'NCPwD certificate number is required.'); return false; }
+  // Navbar shadow on scroll
+  window.addEventListener('scroll', () => {
+    document.querySelector('.lp-nav').style.boxShadow =
+      window.scrollY > 20 ? '0 4px 24px rgba(0,0,0,0.4)' : 'none';
+  });
+
+  // Fetch real-time stats
+  async function loadPublicStats() {
+    try {
+      const res = await fetch('/api/public/stats');
+      const data = await res.json();
+      if (data.success) {
+        document.getElementById('statMembers').textContent = data.data.memberCount + '+';
+        document.getElementById('statEvents').textContent = data.data.eventCount + '+';
+        document.getElementById('statYears').textContent = data.data.yearsActive + '+';
       }
-    }
-    alert.classList.add('hidden');
-    return true;
-  }
-
-  function toggleDisabilityFields(show) {
-    document.getElementById('disabilityFields').classList.toggle('visible', show);
-  }
-
-  // ── Photo handling ────────────────────────────────────────────
-  function handlePhotoSelect(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    if (file.size > 5 * 1024 * 1024) {
-      showAlert(document.getElementById('authAlert'), 'error', 'Photo must be less than 5MB.');
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const dataUrl = e.target.result;
-      document.getElementById('passportPhotoData').value = dataUrl;
-      document.getElementById('photoPreviewImg').src = dataUrl;
-      document.getElementById('photoPreviewWrap').style.display = 'block';
-      document.getElementById('photoUploadPlaceholder').style.display = 'none';
-      document.getElementById('photoUploadArea').classList.add('has-photo');
-    };
-    reader.readAsDataURL(file);
-  }
-
-  function removePhoto() {
-    document.getElementById('passportPhotoData').value = '';
-    document.getElementById('passportPhotoInput').value = '';
-    document.getElementById('photoPreviewImg').src = '';
-    document.getElementById('photoPreviewWrap').style.display = 'none';
-    document.getElementById('photoUploadPlaceholder').style.display = 'block';
-    document.getElementById('photoUploadArea').classList.remove('has-photo');
-  }
-
-  // ── Login ─────────────────────────────────────────────────────
-  async function handleLogin(e) {
-    e.preventDefault();
-    const btn = document.getElementById('loginBtn');
-    btn.disabled = true; btn.textContent = 'Signing in...';
-
-    const res = await api.post('/auth/login', {
-      emailOrStudentId: document.getElementById('loginId').value.trim(),
-      password: document.getElementById('loginPassword').value
-    });
-
-    btn.disabled = false; btn.textContent = 'Sign In';
-    if (!res) return;
-
-    if (res.data.success) {
-      const { token, name, role, id, studentId, email } = res.data.data;
-      saveSession(token, { name, role, id, studentId, email });
-      window.location.href = '/dashboard.html';
-    } else {
-      showAlert(document.getElementById('authAlert'), 'error', res.data.message);
+    } catch (err) {
+      console.error('Failed to load stats:', err);
     }
   }
-
-  // ── Register ──────────────────────────────────────────────────
-  async function handleRegister() {
-    const alert = document.getElementById('authAlert');
-    const photo = document.getElementById('passportPhotoData').value;
-    if (!photo) { showAlert(alert, 'error', 'Please upload your passport photo.'); return; }
-
-    const btn = document.getElementById('registerBtn');
-    btn.disabled = true; btn.textContent = 'Creating account...';
-
-    const hasDisability = document.getElementById('disYes').checked;
-
-    const res = await api.post('/auth/register', {
-      name:           document.getElementById('regName').value.trim(),
-      studentId:      document.getElementById('regStudentId').value.trim(),
-      email:          document.getElementById('regEmail').value.trim(),
-      password:       document.getElementById('regPassword').value,
-      contact:        document.getElementById('regContact').value.trim(),
-      hasDisability,
-      disabilityType: hasDisability ? document.getElementById('disabilityType').value : null,
-      ncpwdNumber:    hasDisability ? document.getElementById('ncpwdNumber').value.trim() : null,
-      passportPhoto:  photo
-    });
-
-    btn.disabled = false; btn.textContent = 'Create Account ✓';
-
-    if (!res) return;
-    if (res.data.success) {
-      showAlert(alert, 'success', '✅ ' + res.data.message);
-      setTimeout(() => switchTab('login'), 2500);
-    } else {
-      showAlert(alert, 'error', res.data.message);
-    }
-  }
+  loadPublicStats();
 </script>
 </body>
 </html>
