@@ -21,11 +21,11 @@ public class TukacApplication {
                 admin.setName("System Admin");
                 admin.setStudentId("ADMIN001");
                 admin.setEmail("admin@tukac.com");
-                admin.setPassword("admin123"); // plain text for legacy compatibility, or bcrypt if you prefer
+                admin.setPassword(new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder().encode("admin123"));
                 admin.setRole("chairperson");
                 admin.setIsApproved(1);
                 userRepository.save(admin);
-                System.out.println("Seeded default admin user: admin@tukac.com / admin123");
+                System.out.println("Seeded default admin user (hashed): admin@tukac.com / admin123");
             } else {
                 // Ensure admin@tukac.com exists in case the db was carried over but missing admin
                 if (userRepository.findByEmail("admin@tukac.com").isEmpty()) {
@@ -33,11 +33,11 @@ public class TukacApplication {
                     admin.setName("System Admin");
                     admin.setStudentId("ADMIN001");
                     admin.setEmail("admin@tukac.com");
-                    admin.setPassword("admin123");
+                    admin.setPassword(new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder().encode("admin123"));
                     admin.setRole("chairperson");
                     admin.setIsApproved(1);
                     userRepository.save(admin);
-                    System.out.println("Seeded default admin user: admin@tukac.com / admin123");
+                    System.out.println("Seeded default admin user (hashed): admin@tukac.com / admin123");
                 }
             }
 

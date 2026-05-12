@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Help & Documentation | TUKAC Portal</title>
+  <link rel="stylesheet" href="/css/style.css"/>
+  <style>
+    .help-section { margin-bottom: 40px; }
+    .help-section h2 { border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 20px; }
+    .help-card { background: var(--card-bg); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    .help-card h3 { color: var(--primary); margin-top: 0; }
+    .shortcut { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+  </style>
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <div class="brand-icon"><img src="/logo.svg" alt="TUKAC Logo"/></div>
+        <div><div class="brand-text">TUKAC</div><div class="brand-subtitle">Ability Club Portal</div></div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main Menu</div>
+      <a href="/dashboard.html" class="nav-item"><span class="nav-icon">🏠</span> Dashboard</a>
+      <a href="/events.html" class="nav-item"><span class="nav-icon">📅</span> Events</a>
+      <a href="/finances.html" class="nav-item"><span class="nav-icon">💰</span> Finances</a>
+      <a href="/blog.html" class="nav-item"><span class="nav-icon">✍️</span> Blog</a>
+      <a href="/forum.html" class="nav-item"><span class="nav-icon">💬</span> Forum</a>
+      <a href="/about.html" class="nav-item"><span class="nav-icon">ℹ️</span> About</a>
+      <a href="/help.html" class="nav-item active"><span class="nav-icon">❓</span> Help</a>
+      <a href="/profile.html" class="nav-item"><span class="nav-icon">👤</span> My Profile</a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn btn-danger w-full btn-sm" onclick="logout()">← Logout</button>
+    </div>
+  </aside>
+
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div>
+        <div class="topbar-title">Help & Documentation</div>
+        <div class="topbar-subtitle">Learn how to navigate and use the TUKAC Portal</div>
+      </div>
+    </header>
+    <main class="main-content">
+      <div class="help-section">
+        <h2>Getting Started</h2>
+        <div class="help-card">
+          <h3>Registration & Login</h3>
+          <p>New members must register using their TUK Student ID and a valid email address. After registration, your account must be approved by the Chairperson before you can access the portal features.</p>
+          <p>If you forget your password, use the "Forgot Password" link on the login page to reset it using your Email and Student ID.</p>
+        </div>
+      </div>
+
+      <div class="help-section">
+        <h2>Key Features</h2>
+        <div class="grid grid-cols-2 gap-6">
+          <div class="help-card">
+            <h3>📅 Event Management</h3>
+            <p>View upcoming club events and RSVP to confirm your attendance. Executives can create, edit, and delete events. Reports on event attendance can be generated from the admin panel.</p>
+          </div>
+          <div class="help-card">
+            <h3>💰 Financial Tracking</h3>
+            <p>The finances section displays the club's income and expenses. Members can view the current balance, while the Treasurer and Chairperson can record new transactions and export financial reports.</p>
+          </div>
+          <div class="help-card">
+            <h3>✍️ Blog & Forum</h3>
+            <p>Stay updated with club news via the Blog. Engage with other members in the Forum by starting discussions or commenting on existing posts.</p>
+          </div>
+          <div class="help-card">
+            <h3>👤 Profile & Disability Info</h3>
+            <p>Keep your profile updated, especially your contact information and NCPWD details. This helps the club provide better support tailored to your needs.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="help-section">
+        <h2>For Executives & Admins</h2>
+        <div class="help-card">
+          <h3>Reporting</h3>
+          <p>You can generate professional PDF reports for the membership list and financial statements. Look for the "Export PDF" buttons in the Manage Users and Finances sections.</p>
+        </div>
+        <div class="help-card">
+          <h3>System Audit Trail</h3>
+          <p>Every critical action (logins, financial changes, role updates) is logged in the system for security and transparency. These logs are available to the Chairperson for auditing purposes.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="/js/api.js"></script>
+<script>
+  if (!requireAuth()) {}
+  document.addEventListener('DOMContentLoaded', () => {
+    initSidebar();
+  });
+</script>
+</body>
+</html>

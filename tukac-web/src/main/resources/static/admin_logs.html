@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>System Audit Logs | TUKAC Portal</title>
+  <link rel="stylesheet" href="/css/style.css"/>
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <div class="brand-icon"><img src="/logo.svg" alt="TUKAC Logo"/></div>
+        <div><div class="brand-text">TUKAC</div><div class="brand-subtitle">Ability Club Portal</div></div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main Menu</div>
+      <a href="/dashboard.html" class="nav-item"><span class="nav-icon">🏠</span> Dashboard</a>
+      <a href="/events.html" class="nav-item"><span class="nav-icon">📅</span> Events</a>
+      <a href="/finances.html" class="nav-item"><span class="nav-icon">💰</span> Finances</a>
+      <a href="/blog.html" class="nav-item"><span class="nav-icon">✍️</span> Blog</a>
+      <a href="/forum.html" class="nav-item"><span class="nav-icon">💬</span> Forum</a>
+      <div id="adminSection">
+        <div class="nav-section-label">Admin</div>
+        <a href="/admin.html" class="nav-item"><span class="nav-icon">👥</span> Manage Users</a>
+        <a href="/admin_logs.html" class="nav-item active"><span class="nav-icon">📜</span> Audit Logs</a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn btn-danger w-full btn-sm" onclick="logout()">← Logout</button>
+    </div>
+  </aside>
+
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div>
+        <div class="topbar-title">System Audit Logs</div>
+        <div class="topbar-subtitle">Track all system activities and security events</div>
+      </div>
+    </header>
+    <main class="main-content">
+      <div class="card">
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>User</th>
+                <th>Action</th>
+                <th>Details</th>
+                <th>IP Address</th>
+              </tr>
+            </thead>
+            <tbody id="logsTableBody">
+              <tr><td colspan="5"><div class="loading"><div class="spinner"></div></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="/js/api.js"></script>
+<script>
+  if (!requireRole('chairperson')) {}
+  document.addEventListener('DOMContentLoaded', () => {
+    initSidebar();
+    loadLogs();
+  });
+
+  async function loadLogs() {
+    const res = await api.get('/activity-logs');
+    if (!res || !res.data.success) return;
+    const logs = res.data.data;
+    document.getElementById('logsTableBody').innerHTML = logs.map(l => `
+      <tr>
+        <td style="white-space:nowrap;font-size:12px;color:var(--text-muted);">${new Date(l.timestamp).toLocaleString()}</td>
+        <td><div style="font-weight:600;">${l.userName || 'System'}</div><div style="font-size:10px;color:var(--text-muted);">UID: ${l.userId || '—'}</div></td>
+        <td><span class="badge ${getBadgeClass(l.action)}">${l.action}</span></td>
+        <td style="font-size:13px;">${l.details}</td>
+        <td style="font-family:monospace;font-size:12px;">${l.ipAddress || '—'}</td>
+      </tr>`).join('');
+  }
+
+  function getBadgeClass(action) {
+    if (action.includes('LOGIN')) return 'badge-success';
+    if (action.includes('REGISTER')) return 'badge-primary';
+    if (action.includes('DELETE') || action.includes('REJECT')) return 'badge-danger';
+    if (action.includes('UPDATE') || action.includes('ROLE')) return 'badge-warning';
+    return 'badge-muted';
+  }
+</script>
+</body>
+</html>

@@ -45,6 +45,26 @@ public class AuthController {
         return ResponseEntity.ok(ApiResponse.ok("Login successful", authResponse));
     }
 
+    @PostMapping("/forgot-password")
+    public ResponseEntity<ApiResponse<String>> forgotPassword(@RequestBody Map<String, String> body) {
+        String email = body.get("email");
+        String studentId = body.get("studentId");
+        
+        if (email == null || studentId == null) {
+            return ResponseEntity.badRequest().body(ApiResponse.error("Email and Student ID are required."));
+        }
+        
+        Optional<User> userOpt = authService.authenticateReset(email, studentId);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(404).body(ApiResponse.error("User not found or details mismatch."));
+        }
+        
+        // In a real app, send email. Here we just reset to default for demo.
+        authService.resetPassword(userOpt.get(), "Reset@123");
+        
+        return ResponseEntity.ok(ApiResponse.ok("Password has been reset to: Reset@123. Please login and change it.", null));
+    }
+
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<String>> register(@RequestBody RegisterRequest req) {
         if (req.getName() == null || req.getStudentId() == null || req.getEmail() == null || req.getPassword() == null) {

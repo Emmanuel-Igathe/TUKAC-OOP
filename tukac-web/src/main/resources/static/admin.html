@@ -34,6 +34,7 @@
       <div id="adminSection" class="hidden">
         <div class="nav-section-label">Admin</div>
         <a href="/admin.html" class="nav-item" data-page="admin.html"><span class="nav-icon">👥</span> Manage Users</a>
+        <a href="/admin_logs.html" class="nav-item" data-page="admin_logs.html"><span class="nav-icon">📜</span> Audit Logs</a>
       </div>
     </nav>
     <div class="sidebar-footer">
@@ -51,6 +52,9 @@
         <div class="topbar-title">Manage Users</div>
         <div class="topbar-subtitle">Approve members and assign roles</div>
       </div>
+      <button class="btn btn-outline btn-sm" onclick="exportUsersReport()" style="display:flex;align-items:center;gap:6px;">
+        <span>📄</span> Export PDF
+      </button>
     </header>
 
     <main class="main-content">
@@ -140,6 +144,21 @@
     initSidebar();
     loadUsers();
   });
+
+  async function exportUsersReport() {
+    try {
+      const res = await api.get('/reports/users', { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `TUKAC_Members_${new Date().toISOString().split('T')[0]}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (e) {
+      alert('Failed to generate report.');
+    }
+  }
 
   async function loadUsers() {
     const res = await api.get('/users');

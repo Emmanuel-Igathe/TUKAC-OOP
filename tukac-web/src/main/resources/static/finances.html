@@ -49,7 +49,12 @@
         <div class="topbar-title">Finances</div>
         <div class="topbar-subtitle">Club income and expense tracking</div>
       </div>
-      <button class="btn btn-primary btn-sm hidden" id="addTxBtn" onclick="document.getElementById('txModal').classList.remove('hidden')">+ Add Transaction</button>
+      <div class="flex gap-2">
+        <button class="btn btn-outline btn-sm" onclick="exportFinanceReport()" style="display:flex;align-items:center;gap:6px;">
+          <span>📄</span> Export PDF
+        </button>
+        <button class="btn btn-primary btn-sm hidden" id="addTxBtn" onclick="document.getElementById('txModal').classList.remove('hidden')">+ Add Transaction</button>
+      </div>
     </header>
     <main class="main-content">
       <div id="pageAlert" class="alert hidden"></div>
@@ -114,6 +119,21 @@
     document.getElementById('txDate').value = new Date().toISOString().split('T')[0];
     loadTransactions();
   });
+
+  async function exportFinanceReport() {
+    try {
+      const res = await api.get('/reports/finances', { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `TUKAC_Finances_${new Date().toISOString().split('T')[0]}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (e) {
+      alert('Failed to generate report.');
+    }
+  }
 
   async function loadTransactions() {
     const res = await api.get('/transactions');

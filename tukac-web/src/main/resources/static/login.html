@@ -94,7 +94,10 @@
         <label for="loginPassword">Password</label>
         <input type="password" id="loginPassword" class="form-control" placeholder="Enter your password" required autocomplete="current-password"/>
       </div>
-      <div class="form-group" style="margin-top:8px;">
+      <div style="display:flex;justify-content:flex-end;margin-top:-8px;margin-bottom:12px;">
+        <a href="#" class="text-sm text-primary" onclick="openResetModal(event)">Forgot Password?</a>
+      </div>
+      <div class="form-group">
         <button type="submit" id="loginBtn" class="btn btn-primary btn-lg">Sign In</button>
       </div>
       <p class="text-center text-sm text-muted" style="margin-top:12px;">
@@ -214,10 +217,66 @@
   </div>
 </div>
 
+<!-- ══ RESET MODAL ══════════════════════════════════════════════ -->
+<div class="modal-overlay hidden" id="resetModal">
+  <div class="modal" style="max-width:400px;">
+    <div class="modal-header">
+      <div class="modal-title">Reset Password</div>
+      <button class="modal-close" onclick="closeResetModal()">✕</button>
+    </div>
+    <div id="resetAlert" class="alert hidden"></div>
+    <form onsubmit="handleResetSubmit(event)">
+      <p class="text-sm text-muted mb-4">Provide your details to reset your password to a default one.</p>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="resetEmail" class="form-control" placeholder="e.g. jane@students.tukenya.ac.ke" required/>
+      </div>
+      <div class="form-group">
+        <label>Student ID</label>
+        <input type="text" id="resetStudentId" class="form-control" placeholder="e.g. C022-01-1234/2023" required/>
+      </div>
+      <div class="flex gap-2" style="margin-top:8px;">
+        <button type="submit" class="btn btn-primary" id="resetSubmitBtn">Reset Password</button>
+        <button type="button" class="btn btn-outline" onclick="closeResetModal()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script src="/js/api.js"></script>
 <script>
   // Redirect if already logged in
   if (getToken()) window.location.href = '/dashboard.html';
+
+  function openResetModal(e) {
+    e.preventDefault();
+    document.getElementById('resetModal').classList.remove('hidden');
+  }
+
+  function closeResetModal() {
+    document.getElementById('resetModal').classList.add('hidden');
+    document.getElementById('resetAlert').classList.add('hidden');
+  }
+
+  async function handleResetSubmit(e) {
+    e.preventDefault();
+    const btn = document.getElementById('resetSubmitBtn');
+    const alert = document.getElementById('resetAlert');
+    btn.disabled = true;
+    
+    const res = await api.post('/auth/forgot-password', {
+      email: document.getElementById('resetEmail').value.trim(),
+      studentId: document.getElementById('resetStudentId').value.trim()
+    });
+    
+    btn.disabled = false;
+    if (res && res.data.success) {
+      showAlert(alert, 'success', res.data.message);
+      setTimeout(() => closeResetModal(), 5000);
+    } else {
+      showAlert(alert, 'error', res?.data?.message || 'Reset failed');
+    }
+  }
 
   // ── Tab switching ─────────────────────────────────────────────
   function switchTab(tab) {

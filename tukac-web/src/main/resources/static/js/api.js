@@ -54,11 +54,15 @@ async function apiCall(endpoint, options = {}) {
       headers
     });
 
-    // Handle 401 - token expired
     if (response.status === 401) {
       clearSession();
       window.location.href = '/login.html';
       return null;
+    }
+
+    if (options.responseType === 'blob') {
+      const blob = await response.blob();
+      return { ok: response.ok, status: response.status, data: blob };
     }
 
     const data = await response.json();
@@ -69,9 +73,8 @@ async function apiCall(endpoint, options = {}) {
   }
 }
 
-// Shorthand methods
 const api = {
-  get: (endpoint) => apiCall(endpoint, { method: 'GET' }),
+  get: (endpoint, options = {}) => apiCall(endpoint, { method: 'GET', ...options }),
   post: (endpoint, body) => apiCall(endpoint, { method: 'POST', body: JSON.stringify(body) }),
   put: (endpoint, body) => apiCall(endpoint, { method: 'PUT', body: JSON.stringify(body) }),
   delete: (endpoint) => apiCall(endpoint, { method: 'DELETE' }),
