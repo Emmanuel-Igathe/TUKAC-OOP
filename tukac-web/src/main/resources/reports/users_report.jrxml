@@ -1,98 +1,274 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="users_report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e04c3e80-7a0e-4f0e-8f0a-7e0e7e0e7e0e">
-    <parameter name="ReportTitle" class="java.lang.String"/>
-    <parameter name="GeneratedBy" class="java.lang.String"/>
+<jasperReport
+    xmlns="http://jasperreports.sourceforge.net/jasperreports"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports
+                        http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+    name="users_report"
+    pageWidth="595" pageHeight="842"
+    columnWidth="555" leftMargin="20" rightMargin="20"
+    topMargin="15" bottomMargin="15"
+    uuid="aa000001-0000-0000-0000-000000000001">
+
+    <!-- ── Parameters ──────────────────────────────────────────────── -->
+    <parameter name="ReportTitle"   class="java.lang.String"/>
+    <parameter name="GeneratedBy"   class="java.lang.String"/>
     <parameter name="GeneratedDate" class="java.lang.String"/>
-    <field name="name" class="java.lang.String"/>
-    <field name="studentId" class="java.lang.String"/>
-    <field name="email" class="java.lang.String"/>
-    <field name="role" class="java.lang.String"/>
-    <background>
-        <band splitType="Stretch"/>
-    </background>
+    <parameter name="TotalMembers"  class="java.lang.Long"/>
+
+    <!-- ── Fields (match User entity getters) ──────────────────────── -->
+    <field name="name"       class="java.lang.String"/>
+    <field name="studentId"  class="java.lang.String"/>
+    <field name="email"      class="java.lang.String"/>
+    <field name="role"       class="java.lang.String"/>
+    <field name="contact"    class="java.lang.String"/>
+    <field name="isApproved" class="java.lang.Integer"/>
+
+    <!-- ── Named styles ────────────────────────────────────────────── -->
+    <style name="HeaderText"  fontName="DejaVu Sans" fontSize="9" isBold="true" forecolor="#FFFFFF"/>
+    <style name="BodyText"    fontName="DejaVu Sans" fontSize="8"/>
+    <style name="SmallGray"   fontName="DejaVu Sans" fontSize="8" forecolor="#666666"/>
+    <style name="ActiveBadge" fontName="DejaVu Sans" fontSize="8" forecolor="#155724"/>
+    <style name="PendBadge"   fontName="DejaVu Sans" fontSize="8" forecolor="#856404"/>
+
+    <background><band splitType="Stretch"/></background>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         TITLE BAND  —  Branded TUKAC header
+    ═══════════════════════════════════════════════════════════════════ -->
     <title>
-        <band height="79" splitType="Stretch">
-            <textField>
-                <reportElement x="0" y="0" width="555" height="40" uuid="a1a1a1a1-1a1a-1a1a-1a1a-1a1a1a1a1a1a"/>
+        <band height="115" splitType="Stretch">
+
+            <!-- Dark-blue header background -->
+            <rectangle radius="0">
+                <reportElement x="0" y="0" width="555" height="72"
+                               backcolor="#1E3A5F" forecolor="#1E3A5F" mode="Opaque"
+                               uuid="aa000001-0000-0000-0000-000000000010"/>
+                <graphicElement><pen lineWidth="0.0"/></graphicElement>
+            </rectangle>
+
+            <!-- Gold accent bar at bottom of header -->
+            <rectangle radius="0">
+                <reportElement x="0" y="69" width="555" height="3"
+                               backcolor="#D4A017" forecolor="#D4A017" mode="Opaque"
+                               uuid="aa000001-0000-0000-0000-000000000011"/>
+                <graphicElement><pen lineWidth="0.0"/></graphicElement>
+            </rectangle>
+
+            <!-- Logo placeholder box (white box, left side) -->
+            <rectangle radius="4">
+                <reportElement x="8" y="8" width="56" height="56"
+                               backcolor="#FFFFFF" forecolor="#CCCCCC" mode="Opaque"
+                               uuid="aa000001-0000-0000-0000-000000000012"/>
+                <graphicElement><pen lineWidth="1.0" lineColor="#CCCCCC"/></graphicElement>
+            </rectangle>
+            <!-- "T" monogram inside logo box -->
+            <staticText>
+                <reportElement x="8" y="8" width="56" height="56"
+                               forecolor="#1E3A5F" mode="Transparent"
+                               uuid="aa000001-0000-0000-0000-000000000013"/>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="24" isBold="true"/>
+                    <font size="32" isBold="true" fontName="DejaVu Sans"/>
+                </textElement>
+                <text><![CDATA[T]]></text>
+            </staticText>
+
+            <!-- Club name -->
+            <staticText>
+                <reportElement x="74" y="10" width="420" height="28"
+                               forecolor="#FFFFFF" mode="Transparent"
+                               uuid="aa000001-0000-0000-0000-000000000014"/>
+                <textElement verticalAlignment="Middle">
+                    <font size="22" isBold="true" fontName="DejaVu Sans"/>
+                </textElement>
+                <text><![CDATA[TUKAC]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="74" y="38" width="420" height="18"
+                               forecolor="#A8C5E8" mode="Transparent"
+                               uuid="aa000001-0000-0000-0000-000000000015"/>
+                <textElement verticalAlignment="Middle">
+                    <font size="9" fontName="DejaVu Sans"/>
+                </textElement>
+                <text><![CDATA[Technical University of Kenya — Ability Club Portal]]></text>
+            </staticText>
+
+            <!-- Top-right label -->
+            <staticText>
+                <reportElement x="494" y="55" width="60" height="14"
+                               forecolor="#D4A017" mode="Transparent"
+                               uuid="aa000001-0000-0000-0000-000000000016"/>
+                <textElement textAlignment="Right">
+                    <font size="7" isBold="true" fontName="DejaVu Sans"/>
+                </textElement>
+                <text><![CDATA[CONFIDENTIAL]]></text>
+            </staticText>
+
+            <!-- Report title below header -->
+            <textField>
+                <reportElement x="0" y="80" width="555" height="20"
+                               forecolor="#1E3A5F" mode="Transparent"
+                               uuid="aa000001-0000-0000-0000-000000000017"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="13" isBold="true" fontName="DejaVu Sans"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$P{ReportTitle}]]></textFieldExpression>
             </textField>
-            <textField>
-                <reportElement x="0" y="45" width="280" height="20" uuid="b2b2b2b2-2b2b-2b2b-2b2b-2b2b2b2b2b2b"/>
-                <textElement verticalAlignment="Middle"/>
-                <textFieldExpression><![CDATA["Generated By: " + $P{GeneratedBy}]]></textFieldExpression>
+
+            <!-- Generated by / date row -->
+            <textField isBlankWhenNull="true">
+                <reportElement x="0" y="103" width="300" height="11"
+                               forecolor="#555555" mode="Transparent"
+                               uuid="aa000001-0000-0000-0000-000000000018"/>
+                <textElement><font size="8" fontName="DejaVu Sans"/></textElement>
+                <textFieldExpression><![CDATA["Generated by: " + $P{GeneratedBy}]]></textFieldExpression>
             </textField>
-            <textField>
-                <reportElement x="350" y="45" width="205" height="20" uuid="c3c3c3c3-3c3c-3c3c-3c3c-3c3c3c3c3c3c"/>
-                <textElement textAlignment="Right" verticalAlignment="Middle"/>
+            <textField isBlankWhenNull="true">
+                <reportElement x="255" y="103" width="300" height="11"
+                               forecolor="#555555" mode="Transparent"
+                               uuid="aa000001-0000-0000-0000-000000000019"/>
+                <textElement textAlignment="Right"><font size="8" fontName="DejaVu Sans"/></textElement>
                 <textFieldExpression><![CDATA["Date: " + $P{GeneratedDate}]]></textFieldExpression>
             </textField>
-            <line>
-                <reportElement x="0" y="70" width="555" height="1" uuid="d4d4d4d4-4d4d-4d4d-4d4d-4d4d4d4d4d4d"/>
-            </line>
         </band>
     </title>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         COLUMN HEADER
+    ═══════════════════════════════════════════════════════════════════ -->
     <columnHeader>
-        <band height="30" splitType="Stretch">
+        <band height="26" splitType="Stretch">
+            <rectangle radius="0">
+                <reportElement x="0" y="0" width="555" height="26"
+                               backcolor="#2E6DA4" forecolor="#2E6DA4" mode="Opaque"
+                               uuid="aa000001-0000-0000-0000-000000000020"/>
+                <graphicElement><pen lineWidth="0.0"/></graphicElement>
+            </rectangle>
             <staticText>
-                <reportElement x="0" y="0" width="150" height="30" uuid="e5e5e5e5-5e5e-5e5e-5e5e-5e5e5e5e5e5e"/>
-                <textElement verticalAlignment="Middle">
-                    <font isBold="true"/>
-                </textElement>
-                <text><![CDATA[Name]]></text>
+                <reportElement x="4" y="0" width="140" height="26" mode="Transparent" forecolor="#FFFFFF" uuid="aa000001-0000-0000-0000-000000000021"/>
+                <textElement verticalAlignment="Middle"><font isBold="true" size="8" fontName="DejaVu Sans"/></textElement>
+                <text><![CDATA[Full Name]]></text>
             </staticText>
             <staticText>
-                <reportElement x="150" y="0" width="100" height="30" uuid="f6f6f6f6-6f6f-6f6f-6f6f-6f6f6f6f6f6f"/>
-                <textElement verticalAlignment="Middle">
-                    <font isBold="true"/>
-                </textElement>
+                <reportElement x="144" y="0" width="85" height="26" mode="Transparent" forecolor="#FFFFFF" uuid="aa000001-0000-0000-0000-000000000022"/>
+                <textElement verticalAlignment="Middle"><font isBold="true" size="8" fontName="DejaVu Sans"/></textElement>
                 <text><![CDATA[Student ID]]></text>
             </staticText>
             <staticText>
-                <reportElement x="250" y="0" width="180" height="30" uuid="07070707-7070-7070-7070-707070707070"/>
-                <textElement verticalAlignment="Middle">
-                    <font isBold="true"/>
-                </textElement>
-                <text><![CDATA[Email]]></text>
+                <reportElement x="229" y="0" width="170" height="26" mode="Transparent" forecolor="#FFFFFF" uuid="aa000001-0000-0000-0000-000000000023"/>
+                <textElement verticalAlignment="Middle"><font isBold="true" size="8" fontName="DejaVu Sans"/></textElement>
+                <text><![CDATA[Email Address]]></text>
             </staticText>
             <staticText>
-                <reportElement x="430" y="0" width="125" height="30" uuid="18181818-1818-1818-1818-181818181818"/>
-                <textElement verticalAlignment="Middle">
-                    <font isBold="true"/>
-                </textElement>
+                <reportElement x="399" y="0" width="95" height="26" mode="Transparent" forecolor="#FFFFFF" uuid="aa000001-0000-0000-0000-000000000024"/>
+                <textElement verticalAlignment="Middle"><font isBold="true" size="8" fontName="DejaVu Sans"/></textElement>
                 <text><![CDATA[Role]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="494" y="0" width="60" height="26" mode="Transparent" forecolor="#FFFFFF" uuid="aa000001-0000-0000-0000-000000000025"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font isBold="true" size="8" fontName="DejaVu Sans"/></textElement>
+                <text><![CDATA[Status]]></text>
             </staticText>
         </band>
     </columnHeader>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         DETAIL — alternating row shading
+    ═══════════════════════════════════════════════════════════════════ -->
     <detail>
-        <band height="20" splitType="Stretch">
-            <textField>
-                <reportElement x="0" y="0" width="150" height="20" uuid="29292929-2929-2929-2929-292929292929"/>
+        <band height="17" splitType="Stretch">
+            <!-- Even-row shading -->
+            <rectangle radius="0">
+                <reportElement x="0" y="0" width="555" height="17"
+                               backcolor="#EBF3FB" forecolor="#EBF3FB" mode="Opaque"
+                               uuid="aa000001-0000-0000-0000-000000000030">
+                    <printWhenExpression><![CDATA[$V{REPORT_COUNT} % 2 == 0]]></printWhenExpression>
+                </reportElement>
+                <graphicElement><pen lineWidth="0.0"/></graphicElement>
+            </rectangle>
+
+            <textField isBlankWhenNull="true">
+                <reportElement x="4" y="2" width="140" height="13" uuid="aa000001-0000-0000-0000-000000000031"/>
+                <textElement><font size="8" fontName="DejaVu Sans"/></textElement>
                 <textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
             </textField>
-            <textField>
-                <reportElement x="150" y="0" width="100" height="20" uuid="30303030-3030-3030-3030-303030303030"/>
+            <textField isBlankWhenNull="true">
+                <reportElement x="144" y="2" width="85" height="13" uuid="aa000001-0000-0000-0000-000000000032"/>
+                <textElement><font size="8" fontName="DejaVu Sans"/></textElement>
                 <textFieldExpression><![CDATA[$F{studentId}]]></textFieldExpression>
             </textField>
-            <textField>
-                <reportElement x="250" y="0" width="180" height="20" uuid="41414141-4141-4141-4141-414141414141"/>
+            <textField isBlankWhenNull="true">
+                <reportElement x="229" y="2" width="170" height="13" uuid="aa000001-0000-0000-0000-000000000033"/>
+                <textElement><font size="8" fontName="DejaVu Sans"/></textElement>
                 <textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
             </textField>
-            <textField>
-                <reportElement x="430" y="0" width="125" height="20" uuid="52525252-5252-5252-5252-525252525252"/>
-                <textFieldExpression><![CDATA[$F{role}]]></textFieldExpression>
+            <textField isBlankWhenNull="true">
+                <reportElement x="399" y="2" width="95" height="13" uuid="aa000001-0000-0000-0000-000000000034"/>
+                <textElement><font size="8" fontName="DejaVu Sans"/></textElement>
+                <textFieldExpression><![CDATA[$F{role} != null ? $F{role}.toUpperCase() : ""]]></textFieldExpression>
+            </textField>
+            <!-- Status badge: green for approved, amber for pending -->
+            <textField isBlankWhenNull="true">
+                <reportElement x="494" y="2" width="60" height="13" forecolor="#155724" mode="Transparent"
+                               uuid="aa000001-0000-0000-0000-000000000035">
+                    <printWhenExpression><![CDATA[$F{isApproved} != null && $F{isApproved} == 1]]></printWhenExpression>
+                </reportElement>
+                <textElement textAlignment="Center"><font size="8" isBold="true" fontName="DejaVu Sans"/></textElement>
+                <textFieldExpression><![CDATA["Active"]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement x="494" y="2" width="60" height="13" forecolor="#856404" mode="Transparent"
+                               uuid="aa000001-0000-0000-0000-000000000036">
+                    <printWhenExpression><![CDATA[$F{isApproved} == null || $F{isApproved} != 1]]></printWhenExpression>
+                </reportElement>
+                <textElement textAlignment="Center"><font size="8" isBold="true" fontName="DejaVu Sans"/></textElement>
+                <textFieldExpression><![CDATA["Pending"]]></textFieldExpression>
             </textField>
         </band>
     </detail>
-    <pageFooter>
-        <band height="30" splitType="Stretch">
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         SUMMARY — total count
+    ═══════════════════════════════════════════════════════════════════ -->
+    <summary>
+        <band height="32" splitType="Stretch">
+            <line>
+                <reportElement x="0" y="4" width="555" height="1" uuid="aa000001-0000-0000-0000-000000000040"/>
+                <graphicElement><pen lineWidth="1.0" lineColor="#2E6DA4"/></graphicElement>
+            </line>
             <textField>
-                <reportElement x="455" y="0" width="100" height="30" uuid="63636363-6363-6363-6363-636363636363"/>
-                <textElement textAlignment="Right" verticalAlignment="Middle"/>
+                <reportElement x="0" y="12" width="555" height="14" forecolor="#1E3A5F"
+                               uuid="aa000001-0000-0000-0000-000000000041"/>
+                <textElement textAlignment="Right">
+                    <font size="9" isBold="true" fontName="DejaVu Sans"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Total records: " + $V{REPORT_COUNT}]]></textFieldExpression>
+            </textField>
+        </band>
+    </summary>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         PAGE FOOTER
+    ═══════════════════════════════════════════════════════════════════ -->
+    <pageFooter>
+        <band height="22" splitType="Stretch">
+            <line>
+                <reportElement x="0" y="0" width="555" height="1" uuid="aa000001-0000-0000-0000-000000000050"/>
+                <graphicElement><pen lineWidth="0.5" lineColor="#CCCCCC"/></graphicElement>
+            </line>
+            <staticText>
+                <reportElement x="0" y="5" width="280" height="14" forecolor="#999999"
+                               uuid="aa000001-0000-0000-0000-000000000051"/>
+                <textElement><font size="7" fontName="DejaVu Sans"/></textElement>
+                <text><![CDATA[TUKAC Portal — This report is strictly confidential]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="430" y="5" width="125" height="14"
+                               uuid="aa000001-0000-0000-0000-000000000052"/>
+                <textElement textAlignment="Right"><font size="7" fontName="DejaVu Sans"/></textElement>
                 <textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
             </textField>
         </band>
     </pageFooter>
+
 </jasperReport>
