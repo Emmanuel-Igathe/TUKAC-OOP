@@ -3,18 +3,72 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Help & Documentation | TUKAC Portal</title>
+  <title>Help &amp; Documentation | TUKAC Portal</title>
   <link rel="stylesheet" href="/css/style.css"/>
   <style>
-    .help-section { margin-bottom: 40px; }
-    .help-section h2 { border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 20px; }
-    .help-card { background: var(--card-bg); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 20px; }
-    .help-card h3 { color: var(--primary); margin-top: 0; }
-    .shortcut { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+    /* ── Layout ─────────────────────────────────────────────── */
+    .help-section        { margin-bottom: 40px; }
+    .help-section h2     { border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 20px; color: var(--primary); }
+    .help-card           { background: var(--card-bg); border-radius: 12px; padding: 22px 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 18px; }
+    .help-card h3        { margin-top: 0; color: var(--primary); font-size: 1rem; }
+    .help-card p, .help-card li { font-size: 0.9rem; line-height: 1.65; color: #374151; }
+    .help-card ul        { padding-left: 20px; margin: 8px 0 0; }
+
+    /* ── Role cards ─────────────────────────────────────────── */
+    .role-grid           { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-bottom: 8px; }
+    .role-card           { border-radius: 12px; padding: 20px; border-left: 5px solid; position: relative; }
+    .role-card h3        { margin: 0 0 6px; font-size: 0.95rem; display: flex; align-items: center; gap: 8px; }
+    .role-card .badge    { font-size: 0.65rem; padding: 2px 8px; border-radius: 99px; font-weight: 700; text-transform: uppercase; }
+    .role-card p, .role-card li { font-size: 0.85rem; color: #374151; line-height: 1.6; margin: 0; }
+    .role-card ul        { padding-left: 18px; margin-top: 8px; }
+
+    /* Role colour themes */
+    .role-chairperson    { background:#EFF6FF; border-color:#1D4ED8; }
+    .role-chairperson h3 { color:#1D4ED8; }
+    .role-chairperson .badge { background:#DBEAFE; color:#1D4ED8; }
+
+    .role-vice           { background:#F0FDF4; border-color:#16A34A; }
+    .role-vice h3        { color:#15803D; }
+    .role-vice .badge    { background:#DCFCE7; color:#15803D; }
+
+    .role-secretary      { background:#FDF4FF; border-color:#9333EA; }
+    .role-secretary h3   { color:#7E22CE; }
+    .role-secretary .badge { background:#F3E8FF; color:#7E22CE; }
+
+    .role-treasurer      { background:#FFFBEB; border-color:#D97706; }
+    .role-treasurer h3   { color:#B45309; }
+    .role-treasurer .badge { background:#FEF3C7; color:#B45309; }
+
+    .role-member         { background:#F9FAFB; border-color:#6B7280; }
+    .role-member h3      { color:#374151; }
+    .role-member .badge  { background:#F3F4F6; color:#4B5563; }
+
+    /* ── Navigation table ───────────────────────────────────── */
+    .nav-table           { width:100%; border-collapse: collapse; font-size: 0.87rem; }
+    .nav-table th        { background:#1E3A5F; color:#fff; padding: 10px 14px; text-align:left; }
+    .nav-table td        { padding: 10px 14px; border-bottom: 1px solid #E5E7EB; vertical-align:top; }
+    .nav-table tr:nth-child(even) td { background:#F8FAFC; }
+    .nav-table .icon-col { width:36px; text-align:center; }
+    .nav-table .role-tag { font-size:0.72rem; padding:2px 7px; border-radius:99px; background:#DBEAFE; color:#1D4ED8; white-space:nowrap; }
+
+    /* ── FAQ ───────────────────────────────────────────────── */
+    .faq-item            { border-bottom: 1px solid #E5E7EB; padding: 14px 0; }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-q               { font-weight: 700; color: #1E3A5F; margin-bottom: 6px; font-size:0.9rem; }
+    .faq-a               { font-size:0.87rem; color:#374151; line-height:1.65; }
+
+    /* ── kbd shortcut ───────────────────────────────────────── */
+    kbd { background:#F3F4F6; padding:2px 6px; border-radius:4px; font-family:monospace; font-size:0.85em; border:1px solid #D1D5DB; }
+
+    /* ── Responsive grid ────────────────────────────────────── */
+    .two-col { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+    @media(max-width:720px){ .two-col{ grid-template-columns:1fr; } .role-grid{ grid-template-columns:1fr; } }
   </style>
 </head>
 <body>
 <div class="app-layout">
+
+  <!-- ── Sidebar ─────────────────────────────────────────────────── -->
   <aside class="sidebar">
     <div class="sidebar-header">
       <div class="sidebar-brand">
@@ -25,72 +79,280 @@
     <nav class="sidebar-nav">
       <div class="nav-section-label">Main Menu</div>
       <a href="/dashboard.html" class="nav-item"><span class="nav-icon">🏠</span> Dashboard</a>
-      <a href="/events.html" class="nav-item"><span class="nav-icon">📅</span> Events</a>
-      <a href="/finances.html" class="nav-item"><span class="nav-icon">💰</span> Finances</a>
-      <a href="/blog.html" class="nav-item"><span class="nav-icon">✍️</span> Blog</a>
-      <a href="/forum.html" class="nav-item"><span class="nav-icon">💬</span> Forum</a>
-      <a href="/about.html" class="nav-item"><span class="nav-icon">ℹ️</span> About</a>
-      <a href="/help.html" class="nav-item active"><span class="nav-icon">❓</span> Help</a>
-      <a href="/profile.html" class="nav-item"><span class="nav-icon">👤</span> My Profile</a>
+      <a href="/events.html"    class="nav-item"><span class="nav-icon">📅</span> Events</a>
+      <a href="/finances.html"  class="nav-item"><span class="nav-icon">💰</span> Finances</a>
+      <a href="/blog.html"      class="nav-item"><span class="nav-icon">✍️</span> Blog</a>
+      <a href="/forum.html"     class="nav-item"><span class="nav-icon">💬</span> Forum</a>
+      <a href="/about.html"     class="nav-item"><span class="nav-icon">ℹ️</span> About</a>
+      <a href="/help.html"      class="nav-item active"><span class="nav-icon">❓</span> Help</a>
+      <a href="/profile.html"   class="nav-item"><span class="nav-icon">👤</span> My Profile</a>
     </nav>
     <div class="sidebar-footer">
       <button class="btn btn-danger w-full btn-sm" onclick="logout()">← Logout</button>
     </div>
   </aside>
 
+  <!-- ── Main wrapper ────────────────────────────────────────────── -->
   <div class="main-wrapper">
     <header class="topbar">
       <div>
-        <div class="topbar-title">Help & Documentation</div>
-        <div class="topbar-subtitle">Learn how to navigate and use the TUKAC Portal</div>
+        <div class="topbar-title">Help &amp; Documentation</div>
+        <div class="topbar-subtitle">System guide, user roles, and frequently asked questions</div>
       </div>
     </header>
+
     <main class="main-content">
+
+      <!-- ═══════════════════════════════════════════════════════════
+           SECTION 1 — Getting Started
+      ═══════════════════════════════════════════════════════════════ -->
       <div class="help-section">
         <h2>Getting Started</h2>
-        <div class="help-card">
-          <h3>Registration & Login</h3>
-          <p>New members must register using their TUK Student ID and a valid email address. After registration, your account must be approved by the Chairperson before you can access the portal features.</p>
-          <p>If you forget your password, use the "Forgot Password" link on the login page to reset it using your Email and Student ID.</p>
+        <div class="two-col">
+          <div class="help-card">
+            <h3>Registration</h3>
+            <p>New members register using their TUK Student ID and a valid university email address. You must upload a passport-size photo and indicate any registered disability (NCPWD number required if applicable).</p>
+            <p>After submitting, your account enters a <strong>Pending</strong> state. The Chairperson must approve it before you can log in.</p>
+          </div>
+          <div class="help-card">
+            <h3>Login &amp; Password Reset</h3>
+            <p>Log in with your email address or Student ID together with your password. If you forget your password:</p>
+            <ul>
+              <li>Click <strong>"Forgot Password"</strong> on the login page.</li>
+              <li>Enter your registered email and Student ID to verify your identity.</li>
+              <li>Your password is reset immediately — you will be shown a temporary password.</li>
+              <li>Log in with the temporary password and change it from your Profile page.</li>
+            </ul>
+          </div>
         </div>
       </div>
 
+      <!-- ═══════════════════════════════════════════════════════════
+           SECTION 2 — User Roles
+      ═══════════════════════════════════════════════════════════════ -->
+      <div class="help-section">
+        <h2>User Roles &amp; Permissions</h2>
+        <p style="margin-bottom:16px;font-size:0.9rem;color:#4B5563;">
+          The TUKAC Portal uses a five-tier role system. Each role inherits the permissions of the one below it.
+          Your current role is shown in the top-right corner of every page.
+        </p>
+
+        <div class="role-grid">
+
+          <!-- Chairperson -->
+          <div class="role-card role-chairperson">
+            <h3>👑 Chairperson <span class="badge">Admin</span></h3>
+            <p>Full system access. Responsible for overall governance of the portal.</p>
+            <ul>
+              <li>Approve or reject new member registrations</li>
+              <li>Assign and change member roles</li>
+              <li>View, filter, and export the full security audit log</li>
+              <li>Delete members and manage all content</li>
+              <li>Generate all PDF reports (members, finances, audit)</li>
+              <li>Clear activity logs when required</li>
+            </ul>
+          </div>
+
+          <!-- Vice-Chairperson -->
+          <div class="role-card role-vice">
+            <h3>🤝 Vice-Chairperson <span class="badge">Executive</span></h3>
+            <p>Assists the Chairperson in running the club. Manages events and member activity.</p>
+            <ul>
+              <li>Create, edit, and delete events</li>
+              <li>View the full member list</li>
+              <li>Generate the members and finances PDF report</li>
+              <li>Post and moderate blog articles</li>
+            </ul>
+          </div>
+
+          <!-- Secretary -->
+          <div class="role-card role-secretary">
+            <h3>📋 Secretary <span class="badge">Executive</span></h3>
+            <p>Keeps records and manages club communications and content.</p>
+            <ul>
+              <li>Create, edit, and delete blog posts</li>
+              <li>Moderate forum discussions and comments</li>
+              <li>View member contact details and profiles</li>
+              <li>Generate the members PDF report</li>
+            </ul>
+          </div>
+
+          <!-- Treasurer -->
+          <div class="role-card role-treasurer">
+            <h3>💰 Treasurer <span class="badge">Executive</span></h3>
+            <p>Manages all financial records of the club.</p>
+            <ul>
+              <li>Record income and expense transactions</li>
+              <li>Delete or correct erroneous transactions</li>
+              <li>Generate the financial PDF statement report</li>
+              <li>View the current net balance and transaction history</li>
+            </ul>
+          </div>
+
+          <!-- Member -->
+          <div class="role-card role-member">
+            <h3>👤 Member <span class="badge">Standard</span></h3>
+            <p>Regular club member. Base level of access after account approval.</p>
+            <ul>
+              <li>View upcoming and past events; RSVP to events</li>
+              <li>Read blog posts and comment on them</li>
+              <li>Participate in forum discussions</li>
+              <li>View the current financial balance (read-only)</li>
+              <li>Update own profile, password, and disability details</li>
+            </ul>
+          </div>
+
+        </div><!-- /role-grid -->
+
+        <div class="help-card" style="margin-top:8px;">
+          <h3>Role Assignment</h3>
+          <p>Roles are assigned by the <strong>Chairperson</strong> from the <strong>Manage Users</strong> section of the Admin panel. If you believe your role is incorrect, contact the Chairperson or club Secretary.</p>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           SECTION 3 — System Navigation
+      ═══════════════════════════════════════════════════════════════ -->
+      <div class="help-section">
+        <h2>System Navigation</h2>
+        <table class="nav-table">
+          <thead>
+            <tr>
+              <th class="icon-col"></th>
+              <th>Page</th>
+              <th>What you can do here</th>
+              <th>Minimum Role</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="icon-col">🏠</td>
+              <td><strong>Dashboard</strong></td>
+              <td>Overview of upcoming events, recent posts, club statistics, and your membership status.</td>
+              <td><span class="role-tag">Member</span></td>
+            </tr>
+            <tr>
+              <td class="icon-col">📅</td>
+              <td><strong>Events</strong></td>
+              <td>Browse all club events and RSVP. Executives can create, edit, and delete events.</td>
+              <td><span class="role-tag">Member</span></td>
+            </tr>
+            <tr>
+              <td class="icon-col">💰</td>
+              <td><strong>Finances</strong></td>
+              <td>View income/expense history and the current net balance. Treasurer+ can add transactions.</td>
+              <td><span class="role-tag">Member</span></td>
+            </tr>
+            <tr>
+              <td class="icon-col">✍️</td>
+              <td><strong>Blog</strong></td>
+              <td>Read club news and announcements. Secretary+ can publish new articles.</td>
+              <td><span class="role-tag">Member</span></td>
+            </tr>
+            <tr>
+              <td class="icon-col">💬</td>
+              <td><strong>Forum</strong></td>
+              <td>Start and join discussions with other club members on any topic.</td>
+              <td><span class="role-tag">Member</span></td>
+            </tr>
+            <tr>
+              <td class="icon-col">👤</td>
+              <td><strong>My Profile</strong></td>
+              <td>Edit your name, contact, disability details, passport photo, and change your password.</td>
+              <td><span class="role-tag">Member</span></td>
+            </tr>
+            <tr>
+              <td class="icon-col">⚙️</td>
+              <td><strong>Admin Panel</strong></td>
+              <td>Approve/reject registrations, manage roles, export PDF reports, view activity logs.</td>
+              <td><span class="role-tag">Chairperson</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           SECTION 4 — Key Features
+      ═══════════════════════════════════════════════════════════════ -->
       <div class="help-section">
         <h2>Key Features</h2>
-        <div class="grid grid-cols-2 gap-6">
+        <div class="two-col">
           <div class="help-card">
-            <h3>📅 Event Management</h3>
-            <p>View upcoming club events and RSVP to confirm your attendance. Executives can create, edit, and delete events. Reports on event attendance can be generated from the admin panel.</p>
+            <h3>📄 PDF Reports</h3>
+            <p>Executives and the Chairperson can export professional PDF reports directly from the Admin panel:</p>
+            <ul>
+              <li><strong>Member List</strong> — All registered members with roles and status.</li>
+              <li><strong>Financial Statement</strong> — All transactions with net balance summary.</li>
+              <li><strong>Audit Log</strong> — Complete system activity history (Chairperson only).</li>
+            </ul>
+            <p style="margin-top:10px;">Each PDF is branded with the TUKAC logo, report date, and the name of the officer who generated it.</p>
           </div>
           <div class="help-card">
-            <h3>💰 Financial Tracking</h3>
-            <p>The finances section displays the club's income and expenses. Members can view the current balance, while the Treasurer and Chairperson can record new transactions and export financial reports.</p>
+            <h3>🔒 Security &amp; Audit Trail</h3>
+            <p>Every significant action in the system is automatically recorded in the audit log:</p>
+            <ul>
+              <li>User login and registration events</li>
+              <li>Password reset requests</li>
+              <li>Financial transactions added</li>
+              <li>PDF reports generated</li>
+              <li>Role changes and member approvals</li>
+            </ul>
+            <p style="margin-top:10px;">Logs are viewable and filterable by the Chairperson under <strong>Admin → Activity Logs</strong>.</p>
           </div>
           <div class="help-card">
-            <h3>✍️ Blog & Forum</h3>
-            <p>Stay updated with club news via the Blog. Engage with other members in the Forum by starting discussions or commenting on existing posts.</p>
+            <h3>♿ Disability Support</h3>
+            <p>The portal is designed to be inclusive. When registering, members with disabilities may provide their NCPWD number and disability type. This information helps the club arrange appropriate accommodations for events and activities.</p>
           </div>
           <div class="help-card">
-            <h3>👤 Profile & Disability Info</h3>
-            <p>Keep your profile updated, especially your contact information and NCPWD details. This helps the club provide better support tailored to your needs.</p>
+            <h3>💬 Community Tools</h3>
+            <p>Stay connected through the <strong>Blog</strong> (curated announcements and articles) and the <strong>Forum</strong> (open discussion). All logged-in members can comment on blog posts and create forum threads.</p>
           </div>
         </div>
       </div>
 
+      <!-- ═══════════════════════════════════════════════════════════
+           SECTION 5 — FAQ
+      ═══════════════════════════════════════════════════════════════ -->
       <div class="help-section">
-        <h2>For Executives & Admins</h2>
+        <h2>Frequently Asked Questions</h2>
         <div class="help-card">
-          <h3>Reporting</h3>
-          <p>You can generate professional PDF reports for the membership list and financial statements. Look for the "Export PDF" buttons in the Manage Users and Finances sections.</p>
-        </div>
-        <div class="help-card">
-          <h3>System Audit Trail</h3>
-          <p>Every critical action (logins, financial changes, role updates) is logged in the system for security and transparency. These logs are available to the Chairperson for auditing purposes.</p>
+
+          <div class="faq-item">
+            <div class="faq-q">My account says "Pending" — what do I do?</div>
+            <div class="faq-a">Your registration is awaiting approval from the Chairperson. Contact the TUKAC Chairperson or Secretary and ask them to review your application in the Admin panel.</div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q">I forgot my password. How do I reset it?</div>
+            <div class="faq-a">On the login page, click <strong>"Forgot Password"</strong>. Enter your registered email address and Student ID. A temporary password will be shown immediately — log in with it and update your password from the Profile page.</div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q">Why can't I see the Admin panel?</div>
+            <div class="faq-a">The Admin panel is only visible to the Chairperson. Other executives (Vice-Chairperson, Secretary, Treasurer) have access to specific admin features (reports, finance, events) but not the full panel.</div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q">How do I download a financial report?</div>
+            <div class="faq-a">Navigate to the <strong>Finances</strong> page and click <strong>"Export PDF"</strong> (visible to Treasurer and above). The report will download automatically as a PDF file.</div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q">Can I update my disability information after registration?</div>
+            <div class="faq-a">Yes. Go to <strong>My Profile</strong>, update your disability type or NCPWD number, and click <strong>Save</strong>. Changes take effect immediately.</div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q">Who do I contact for technical issues?</div>
+            <div class="faq-a">Contact the TUKAC Secretary or Chairperson. For system-level issues, they can reach the portal administrator who has access to server logs and the activity audit trail.</div>
+          </div>
+
         </div>
       </div>
+
     </main>
-  </div>
-</div>
+  </div><!-- /main-wrapper -->
+</div><!-- /app-layout -->
 
 <script src="/js/api.js"></script>
 <script>

@@ -4,29 +4,27 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports
                         http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
-    name="finance_report"
+    name="activity_log_report"
     pageWidth="595" pageHeight="842"
     columnWidth="555" leftMargin="20" rightMargin="20"
     topMargin="15" bottomMargin="15"
-    uuid="bb000001-0000-0000-0000-000000000001">
+    uuid="cc000001-0000-0000-0000-000000000001">
 
     <!-- ── Parameters ──────────────────────────────────────────────── -->
     <parameter name="ReportTitle"   class="java.lang.String"/>
     <parameter name="GeneratedBy"   class="java.lang.String"/>
     <parameter name="GeneratedDate" class="java.lang.String"/>
-    <parameter name="NetBalance"    class="java.lang.Double"/>
 
-    <!-- ── Fields (match Transaction entity getters) ───────────────── -->
-    <field name="transactionDate" class="java.lang.String"/>
-    <field name="description"     class="java.lang.String"/>
-    <field name="category"        class="java.lang.String"/>
-    <field name="type"            class="java.lang.String"/>
-    <field name="amount"          class="java.lang.Double"/>
-
-    <!-- ── Named styles ────────────────────────────────────────────── -->
-    <style name="IncomeAmt"  fontName="DejaVu Sans" fontSize="8" isBold="true" forecolor="#155724"/>
-    <style name="ExpenseAmt" fontName="DejaVu Sans" fontSize="8" isBold="true" forecolor="#842029"/>
-    <style name="BodyText"   fontName="DejaVu Sans" fontSize="8"/>
+    <!--
+        Fields match ActivityLog entity getters.
+        timestamp is LocalDateTime — declared as Object to avoid type errors;
+        we format it inline in the textFieldExpression.
+    -->
+    <field name="userName"  class="java.lang.String"/>
+    <field name="action"    class="java.lang.String"/>
+    <field name="details"   class="java.lang.String"/>
+    <field name="ipAddress" class="java.lang.String"/>
+    <field name="timestamp" class="java.lang.Object"/>
 
     <background><band splitType="Stretch"/></background>
 
@@ -34,21 +32,18 @@
          TITLE BAND
     ═══════════════════════════════════════════════════════════════════ -->
     <title>
-        <band height="130" splitType="Stretch">
+        <band height="115" splitType="Stretch">
 
-            <!-- Header background -->
             <rectangle radius="0">
                 <reportElement x="0" y="0" width="555" height="72"
                                backcolor="#1E3A5F" forecolor="#1E3A5F" mode="Opaque"
-                               uuid="bb000001-0000-0000-0000-000000000010"/>
+                               uuid="cc000001-0000-0000-0000-000000000010"/>
                 <graphicElement><pen lineWidth="0.0"/></graphicElement>
             </rectangle>
-
-            <!-- Gold accent bar -->
             <rectangle radius="0">
                 <reportElement x="0" y="69" width="555" height="3"
                                backcolor="#D4A017" forecolor="#D4A017" mode="Opaque"
-                               uuid="bb000001-0000-0000-0000-000000000011"/>
+                               uuid="cc000001-0000-0000-0000-000000000011"/>
                 <graphicElement><pen lineWidth="0.0"/></graphicElement>
             </rectangle>
 
@@ -56,13 +51,13 @@
             <rectangle radius="4">
                 <reportElement x="8" y="8" width="56" height="56"
                                backcolor="#FFFFFF" forecolor="#CCCCCC" mode="Opaque"
-                               uuid="bb000001-0000-0000-0000-000000000012"/>
+                               uuid="cc000001-0000-0000-0000-000000000012"/>
                 <graphicElement><pen lineWidth="1.0" lineColor="#CCCCCC"/></graphicElement>
             </rectangle>
             <staticText>
                 <reportElement x="8" y="8" width="56" height="56"
                                forecolor="#1E3A5F" mode="Transparent"
-                               uuid="bb000001-0000-0000-0000-000000000013"/>
+                               uuid="cc000001-0000-0000-0000-000000000013"/>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="32" isBold="true" fontName="DejaVu Sans"/>
                 </textElement>
@@ -72,7 +67,7 @@
             <staticText>
                 <reportElement x="74" y="10" width="420" height="28"
                                forecolor="#FFFFFF" mode="Transparent"
-                               uuid="bb000001-0000-0000-0000-000000000014"/>
+                               uuid="cc000001-0000-0000-0000-000000000014"/>
                 <textElement verticalAlignment="Middle">
                     <font size="22" isBold="true" fontName="DejaVu Sans"/>
                 </textElement>
@@ -81,64 +76,45 @@
             <staticText>
                 <reportElement x="74" y="38" width="420" height="18"
                                forecolor="#A8C5E8" mode="Transparent"
-                               uuid="bb000001-0000-0000-0000-000000000015"/>
+                               uuid="cc000001-0000-0000-0000-000000000015"/>
                 <textElement verticalAlignment="Middle">
                     <font size="9" fontName="DejaVu Sans"/>
                 </textElement>
                 <text><![CDATA[Technical University of Kenya — Ability Club Portal]]></text>
             </staticText>
             <staticText>
-                <reportElement x="494" y="55" width="60" height="14"
+                <reportElement x="480" y="55" width="74" height="14"
                                forecolor="#D4A017" mode="Transparent"
-                               uuid="bb000001-0000-0000-0000-000000000016"/>
+                               uuid="cc000001-0000-0000-0000-000000000016"/>
                 <textElement textAlignment="Right">
                     <font size="7" isBold="true" fontName="DejaVu Sans"/>
                 </textElement>
-                <text><![CDATA[TREASURY DEPT]]></text>
+                <text><![CDATA[SECURITY AUDIT]]></text>
             </staticText>
 
             <!-- Report title -->
             <textField>
                 <reportElement x="0" y="80" width="555" height="20"
                                forecolor="#1E3A5F" mode="Transparent"
-                               uuid="bb000001-0000-0000-0000-000000000017"/>
+                               uuid="cc000001-0000-0000-0000-000000000017"/>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="13" isBold="true" fontName="DejaVu Sans"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$P{ReportTitle}]]></textFieldExpression>
             </textField>
 
-            <!-- Net balance banner -->
-            <rectangle radius="4">
-                <reportElement x="150" y="102" width="255" height="22"
-                               backcolor="#E8F5E9" forecolor="#2E7D32" mode="Opaque"
-                               uuid="bb000001-0000-0000-0000-000000000018"/>
-                <graphicElement><pen lineWidth="1.0" lineColor="#2E7D32"/></graphicElement>
-            </rectangle>
-            <textField>
-                <reportElement x="150" y="102" width="255" height="22"
-                               forecolor="#2E7D32" mode="Transparent"
-                               uuid="bb000001-0000-0000-0000-000000000019"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="9" isBold="true" fontName="DejaVu Sans"/>
-                </textElement>
-                <textFieldExpression><![CDATA[
-                    "Net Balance: KES " + String.format("%,.2f", $P{NetBalance})
-                ]]></textFieldExpression>
-            </textField>
-
             <!-- Generated by / date -->
             <textField isBlankWhenNull="true">
-                <reportElement x="0" y="126" width="300" height="11"
+                <reportElement x="0" y="103" width="300" height="11"
                                forecolor="#555555" mode="Transparent"
-                               uuid="bb000001-0000-0000-0000-000000000021"/>
+                               uuid="cc000001-0000-0000-0000-000000000018"/>
                 <textElement><font size="8" fontName="DejaVu Sans"/></textElement>
                 <textFieldExpression><![CDATA["Generated by: " + $P{GeneratedBy}]]></textFieldExpression>
             </textField>
             <textField isBlankWhenNull="true">
-                <reportElement x="255" y="126" width="300" height="11"
+                <reportElement x="255" y="103" width="300" height="11"
                                forecolor="#555555" mode="Transparent"
-                               uuid="bb000001-0000-0000-0000-000000000022"/>
+                               uuid="cc000001-0000-0000-0000-000000000019"/>
                 <textElement textAlignment="Right"><font size="8" fontName="DejaVu Sans"/></textElement>
                 <textFieldExpression><![CDATA["Date: " + $P{GeneratedDate}]]></textFieldExpression>
             </textField>
@@ -153,102 +129,80 @@
             <rectangle radius="0">
                 <reportElement x="0" y="0" width="555" height="26"
                                backcolor="#2E6DA4" forecolor="#2E6DA4" mode="Opaque"
-                               uuid="bb000001-0000-0000-0000-000000000030"/>
+                               uuid="cc000001-0000-0000-0000-000000000020"/>
                 <graphicElement><pen lineWidth="0.0"/></graphicElement>
             </rectangle>
             <staticText>
-                <reportElement x="4" y="0" width="70" height="26" forecolor="#FFFFFF" mode="Transparent" uuid="bb000001-0000-0000-0000-000000000031"/>
+                <reportElement x="4" y="0" width="105" height="26" forecolor="#FFFFFF" mode="Transparent" uuid="cc000001-0000-0000-0000-000000000021"/>
                 <textElement verticalAlignment="Middle"><font isBold="true" size="8" fontName="DejaVu Sans"/></textElement>
-                <text><![CDATA[Date]]></text>
+                <text><![CDATA[Timestamp]]></text>
             </staticText>
             <staticText>
-                <reportElement x="74" y="0" width="175" height="26" forecolor="#FFFFFF" mode="Transparent" uuid="bb000001-0000-0000-0000-000000000032"/>
+                <reportElement x="109" y="0" width="100" height="26" forecolor="#FFFFFF" mode="Transparent" uuid="cc000001-0000-0000-0000-000000000022"/>
                 <textElement verticalAlignment="Middle"><font isBold="true" size="8" fontName="DejaVu Sans"/></textElement>
-                <text><![CDATA[Description]]></text>
+                <text><![CDATA[User]]></text>
             </staticText>
             <staticText>
-                <reportElement x="249" y="0" width="100" height="26" forecolor="#FFFFFF" mode="Transparent" uuid="bb000001-0000-0000-0000-000000000033"/>
+                <reportElement x="209" y="0" width="90" height="26" forecolor="#FFFFFF" mode="Transparent" uuid="cc000001-0000-0000-0000-000000000023"/>
                 <textElement verticalAlignment="Middle"><font isBold="true" size="8" fontName="DejaVu Sans"/></textElement>
-                <text><![CDATA[Category]]></text>
+                <text><![CDATA[Action]]></text>
             </staticText>
             <staticText>
-                <reportElement x="349" y="0" width="65" height="26" forecolor="#FFFFFF" mode="Transparent" uuid="bb000001-0000-0000-0000-000000000034"/>
+                <reportElement x="299" y="0" width="186" height="26" forecolor="#FFFFFF" mode="Transparent" uuid="cc000001-0000-0000-0000-000000000024"/>
                 <textElement verticalAlignment="Middle"><font isBold="true" size="8" fontName="DejaVu Sans"/></textElement>
-                <text><![CDATA[Type]]></text>
+                <text><![CDATA[Details]]></text>
             </staticText>
             <staticText>
-                <reportElement x="414" y="0" width="140" height="26" forecolor="#FFFFFF" mode="Transparent" uuid="bb000001-0000-0000-0000-000000000035"/>
-                <textElement textAlignment="Right" verticalAlignment="Middle"><font isBold="true" size="8" fontName="DejaVu Sans"/></textElement>
-                <text><![CDATA[Amount (KES)]]></text>
+                <reportElement x="485" y="0" width="70" height="26" forecolor="#FFFFFF" mode="Transparent" uuid="cc000001-0000-0000-0000-000000000025"/>
+                <textElement verticalAlignment="Middle"><font isBold="true" size="8" fontName="DejaVu Sans"/></textElement>
+                <text><![CDATA[IP Address]]></text>
             </staticText>
         </band>
     </columnHeader>
 
     <!-- ═══════════════════════════════════════════════════════════════
-         DETAIL — income green / expense red, alternating rows
+         DETAIL
     ═══════════════════════════════════════════════════════════════════ -->
     <detail>
         <band height="17" splitType="Stretch">
-            <!-- Even-row shading -->
             <rectangle radius="0">
                 <reportElement x="0" y="0" width="555" height="17"
-                               backcolor="#F5F8FF" forecolor="#F5F8FF" mode="Opaque"
-                               uuid="bb000001-0000-0000-0000-000000000040">
+                               backcolor="#EBF3FB" forecolor="#EBF3FB" mode="Opaque"
+                               uuid="cc000001-0000-0000-0000-000000000030">
                     <printWhenExpression><![CDATA[$V{REPORT_COUNT} % 2 == 0]]></printWhenExpression>
                 </reportElement>
                 <graphicElement><pen lineWidth="0.0"/></graphicElement>
             </rectangle>
 
+            <!-- Timestamp: LocalDateTime.toString() → "2024-01-15T10:30:00" → "2024-01-15 10:30" -->
             <textField isBlankWhenNull="true">
-                <reportElement x="4" y="2" width="70" height="13" uuid="bb000001-0000-0000-0000-000000000041"/>
-                <textElement><font size="8" fontName="DejaVu Sans"/></textElement>
-                <textFieldExpression><![CDATA[$F{transactionDate}]]></textFieldExpression>
+                <reportElement x="4" y="2" width="105" height="13" uuid="cc000001-0000-0000-0000-000000000031"/>
+                <textElement><font size="7" fontName="DejaVu Sans"/></textElement>
+                <textFieldExpression><![CDATA[
+                    $F{timestamp} != null
+                        ? $F{timestamp}.toString().replace("T"," ").substring(0, Math.min(16, $F{timestamp}.toString().length()))
+                        : ""
+                ]]></textFieldExpression>
             </textField>
             <textField isBlankWhenNull="true">
-                <reportElement x="74" y="2" width="175" height="13" uuid="bb000001-0000-0000-0000-000000000042"/>
+                <reportElement x="109" y="2" width="100" height="13" uuid="cc000001-0000-0000-0000-000000000032"/>
                 <textElement><font size="8" fontName="DejaVu Sans"/></textElement>
-                <textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{userName}]]></textFieldExpression>
             </textField>
             <textField isBlankWhenNull="true">
-                <reportElement x="249" y="2" width="100" height="13" uuid="bb000001-0000-0000-0000-000000000043"/>
-                <textElement><font size="8" fontName="DejaVu Sans"/></textElement>
-                <textFieldExpression><![CDATA[$F{category}]]></textFieldExpression>
-            </textField>
-
-            <!-- Type cell: green for income, red for expense -->
-            <textField isBlankWhenNull="true">
-                <reportElement x="349" y="2" width="65" height="13" forecolor="#155724" mode="Transparent"
-                               uuid="bb000001-0000-0000-0000-000000000044">
-                    <printWhenExpression><![CDATA["income".equalsIgnoreCase($F{type})]]></printWhenExpression>
-                </reportElement>
+                <reportElement x="209" y="2" width="90" height="13" uuid="cc000001-0000-0000-0000-000000000033"/>
                 <textElement><font size="8" isBold="true" fontName="DejaVu Sans"/></textElement>
-                <textFieldExpression><![CDATA["INCOME"]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{action}]]></textFieldExpression>
             </textField>
             <textField isBlankWhenNull="true">
-                <reportElement x="349" y="2" width="65" height="13" forecolor="#842029" mode="Transparent"
-                               uuid="bb000001-0000-0000-0000-000000000045">
-                    <printWhenExpression><![CDATA["expense".equalsIgnoreCase($F{type})]]></printWhenExpression>
-                </reportElement>
-                <textElement><font size="8" isBold="true" fontName="DejaVu Sans"/></textElement>
-                <textFieldExpression><![CDATA["EXPENSE"]]></textFieldExpression>
-            </textField>
-
-            <!-- Amount: income green / expense red -->
-            <textField isBlankWhenNull="true">
-                <reportElement x="414" y="2" width="140" height="13" forecolor="#155724" mode="Transparent"
-                               uuid="bb000001-0000-0000-0000-000000000046">
-                    <printWhenExpression><![CDATA["income".equalsIgnoreCase($F{type})]]></printWhenExpression>
-                </reportElement>
-                <textElement textAlignment="Right"><font size="8" isBold="true" fontName="DejaVu Sans"/></textElement>
-                <textFieldExpression><![CDATA["+ " + String.format("%,.2f", $F{amount})]]></textFieldExpression>
+                <reportElement x="299" y="2" width="186" height="13" uuid="cc000001-0000-0000-0000-000000000034"/>
+                <textElement><font size="8" fontName="DejaVu Sans"/></textElement>
+                <textFieldExpression><![CDATA[$F{details}]]></textFieldExpression>
             </textField>
             <textField isBlankWhenNull="true">
-                <reportElement x="414" y="2" width="140" height="13" forecolor="#842029" mode="Transparent"
-                               uuid="bb000001-0000-0000-0000-000000000047">
-                    <printWhenExpression><![CDATA["expense".equalsIgnoreCase($F{type})]]></printWhenExpression>
-                </reportElement>
-                <textElement textAlignment="Right"><font size="8" isBold="true" fontName="DejaVu Sans"/></textElement>
-                <textFieldExpression><![CDATA["- " + String.format("%,.2f", $F{amount})]]></textFieldExpression>
+                <reportElement x="485" y="2" width="70" height="13" uuid="cc000001-0000-0000-0000-000000000035"/>
+                <textElement><font size="7" fontName="DejaVu Sans"/></textElement>
+                <textFieldExpression><![CDATA[$F{ipAddress}]]></textFieldExpression>
             </textField>
         </band>
     </detail>
@@ -257,24 +211,18 @@
          SUMMARY
     ═══════════════════════════════════════════════════════════════════ -->
     <summary>
-        <band height="40" splitType="Stretch">
+        <band height="32" splitType="Stretch">
             <line>
-                <reportElement x="0" y="4" width="555" height="1" uuid="bb000001-0000-0000-0000-000000000050"/>
+                <reportElement x="0" y="4" width="555" height="1" uuid="cc000001-0000-0000-0000-000000000040"/>
                 <graphicElement><pen lineWidth="1.0" lineColor="#2E6DA4"/></graphicElement>
             </line>
             <textField>
-                <reportElement x="0" y="12" width="275" height="14" forecolor="#333333"
-                               uuid="bb000001-0000-0000-0000-000000000051"/>
-                <textElement><font size="9" fontName="DejaVu Sans"/></textElement>
-                <textFieldExpression><![CDATA["Total Transactions: " + $V{REPORT_COUNT}]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement x="275" y="12" width="280" height="14" forecolor="#1E3A5F"
-                               uuid="bb000001-0000-0000-0000-000000000052"/>
+                <reportElement x="0" y="12" width="555" height="14" forecolor="#1E3A5F"
+                               uuid="cc000001-0000-0000-0000-000000000041"/>
                 <textElement textAlignment="Right">
                     <font size="9" isBold="true" fontName="DejaVu Sans"/>
                 </textElement>
-                <textFieldExpression><![CDATA["Net Balance: KES " + String.format("%,.2f", $P{NetBalance})]]></textFieldExpression>
+                <textFieldExpression><![CDATA["Total log entries: " + $V{REPORT_COUNT}]]></textFieldExpression>
             </textField>
         </band>
     </summary>
@@ -285,18 +233,18 @@
     <pageFooter>
         <band height="22" splitType="Stretch">
             <line>
-                <reportElement x="0" y="0" width="555" height="1" uuid="bb000001-0000-0000-0000-000000000060"/>
+                <reportElement x="0" y="0" width="555" height="1" uuid="cc000001-0000-0000-0000-000000000050"/>
                 <graphicElement><pen lineWidth="0.5" lineColor="#CCCCCC"/></graphicElement>
             </line>
             <staticText>
                 <reportElement x="0" y="5" width="280" height="14" forecolor="#999999"
-                               uuid="bb000001-0000-0000-0000-000000000061"/>
+                               uuid="cc000001-0000-0000-0000-000000000051"/>
                 <textElement><font size="7" fontName="DejaVu Sans"/></textElement>
-                <text><![CDATA[TUKAC Portal — Treasury Financial Report]]></text>
+                <text><![CDATA[TUKAC Portal — Audit log for internal use only]]></text>
             </staticText>
             <textField>
                 <reportElement x="430" y="5" width="125" height="14"
-                               uuid="bb000001-0000-0000-0000-000000000062"/>
+                               uuid="cc000001-0000-0000-0000-000000000052"/>
                 <textElement textAlignment="Right"><font size="7" fontName="DejaVu Sans"/></textElement>
                 <textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
             </textField>
