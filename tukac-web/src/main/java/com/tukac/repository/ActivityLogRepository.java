@@ -6,4 +6,7 @@ import java.util.List;
 
 public interface ActivityLogRepository extends JpaRepository<ActivityLog, Long> {
     List<ActivityLog> findAllByOrderByTimestampDesc();
+    List<ActivityLog> findByActionOrderByTimestampDesc(String action);
+    List<ActivityLog> findByUserNameContainingIgnoreCaseOrderByTimestampDesc(String userName);
+    long countByAction(String action);
 }
