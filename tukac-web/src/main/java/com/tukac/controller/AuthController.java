@@ -21,7 +21,7 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<AuthResponse>> login(@RequestBody LoginRequest req) {
+    public ResponseEntity<ApiResponse<AuthResponse>> login(@jakarta.validation.Valid @RequestBody LoginRequest req) {
         if (req.getEmailOrStudentId() == null || req.getPassword() == null) {
             return ResponseEntity.badRequest().body(ApiResponse.error("Email/ID and password are required."));
         }
@@ -67,7 +67,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<String>> register(@RequestBody RegisterRequest req) {
+    public ResponseEntity<ApiResponse<String>> register(@jakarta.validation.Valid @RequestBody RegisterRequest req) {
         if (req.getName() == null || req.getStudentId() == null || req.getEmail() == null || req.getPassword() == null) {
             return ResponseEntity.badRequest().body(ApiResponse.error("All fields are required."));
         }

@@ -134,6 +134,7 @@
       <a href="/forum.html"     class="nav-item" data-page="forum.html"><span class="nav-icon">💬</span> Forum</a>
       <a href="/about.html"     class="nav-item" data-page="about.html"><span class="nav-icon">ℹ️</span> About</a>
       <a href="/profile.html" class="nav-item" data-page="profile.html"><span class="nav-icon">👤</span> My Profile</a>
+      <a href="/help.html" class="nav-item" data-page="help.html"><span class="nav-icon">❓</span> Help & Support</a>
       <div id="execSection" class="hidden">
         <div class="nav-section-label">Management</div>
         <a href="/events.html"   class="nav-item"><span class="nav-icon">⚙️</span> Manage Events</a>
@@ -143,6 +144,7 @@
       <div id="adminSection" class="hidden">
         <div class="nav-section-label">Admin</div>
         <a href="/admin.html" class="nav-item" data-page="admin.html"><span class="nav-icon">👥</span> Manage Users</a>
+        <a href="/audit-logs.html" class="nav-item" data-page="audit-logs.html"><span class="nav-icon">📜</span> Audit Logs</a>
       </div>
     </nav>
     <div class="sidebar-footer">
@@ -289,22 +291,6 @@
               <div class="contact-value"><a href="mailto:${escHtml(contact.email||'')}" style="color:var(--navy);">${escHtml(contact.email || 'Not set yet')}</a></div>
             </div>
           </div>
-          <!-- Dynamic executives from DB -->
-          ${executivesData.length ? executivesData.map(e => {
-            const roleIcons = { 'chairperson': '👑', 'vice-chairperson': '🤝', 'secretary': '📋', 'treasurer': '💰' };
-            const roleColors = { 'chairperson': 'gold', 'vice-chairperson': 'green', 'secretary': 'navy', 'treasurer': 'gold' };
-            const roleLabel = e.role.replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
-            return `
-            <div class="contact-card">
-              <div class="contact-icon ${roleColors[e.role] || 'navy'}">${roleIcons[e.role] || '👤'}</div>
-              <div>
-                <div class="contact-label">${escHtml(roleLabel)}</div>
-                <div class="contact-value">${escHtml(e.name)}</div>
-                ${e.contact ? `<div class="contact-sub">📞 ${escHtml(e.contact)}</div>` : ''}
-                ${e.email ? `<div class="contact-sub">✉️ <a href="mailto:${escHtml(e.email)}" style="color:var(--text-muted);">${escHtml(e.email)}</a></div>` : ''}
-              </div>
-            </div>`;
-          }).join('') : '<div class="contact-card"><div class="contact-icon navy">ℹ️</div><div><div class="contact-label">Executives</div><div class="contact-value">Not yet assigned</div></div></div>'}
           <!-- Location (manually set) -->
           <div class="contact-card">
             <div class="contact-icon green">📍</div>
@@ -317,6 +303,28 @@
               </div>
             </div>
           </div>
+        </div>
+
+        <!-- Executive Members from Database -->
+        <div class="section-title" style="margin-top:28px; margin-bottom:16px;">👥 Executive Committee</div>
+        <div class="contact-grid">
+          ${executivesData.length ? executivesData.map(e => {
+            const roleIcons = { 'chairperson': '👑', 'vice-chairperson': '🤝', 'secretary': '📋', 'treasurer': '💰' };
+            const roleColors = { 'chairperson': 'gold', 'vice-chairperson': 'green', 'secretary': 'navy', 'treasurer': 'gold' };
+            const roleLabel = e.role.replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+            return `
+            <div class="contact-card" style="border-left: 4px solid var(--${roleColors[e.role] || 'navy'});">
+              <div class="contact-icon ${roleColors[e.role] || 'navy'}">${roleIcons[e.role] || '👤'}</div>
+              <div>
+                <div class="contact-label">${escHtml(roleLabel)}</div>
+                <div class="contact-value">${escHtml(e.name)}</div>
+                ${e.contact ? `<div class="contact-sub">📞 <a href="tel:${escHtml(e.contact)}" style="color:var(--text-muted);">${escHtml(e.contact)}</a></div>` : '<div class="contact-sub" style="color:var(--text-muted); font-style:italic;">No phone on file</div>'}
+                ${e.email ? `<div class="contact-sub">✉️ <a href="mailto:${escHtml(e.email)}" style="color:var(--text-muted);">${escHtml(e.email)}</a></div>` : ''}
+              </div>
+            </div>`;
+          }).join('') : `
+            <div class="contact-card"><div class="contact-icon navy">ℹ️</div><div><div class="contact-label">Executive Committee</div><div class="contact-value">Not yet assigned</div><div class="contact-sub">Contact the club email above.</div></div></div>
+          `}
         </div>
       </div>
     `;
@@ -354,18 +362,9 @@
       </div>
 
       <div style="border-top:1px solid var(--border);margin:20px 0;padding-top:16px;">
-        <div class="section-title" style="margin-bottom:14px;">📞 Contact Information</div>
+        <div class="section-title" style="margin-bottom:6px;">📞 Contact Information</div>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:14px;">Executive member contacts (name, phone, email) are pulled automatically from the user database. Update them via the <strong>Manage Users</strong> admin panel.</p>
         <div class="form-group"><label>Club Email</label><input type="email" id="ed-email" class="form-control" value="${escHtml(c.email||'')}"/></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-          <div class="form-group"><label>Chairperson Name</label><input type="text" id="ed-chair-name" class="form-control" value="${escHtml(c.chairperson?.name||'')}"/></div>
-          <div class="form-group"><label>Chairperson Phone</label><input type="text" id="ed-chair-phone" class="form-control" value="${escHtml(c.chairperson?.phone||'')}"/></div>
-          <div class="form-group"><label>Vice Chairperson Name</label><input type="text" id="ed-vice-name" class="form-control" value="${escHtml(c.viceChairperson?.name||'')}"/></div>
-          <div class="form-group"><label>Vice Chairperson Phone</label><input type="text" id="ed-vice-phone" class="form-control" value="${escHtml(c.viceChairperson?.phone||'')}"/></div>
-          <div class="form-group"><label>Secretary Name</label><input type="text" id="ed-sec-name" class="form-control" value="${escHtml(c.secretary?.name||'')}"/></div>
-          <div class="form-group"><label>Secretary Phone</label><input type="text" id="ed-sec-phone" class="form-control" value="${escHtml(c.secretary?.phone||'')}"/></div>
-          <div class="form-group"><label>Treasurer Name</label><input type="text" id="ed-trea-name" class="form-control" value="${escHtml(c.treasurer?.name||'')}"/></div>
-          <div class="form-group"><label>Treasurer Phone</label><input type="text" id="ed-trea-phone" class="form-control" value="${escHtml(c.treasurer?.phone||'')}"/></div>
-        </div>
         <div class="form-group"><label>Office Location</label><input type="text" id="ed-location" class="form-control" value="${escHtml(c.location||'')}"/></div>
       </div>
     `;
@@ -406,10 +405,6 @@
       previousChairpersons: chairs,
       contact: {
         email: document.getElementById('ed-email').value.trim(),
-        chairperson:    { name: document.getElementById('ed-chair-name').value.trim(),  phone: document.getElementById('ed-chair-phone').value.trim() },
-        viceChairperson:{ name: document.getElementById('ed-vice-name').value.trim(),   phone: document.getElementById('ed-vice-phone').value.trim() },
-        secretary:      { name: document.getElementById('ed-sec-name').value.trim(),    phone: document.getElementById('ed-sec-phone').value.trim() },
-        treasurer:      { name: document.getElementById('ed-trea-name').value.trim(),   phone: document.getElementById('ed-trea-phone').value.trim() },
         location: document.getElementById('ed-location').value.trim()
       }
     };
@@ -438,5 +433,7 @@
     return d.innerHTML;
   }
 </script>
+<script src="/js/accessibility.js"></script>
 </body>
 </html>
+

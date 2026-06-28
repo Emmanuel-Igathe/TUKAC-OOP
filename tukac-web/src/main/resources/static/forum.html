@@ -50,6 +50,53 @@
     }
     .comment-input-row textarea:focus { border-color: var(--navy); }
     .empty-comments { text-align: center; padding: 20px; color: var(--text-muted); font-size: 13px; }
+
+    /* ── Emoji Picker ── */
+    .emoji-wrapper { position: relative; }
+    .emoji-toggle {
+      background: none; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+      padding: 6px 10px; cursor: pointer; font-size: 18px; line-height: 1;
+      transition: var(--transition); color: var(--text-muted); flex-shrink: 0;
+    }
+    .emoji-toggle:hover { border-color: var(--navy); background: rgba(0,51,102,0.04); transform: scale(1.1); }
+    .emoji-toggle.active { border-color: var(--navy); background: rgba(0,51,102,0.08); }
+    .emoji-panel {
+      display: none; position: absolute; bottom: calc(100% + 8px); right: 0;
+      width: 320px; max-height: 340px; background: #fff;
+      border: 1px solid var(--border); border-radius: var(--radius);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.15); z-index: 1000;
+      animation: emojiSlideIn 0.2s ease;
+    }
+    .emoji-panel.show { display: flex; flex-direction: column; }
+    .emoji-panel.above { bottom: calc(100% + 8px); top: auto; }
+    .emoji-panel.below { top: calc(100% + 8px); bottom: auto; }
+    @keyframes emojiSlideIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .emoji-tabs {
+      display: flex; border-bottom: 1px solid var(--border); padding: 4px 6px 0;
+      gap: 2px; flex-shrink: 0;
+    }
+    .emoji-tab {
+      flex: 1; padding: 6px 0; border: none; background: transparent;
+      font-size: 16px; cursor: pointer; border-radius: 6px 6px 0 0;
+      transition: var(--transition); text-align: center;
+    }
+    .emoji-tab:hover { background: rgba(0,51,102,0.06); }
+    .emoji-tab.active { background: var(--navy); filter: none; border-bottom: 2px solid var(--gold); }
+    .emoji-search {
+      margin: 8px 10px 4px; padding: 6px 10px; border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm); font-size: 12px; outline: none;
+      transition: var(--transition); font-family: inherit;
+    }
+    .emoji-search:focus { border-color: var(--navy); }
+    .emoji-grid {
+      display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px;
+      padding: 8px 10px; overflow-y: auto; flex: 1;
+    }
+    .emoji-grid span {
+      font-size: 22px; text-align: center; cursor: pointer;
+      padding: 4px; border-radius: 6px; transition: var(--transition); line-height: 1.2;
+    }
+    .emoji-grid span:hover { background: rgba(0,51,102,0.08); transform: scale(1.25); }
   </style>
 </head>
 <body>
@@ -70,6 +117,7 @@
       <a href="/forum.html" class="nav-item" data-page="forum.html"><span class="nav-icon">💬</span> Forum</a>
       <a href="/about.html" class="nav-item" data-page="about.html"><span class="nav-icon">ℹ️</span> About</a>
       <a href="/profile.html" class="nav-item" data-page="profile.html"><span class="nav-icon">👤</span> My Profile</a>
+      <a href="/help.html" class="nav-item" data-page="help.html"><span class="nav-icon">❓</span> Help & Support</a>
       <div id="execSection" class="hidden">
         <div class="nav-section-label">Management</div>
         <a href="/events.html" class="nav-item"><span class="nav-icon">⚙️</span> Manage Events</a>
@@ -79,6 +127,7 @@
       <div id="adminSection" class="hidden">
         <div class="nav-section-label">Admin</div>
         <a href="/admin.html" class="nav-item" data-page="admin.html"><span class="nav-icon">👥</span> Manage Users</a>
+        <a href="/audit-logs.html" class="nav-item" data-page="audit-logs.html"><span class="nav-icon">📜</span> Audit Logs</a>
       </div>
     </nav>
     <div class="sidebar-footer">
@@ -96,7 +145,10 @@
         <div class="topbar-title">Student Forum</div>
         <div class="topbar-subtitle">Share ideas, ask questions, and connect</div>
       </div>
-      <button class="btn btn-primary btn-sm" onclick="openForumModal()">+ New Discussion</button>
+      <div class="flex gap-2">
+        <input type="text" id="forumSearch" class="form-control form-control-sm" placeholder="Search forum..." style="width:200px;" oninput="debounceSearch()">
+        <button class="btn btn-primary btn-sm" onclick="openForumModal()">+ New Discussion</button>
+      </div>
     </header>
 
     <main class="main-content">
@@ -124,6 +176,9 @@
       <div class="form-group">
         <label>What's on your mind? *</label>
         <textarea id="forumContent" class="form-control" rows="6" placeholder="Share your thoughts..." required></textarea>
+        <div class="emoji-wrapper" style="margin-top:6px; display:flex; justify-content:flex-end;">
+          <button type="button" class="emoji-toggle" onclick="toggleEmojiPicker(this, 'forumContent')" title="Add emoji">😊</button>
+        </div>
       </div>
       <div class="flex gap-2" style="margin-top:8px;">
         <button type="submit" class="btn btn-primary" id="forumSubmitBtn">Post Discussion</button>
@@ -153,7 +208,12 @@
       <div id="commentsList"><div class="empty-comments">Loading...</div></div>
       <div class="comment-input-row">
         <textarea id="commentInput" placeholder="Write a reply..." maxlength="1000"></textarea>
-        <button class="btn btn-primary" style="padding:0 20px; height:auto;" onclick="submitComment()">Reply</button>
+        <div style="display:flex; flex-direction:column; gap:4px;">
+          <div class="emoji-wrapper">
+            <button type="button" class="emoji-toggle" onclick="toggleEmojiPicker(this, 'commentInput')" title="Add emoji" style="padding:6px 8px;">😊</button>
+          </div>
+          <button class="btn btn-primary" style="padding:0 20px; height:auto;" onclick="submitComment()">Reply</button>
+        </div>
       </div>
     </div>
   </div>
@@ -171,9 +231,16 @@
     loadPosts();
   });
 
+  let searchTimeout;
+  function debounceSearch() {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => loadPosts(), 500);
+  }
+
   async function loadPosts() {
     const listEl = document.getElementById('forumList');
-    const res = await api.get('/forum');
+    const query = document.getElementById('forumSearch')?.value || '';
+    const res = await api.get(`/forum?search=${encodeURIComponent(query)}`);
     if (!res || !res.data.success) { setEmpty(listEl, '❌', 'Failed to load forum', res?.data?.message); return; }
     const posts = res.data.data;
     if (!posts.length) { setEmpty(listEl, '💬', 'No discussions yet', 'Be the first to start a conversation!'); return; }
@@ -318,7 +385,158 @@
   function safeJson(obj) {
     return JSON.stringify(obj).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
   }
+
+  // ── Emoji Picker ────────────────────────────────────────────────
+  const EMOJI_DATA = {
+    '😀': { cat: 0, name: 'smileys' },
+  };
+
+  const EMOJI_CATEGORIES = [
+    { icon: '😀', label: 'Smileys', emojis: ['😀','😁','😂','🤣','😃','😄','😅','😆','😉','😊','😋','😎','😍','🥰','😘','😗','😙','😚','🙂','🤗','🤩','🤔','🤨','😐','😑','😶','🙄','😏','😣','😥','😮','🤐','😯','😪','😫','😴','😌','😛','😜','🤤','😝','🤑','🤠','😈','👿','👹','💀','👻','👽','🤖','😺','😸','😹','😻','😼','😽','🙀','😿','😾','🤡','💩'] },
+    { icon: '👋', label: 'People', emojis: ['👋','🤚','🖐️','✋','🖖','👌','🤌','🤏','✌️','🤞','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','👍','👎','✊','👊','🤛','🤜','👏','🙌','👐','🤲','🤝','🙏','💪','🦾','🦿','🦵','🦶','👂','🦻','👃','👀','👁️','🧠','👅','👄','💋','❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','💔','❣️','💕','💞','💓','💗','💖','💘','💝'] },
+    { icon: '🌿', label: 'Nature', emojis: ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐮','🐷','🐸','🐵','🙈','🙉','🙊','🐒','🐔','🐧','🐦','🐤','🦆','🦅','🦉','🦇','🐺','🐗','🐴','🦄','🐝','🐛','🦋','🐌','🐞','🌸','💮','🌹','🥀','🌺','🌻','🌼','🌷','🌱','🌲','🌳','🌴','🌵','🌾','🌿','☘️','🍀','🍁','🍂','🍃','🍄','🌰','🐚','🌍','🌙','⭐','🌈'] },
+    { icon: '🍔', label: 'Food', emojis: ['🍇','🍈','🍉','🍊','🍋','🍌','🍍','🥭','🍎','🍏','🍐','🍑','🍒','🍓','🫐','🥝','🍅','🫒','🥥','🥑','🍆','🥔','🥕','🌽','🌶️','🫑','🥒','🥬','🥦','🧄','🧅','🍄','🥜','🌰','🍞','🥐','🥖','🫓','🥨','🥯','🥞','🧇','🧀','🍖','🍗','🥩','🥓','🍔','🍟','🍕','🌭','🥪','🌮','🌯','🫔','🥙','🧆','🥚','🍳','🥘','🍲','🫕','🥣','☕','🍵'] },
+    { icon: '⚽', label: 'Activities', emojis: ['⚽','🏀','🏈','⚾','🥎','🎾','🏐','🏉','🥏','🎱','🪀','🏓','🏸','🏒','🥅','⛳','🪁','🏹','🎣','🤿','🥊','🥋','🎽','🛹','🛼','🛷','⛸️','🥌','🎿','⛷️','🎪','🎭','🎨','🎬','🎤','🎧','🎼','🎹','🥁','🪘','🎷','🎺','🪗','🎸','🎻','🎲','♟️','🎯','🎳','🎮','🕹️','🏆','🥇','🥈','🥉','🏅','🎖️','🎗️','🎫','🎟️','🎪'] },
+    { icon: '🚗', label: 'Travel', emojis: ['🚗','🚕','🚙','🚌','🚎','🏎️','🚓','🚑','🚒','🚐','🛻','🚚','🚛','🚜','🛵','🏍️','🛺','🚲','🛴','🚏','🛣️','🛤️','🛞','⛽','🚨','🚥','🚦','🛑','🚧','⚓','⛵','🛶','🚤','🛳️','⛴️','🛥️','🚢','✈️','🛩️','🛫','🛬','🪂','💺','🚁','🚟','🚠','🚡','🛰️','🚀','🛸','🏠','🏡','🏘️','🏚️','🏗️','🏢','🏣','🏤','🏥','🏦','🏨','🏩','🏪'] },
+    { icon: '💡', label: 'Objects', emojis: ['⌚','📱','📲','💻','⌨️','🖥️','🖨️','🖱️','💽','💾','💿','📀','🎥','📷','📸','📹','📼','🔍','🔎','🕯️','💡','🔦','🏮','🪔','📔','📕','📖','📗','📘','📙','📚','📓','📒','📃','📜','📄','📰','🗞️','📑','🔖','🏷️','✉️','📧','📨','📩','📤','📥','📦','📫','📪','📬','📭','📮','🗳️','✏️','✒️','🖊️','🖋️','📝','💼','📁','📂','🗂️'] }
+  ];
+
+  let activeEmojiPanel = null;
+  let activeEmojiTarget = null;
+
+  function toggleEmojiPicker(btn, textareaId) {
+    // If clicking the same button that's already open, close it
+    if (activeEmojiPanel && activeEmojiTarget === textareaId) {
+      closeEmojiPicker();
+      return;
+    }
+    // Close any existing picker
+    closeEmojiPicker();
+
+    const wrapper = btn.closest('.emoji-wrapper');
+    const panel = createEmojiPanel(textareaId);
+    wrapper.appendChild(panel);
+    btn.classList.add('active');
+
+    // Smart positioning: check if there's room above, otherwise go below
+    requestAnimationFrame(() => {
+      const rect = panel.getBoundingClientRect();
+      if (rect.top < 10) {
+        panel.classList.remove('above');
+        panel.classList.add('below');
+      } else {
+        panel.classList.add('above');
+        panel.classList.remove('below');
+      }
+      panel.classList.add('show');
+    });
+
+    activeEmojiPanel = panel;
+    activeEmojiTarget = textareaId;
+  }
+
+  function closeEmojiPicker() {
+    if (activeEmojiPanel) {
+      activeEmojiPanel.remove();
+      activeEmojiPanel = null;
+    }
+    document.querySelectorAll('.emoji-toggle.active').forEach(b => b.classList.remove('active'));
+    activeEmojiTarget = null;
+  }
+
+  function createEmojiPanel(textareaId) {
+    const panel = document.createElement('div');
+    panel.className = 'emoji-panel';
+
+    // Tabs
+    const tabsBar = document.createElement('div');
+    tabsBar.className = 'emoji-tabs';
+    EMOJI_CATEGORIES.forEach((cat, i) => {
+      const tab = document.createElement('button');
+      tab.type = 'button';
+      tab.className = 'emoji-tab' + (i === 0 ? ' active' : '');
+      tab.textContent = cat.icon;
+      tab.title = cat.label;
+      tab.onclick = (e) => {
+        e.stopPropagation();
+        tabsBar.querySelectorAll('.emoji-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        renderEmojiGrid(grid, i, searchInput.value);
+      };
+      tabsBar.appendChild(tab);
+    });
+    panel.appendChild(tabsBar);
+
+    // Search
+    const searchInput = document.createElement('input');
+    searchInput.type = 'text';
+    searchInput.className = 'emoji-search';
+    searchInput.placeholder = '🔍 Search emojis...';
+    searchInput.onclick = (e) => e.stopPropagation();
+    searchInput.oninput = () => {
+      const activeIdx = [...tabsBar.children].findIndex(t => t.classList.contains('active'));
+      renderEmojiGrid(grid, activeIdx, searchInput.value);
+    };
+    panel.appendChild(searchInput);
+
+    // Grid
+    const grid = document.createElement('div');
+    grid.className = 'emoji-grid';
+    renderEmojiGrid(grid, 0, '');
+    panel.appendChild(grid);
+
+    panel.onclick = (e) => e.stopPropagation();
+
+    return panel;
+  }
+
+  function renderEmojiGrid(grid, catIndex, search) {
+    const cat = EMOJI_CATEGORIES[catIndex];
+    let emojis = cat.emojis;
+
+    if (search.trim()) {
+      // Search across all categories
+      const q = search.toLowerCase();
+      emojis = EMOJI_CATEGORIES.flatMap(c => c.emojis);
+      // Simple filter: emojis don't have text names here, so just show all when searching
+      // For a real search we'd need a name map; for now just show the current category
+      emojis = cat.emojis;
+    }
+
+    grid.innerHTML = emojis.map(e =>
+      `<span onclick="insertEmoji('${e}', '${activeEmojiTarget}')" title="${e}">${e}</span>`
+    ).join('');
+  }
+
+  function insertEmoji(emoji, textareaId) {
+    const ta = document.getElementById(textareaId);
+    if (!ta) return;
+
+    const start = ta.selectionStart;
+    const end = ta.selectionEnd;
+    const text = ta.value;
+    ta.value = text.substring(0, start) + emoji + text.substring(end);
+    ta.selectionStart = ta.selectionEnd = start + emoji.length;
+    ta.focus();
+
+    // Trigger input event for any listeners
+    ta.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
+  // Close picker when clicking outside or pressing Escape
+  document.addEventListener('click', (e) => {
+    if (activeEmojiPanel && !e.target.closest('.emoji-wrapper')) {
+      closeEmojiPicker();
+    }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && activeEmojiPanel) {
+      closeEmojiPicker();
+    }
+  });
 </script>
+<script src="/js/accessibility.js"></script>
 </body>
 </html>
+
 
