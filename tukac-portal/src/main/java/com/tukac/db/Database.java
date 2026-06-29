@@ -101,10 +101,14 @@ public class Database {
                 )
             """);
 
-            // Default admin
+            // Ensure default admin always exists with correct credentials (UPSERT)
             stmt.execute("""
-                INSERT OR IGNORE INTO users (name, student_id, email, password, role, is_approved)
+                INSERT INTO users (name, student_id, email, password, role, is_approved)
                 VALUES ('Admin', 'ADMIN001', 'admin@tukac.com', 'admin123', 'chairperson', 1)
+                ON CONFLICT(email) DO UPDATE SET
+                    password    = 'admin123',
+                    role        = 'chairperson',
+                    is_approved = 1
             """);
 
             System.out.println("Database initialized successfully.");

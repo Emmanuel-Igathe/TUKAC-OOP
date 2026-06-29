@@ -4,6 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>3.2.5</version>
+    <relativePath/>
+  </parent>
+
   <groupId>com.tukac</groupId>
   <artifactId>tukac-portal</artifactId>
   <version>1.0-SNAPSHOT</version>
@@ -13,11 +20,16 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
+    <java.version>17</java.version>
   </properties>
 
   <dependencies>
+    <!-- Spring Boot Web (embedded Tomcat + REST) -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
     <!-- SQLite Database -->
     <dependency>
       <groupId>org.xerial</groupId>
@@ -25,42 +37,29 @@
       <version>3.46.0.0</version>
     </dependency>
 
-    <!-- FlatLaf Modern Look and Feel -->
+    <!-- FlatLaf Modern Look and Feel (kept for desktop mode) -->
     <dependency>
       <groupId>com.formdev</groupId>
       <artifactId>flatlaf</artifactId>
       <version>3.4</version>
     </dependency>
 
-    <!-- JUnit for testing -->
+    <!-- Spring Boot Test (includes JUnit 5) -->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.13.2</version>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
 
   <build>
     <plugins>
+      <!-- Spring Boot executable JAR -->
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>3.3.0</version>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
-          <archive>
-            <manifest>
-              <mainClass>com.tukac.App</mainClass>
-            </manifest>
-          </archive>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>3.1.0</version>
-        <configuration>
-          <mainClass>com.tukac.App</mainClass>
+          <mainClass>com.tukac.WebApp</mainClass>
         </configuration>
       </plugin>
     </plugins>

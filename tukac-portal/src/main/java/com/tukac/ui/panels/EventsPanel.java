@@ -116,7 +116,7 @@ public class EventsPanel extends JPanel {
             PreparedStatement pstmt = Database.getConnection().prepareStatement(
                 "INSERT OR IGNORE INTO event_registrations (user_id, event_id) VALUES (?, ?)"
             );
-            pstmt.setInt(1, currentUser.getId());
+            pstmt.setLong(1, currentUser.getId());
             pstmt.setInt(2, eventId);
             int rows = pstmt.executeUpdate();
             if (rows > 0) {
@@ -141,7 +141,7 @@ public class EventsPanel extends JPanel {
             PreparedStatement pstmt = Database.getConnection().prepareStatement(
                 "DELETE FROM event_registrations WHERE user_id = ? AND event_id = ?"
             );
-            pstmt.setInt(1, currentUser.getId());
+            pstmt.setLong(1, currentUser.getId());
             pstmt.setInt(2, eventId);
             int rows = pstmt.executeUpdate();
             if (rows > 0) {

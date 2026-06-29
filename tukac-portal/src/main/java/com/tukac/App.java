@@ -1,10 +1,12 @@
 package com.tukac;
 
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+
 import com.formdev.flatlaf.FlatLightLaf;
 import com.tukac.db.Database;
 import com.tukac.ui.panels.LoginPanel;
-
-import javax.swing.*;
 
 public class App {
     public static void main(String[] args) {
@@ -27,6 +29,7 @@ public class App {
         // Run the GUI
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("TUK Ability Club Portal");
+ 
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setSize(1000, 650);
             frame.setLocationRelativeTo(null);

@@ -1,0 +1,1948 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="TUKAC - Technical University of Kenya Ability Club">
+    <title>TUKAC - Technical University of Kenya Ability Club</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #3498DB;
+            --primary-hover: #2980B9;
+            --primary-light: #EBF5FB;
+
+            --secondary-color: #2C3E50;
+            --secondary-light: #34495E;
+
+            --background-color: #F4F7F6;
+            --surface-color: #FFFFFF;
+
+            --accent-admin: #F39C12;
+            --accent-success: #27AE60;
+            --accent-danger: #E74C3C;
+            --accent-warning: #F39C12;
+
+            --text-primary: #212121;
+            --text-secondary: #757575;
+            --text-muted: #95A5A6;
+
+            --border-color: #ECF0F1;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.15);
+
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-display: 'Plus Jakarta Sans', var(--font-main);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #app-wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main {
+            flex: 1;
+        }
+
+        /* ===== TYPOGRAPHY ===== */
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: var(--font-display);
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.2;
+            letter-spacing: -0.5px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 2rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+        }
+
+        h4 {
+            font-size: 1.25rem;
+        }
+
+        h5 {
+            font-size: 1.1rem;
+        }
+
+        h6 {
+            font-size: 1rem;
+        }
+
+        p {
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        a:hover {
+            color: var(--primary-hover);
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            background-color: var(--secondary-color);
+            box-shadow: var(--shadow-sm);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            width: 100%;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: white;
+            transition: transform 0.2s ease;
+        }
+
+        .brand:hover {
+            transform: scale(1.05);
+        }
+
+        .brand-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), #2980B9);
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.25rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-item a {
+            color: rgba(255, 255, 255, 0.85);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .nav-item a:hover,
+        .nav-item a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            list-style: none;
+        }
+
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            padding: 0.625rem 1.25rem;
+            border-radius: 6px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            text-align: center;
+            justify-content: center;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-light);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+        }
+
+        .btn-danger {
+            background-color: var(--accent-danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #C0392B;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background-color: var(--accent-success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #229954;
+            transform: translateY(-2px);
+        }
+
+        .btn-sm {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.85rem;
+        }
+
+        .btn-lg {
+            padding: 0.875rem 1.75rem;
+            font-size: 1rem;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* ===== CONTAINER ===== */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            width: 100%;
+        }
+
+        /* ===== SECTIONS ===== */
+        .section {
+            padding: 3rem 0;
+        }
+
+        .section-header {
+            margin-bottom: 2.5rem;
+        }
+
+        .section-header h2 {
+            margin-bottom: 0.5rem;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, #34495E 100%);
+            color: white;
+            padding: 6rem 0;
+            text-align: center;
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-content h1 {
+            color: white;
+            margin-bottom: 1rem;
+            font-size: 3rem;
+        }
+
+        .hero-content p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary-color), #2980B9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ===== CARDS ===== */
+        .card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-4px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .card-body {
+            margin-bottom: 1rem;
+        }
+
+        .card-footer {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* ===== FORMS ===== */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-family: var(--font-main);
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            background-color: var(--surface-color);
+            color: var(--text-primary);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        .form-control::placeholder {
+            color: var(--text-muted);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-row.full {
+            grid-template-columns: 1fr;
+        }
+
+        /* ===== ALERTS ===== */
+        .alert {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-success {
+            background-color: #D4EDDA;
+            border: 1px solid #C3E6CB;
+            color: #155724;
+        }
+
+        .alert-danger {
+            background-color: #F8D7DA;
+            border: 1px solid #F5C6CB;
+            color: #721C24;
+        }
+
+        .alert-warning {
+            background-color: #FFF3CD;
+            border: 1px solid #FFEEBA;
+            color: #856404;
+        }
+
+        .alert-info {
+            background-color: #D1ECF1;
+            border: 1px solid #BEE5EB;
+            color: #0C5460;
+        }
+
+        .alert-icon {
+            flex-shrink: 0;
+            font-size: 1.25rem;
+        }
+
+        .alert-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.25rem;
+            color: inherit;
+            padding: 0;
+        }
+
+        /* ===== BADGE ===== */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        .badge-primary {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+        }
+
+        .badge-success {
+            background-color: #D4EDDA;
+            color: var(--accent-success);
+        }
+
+        .badge-danger {
+            background-color: #F8D7DA;
+            color: var(--accent-danger);
+        }
+
+        .badge-warning {
+            background-color: #FFF3CD;
+            color: var(--accent-warning);
+        }
+
+        .badge-admin {
+            background-color: #FEF5E7;
+            color: var(--accent-admin);
+        }
+
+        /* ===== GRID ===== */
+        .grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        /* ===== STAT CARD ===== */
+        .stat-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .stat-card h4 {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-change {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .stat-change.positive {
+            color: var(--accent-success);
+        }
+
+        .stat-change.negative {
+            color: var(--accent-danger);
+        }
+
+        .stat-card.income {
+            border-left-color: var(--accent-success);
+        }
+
+        .stat-card.expense {
+            border-left-color: var(--accent-danger);
+        }
+
+        .stat-card.admin {
+            border-left-color: var(--accent-admin);
+        }
+
+        /* ===== TABLE ===== */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--surface-color);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .table thead {
+            background-color: var(--background-color);
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .table tbody tr:hover {
+            background-color: var(--background-color);
+        }
+
+        .table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background-color: var(--secondary-color);
+            color: rgba(255, 255, 255, 0.9);
+            padding: 3rem 0 1rem;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section a {
+            display: block;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 0.5rem;
+            transition: color 0.2s ease;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        /* ===== MODAL ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        /* ===== UTILITY CLASSES ===== */
+        .text-center {
+            text-align: center;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-muted {
+            color: var(--text-muted);
+        }
+
+        .text-danger {
+            color: var(--accent-danger);
+        }
+
+        .text-success {
+            color: var(--accent-success);
+        }
+
+        .text-warning {
+            color: var(--accent-warning);
+        }
+
+        .mb-1 {
+            margin-bottom: 0.5rem;
+        }
+
+        .mb-2 {
+            margin-bottom: 1rem;
+        }
+
+        .mb-3 {
+            margin-bottom: 1.5rem;
+        }
+
+        .mb-4 {
+            margin-bottom: 2rem;
+        }
+
+        .mt-1 {
+            margin-top: 0.5rem;
+        }
+
+        .mt-2 {
+            margin-top: 1rem;
+        }
+
+        .mt-3 {
+            margin-top: 1.5rem;
+        }
+
+        .mt-4 {
+            margin-top: 2rem;
+        }
+
+        .d-flex {
+            display: flex;
+        }
+
+        .gap-1 {
+            gap: 0.5rem;
+        }
+
+        .gap-2 {
+            gap: 1rem;
+        }
+
+        .align-center {
+            align-items: center;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .navbar-container {
+                gap: 1rem;
+            }
+
+            .nav-toggle {
+                display: block;
+            }
+
+            .nav-menu,
+            .nav-right {
+                display: none;
+                flex-direction: column;
+                gap: 0.5rem;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background-color: var(--secondary-color);
+                padding: 1rem;
+                width: 100%;
+            }
+
+            .nav-menu.active,
+            .nav-right.active {
+                display: flex;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            h3 {
+                font-size: 1.25rem;
+            }
+
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .hero-content p {
+                font-size: 1rem;
+            }
+
+            .hero {
+                padding: 3rem 0;
+                min-height: 350px;
+            }
+
+            .form-row,
+            .form-row.full {
+                grid-template-columns: 1fr;
+            }
+
+            .grid-2,
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+
+            .table {
+                font-size: 0.9rem;
+            }
+
+            .table th,
+            .table td {
+                padding: 0.75rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .section {
+                padding: 1.5rem 0;
+            }
+
+            .modal-content {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app-wrapper">
+        <!-- NAVBAR -->
+        <nav class="navbar">
+            <div class="navbar-container">
+                <a href="#/" class="brand">
+                    <div class="brand-icon">
+                        <i class="bi bi-universal-access"></i>
+                    </div>
+                    <span>TUKAC</span>
+                </a>
+                <button class="nav-toggle" id="nav-toggle">
+                    <i class="bi bi-list"></i>
+                </button>
+                <ul class="nav-menu" id="nav-menu">
+                    <!-- Dynamic navigation -->
+                </ul>
+                <ul class="nav-right" id="nav-auth">
+                    <!-- Auth links -->
+                </ul>
+            </div>
+        </nav>
+
+        <!-- MAIN CONTENT -->
+        <main id="app-content"></main>
+
+        <!-- FOOTER -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h4>About TUKAC</h4>
+                        <p>Technical University of Kenya Ability Club is dedicated to empowering every student
+                            regardless of ability and fostering an inclusive campus community.</p>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Quick Links</h4>
+                        <a href="#/">Home</a>
+                        <a href="#/events">Events</a>
+                        <a href="#/blog">Blog</a>
+                        <a href="#/dashboard">Dashboard</a>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Support</h4>
+                        <a href="#">Contact Us</a>
+                        <a href="#">FAQ</a>
+                        <a href="#">Report Issue</a>
+                        <a href="#">Privacy Policy</a>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Follow Us</h4>
+                        <a href="#"><i class="bi bi-facebook"></i> Facebook</a>
+                        <a href="#"><i class="bi bi-twitter"></i> Twitter</a>
+                        <a href="#"><i class="bi bi-instagram"></i> Instagram</a>
+                        <a href="#"><i class="bi bi-linkedin"></i> LinkedIn</a>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2025 TUKAC — Technical University of Kenya Ability Club. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        /* ===== API MODULE ===== */
+        const api = (() => {
+            const BASE_URL = '/api';
+            const STORAGE_KEY = 'tukac_auth';
+
+            return {
+                async req(endpoint, options = {}) {
+                    const defaultOptions = {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${this.getToken()}`
+                        }
+                    };
+
+                    const finalOptions = {
+                        ...defaultOptions,
+                        ...options,
+                        headers: {
+                            ...defaultOptions.headers,
+                            ...(options.headers || {})
+                        }
+                    };
+
+                    if (options.body && typeof options.body === 'object') {
+                        finalOptions.body = JSON.stringify(options.body);
+                    }
+
+                    const response = await fetch(BASE_URL + endpoint, finalOptions);
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(data.message || 'Request failed');
+                    }
+
+                    return data;
+                },
+
+                getToken() {
+                    const auth = this.getAuth();
+                    return auth?.token || '';
+                },
+
+                getUser() {
+                    const auth = this.getAuth();
+                    return auth?.user || null;
+                },
+
+                setToken(token) {
+                    const auth = this.getAuth() || {};
+                    auth.token = token;
+                    this.setAuth(auth);
+                },
+
+                setUser(user) {
+                    const auth = this.getAuth() || {};
+                    auth.user = user;
+                    this.setAuth(auth);
+                },
+
+                setAuth(auth) {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(auth));
+                },
+
+                getAuth() {
+                    const auth = localStorage.getItem(STORAGE_KEY);
+                    return auth ? JSON.parse(auth) : null;
+                },
+
+                clearAuth() {
+                    localStorage.removeItem(STORAGE_KEY);
+                },
+
+                isAuth() {
+                    return !!this.getToken();
+                },
+
+                isAdmin() {
+                    const user = this.getUser();
+                    return user?.role === 'admin' || user?.role === 'ADMIN';
+                }
+            };
+        })();
+
+        /* ===== UI MODULE ===== */
+        const ui = (() => {
+            const content = document.getElementById('app-content');
+            const navMenu = document.getElementById('nav-menu');
+            const navAuth = document.getElementById('nav-auth');
+            const navToggle = document.getElementById('nav-toggle');
+
+            navToggle.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+                navAuth.classList.toggle('active');
+            });
+
+            function render(html) {
+                content.innerHTML = html;
+                navMenu.classList.remove('active');
+                navAuth.classList.remove('active');
+                window.scrollTo(0, 0);
+            }
+
+            function showAlert(message, type = 'info') {
+                const icons = {
+                    success: 'bi-check-circle',
+                    danger: 'bi-exclamation-circle',
+                    warning: 'bi-exclamation-triangle',
+                    info: 'bi-info-circle'
+                };
+
+                const alert = document.createElement('div');
+                alert.className = `alert alert-${type}`;
+                alert.innerHTML = `
+                    <div class="alert-icon">
+                        <i class="bi ${icons[type]}"></i>
+                    </div>
+                    <div>${message}</div>
+                    <button class="alert-close" onclick="this.parentElement.remove()">
+                        <i class="bi bi-x"></i>
+                    </button>
+                `;
+
+                content.insertBefore(alert, content.firstChild);
+                setTimeout(() => alert.remove(), 5000);
+            }
+
+            return { render, showAlert };
+        })();
+
+        /* ===== ROUTER ===== */
+        const router = (() => {
+            function navigate(path) {
+                window.location.hash = path;
+            }
+
+            function getCurrentPage() {
+                return window.location.hash.slice(1) || '/';
+            }
+
+            function route() {
+                updateNav();
+                const page = getCurrentPage();
+
+                if (page === '/') renderHome();
+                else if (page === '/login') renderLogin();
+                else if (page === '/register') renderRegister();
+                else if (page === '/dashboard') {
+                    if (!api.isAuth()) return navigate('/login');
+                    renderDashboard();
+                } else if (page === '/events') renderEvents();
+                else if (page === '/blog') renderBlog();
+                else if (page === '/finance') {
+                    if (!api.isAdmin()) return navigate('/dashboard');
+                    renderFinance();
+                } else if (page === '/members') {
+                    if (!api.isAdmin()) return navigate('/dashboard');
+                    renderMembers();
+                } else {
+                    renderHome();
+                }
+            }
+
+            function updateNav() {
+                const user = api.getUser();
+                let navHTML = `
+                    <li class="nav-item">
+                        <a href="#/" class="nav-link-item">
+                            <i class="bi bi-house"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#/blog" class="nav-link-item">
+                            <i class="bi bi-newspaper"></i> Blog
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#/events" class="nav-link-item">
+                            <i class="bi bi-calendar"></i> Events
+                        </a>
+                    </li>
+                `;
+
+                if (api.isAuth()) {
+                    navHTML += `
+                        <li class="nav-item">
+                            <a href="#/dashboard" class="nav-link-item">
+                                <i class="bi bi-speedometer2"></i> Dashboard
+                            </a>
+                        </li>
+                    `;
+                }
+
+                if (api.isAdmin()) {
+                    navHTML += `
+                        <li class="nav-item">
+                            <a href="#/members" class="nav-link-item">
+                                <i class="bi bi-people"></i> Members
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#/finance" class="nav-link-item">
+                                <i class="bi bi-cash"></i> Finance
+                            </a>
+                        </li>
+                    `;
+                }
+
+                document.getElementById('nav-menu').innerHTML = navHTML;
+
+                // Update auth links
+                let authHTML = '';
+                if (api.isAuth()) {
+                    authHTML = `
+                        <li class="nav-item">
+                            <span class="user-badge">
+                                <i class="bi bi-person-circle"></i> ${user?.name || 'User'}
+                            </span>
+                        </li>
+                        <li class="nav-item">
+                            <button class="btn btn-danger btn-sm" onclick="app.logout()">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </button>
+                        </li>
+                    `;
+                } else {
+                    authHTML = `
+                        <li class="nav-item">
+                            <a href="#/login" class="nav-link-item">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#/register" class="btn btn-primary btn-sm">
+                                <i class="bi bi-person-plus"></i> Join
+                            </a>
+                        </li>
+                    `;
+                }
+
+                document.getElementById('nav-auth').innerHTML = authHTML;
+            }
+
+            window.addEventListener('hashchange', route);
+            window.addEventListener('load', route);
+
+            return { navigate, getCurrentPage };
+        })();
+
+        /* ===== PAGES ===== */
+        function renderHome() {
+            ui.render(`
+                <div class="hero">
+                    <div class="container">
+                        <div class="hero-content">
+                            <h1>Technical University of Kenya <span class="gradient-text">Ability Club</span></h1>
+                            <p>Empowering every student regardless of ability. Join us in building an inclusive campus community where everyone can thrive, succeed, and make a difference.</p>
+                            <div class="hero-buttons">
+                                <button class="btn btn-primary btn-lg" onclick="router.navigate('/register')">
+                                    <i class="bi bi-person-plus"></i> Join TUKAC
+                                </button>
+                                <button class="btn btn-outline btn-lg" onclick="router.navigate('/events')">
+                                    <i class="bi bi-calendar"></i> View Events
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <section class="section">
+                    <div class="container">
+                        <div class="section-header text-center">
+                            <h2>About Our Club</h2>
+                            <p>Learn what makes TUKAC special</p>
+                        </div>
+                        <div class="grid grid-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--primary-color);">
+                                        <i class="bi bi-people-fill"></i>
+                                    </div>
+                                    <h4>Inclusive Community</h4>
+                                    <p>We celebrate diversity and ensure every member feels valued and supported in their journey.</p>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--primary-color);">
+                                        <i class="bi bi-calendar-event"></i>
+                                    </div>
+                                    <h4>Regular Events</h4>
+                                    <p>Participate in monthly events, workshops, and social gatherings designed for your growth.</p>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--primary-color);">
+                                        <i class="bi bi-chat-dots"></i>
+                                    </div>
+                                    <h4>Support Network</h4>
+                                    <p>Connect with peers, share experiences, and build meaningful relationships with members.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section" style="background-color: var(--background-color);">
+                    <div class="container">
+                        <div class="section-header text-center">
+                            <h2>Latest News</h2>
+                            <p>Stay updated with our latest blog posts</p>
+                        </div>
+                        <div class="grid grid-2">
+                            <div class="card">
+                                <div style="width: 100%; height: 200px; background: linear-gradient(135deg, var(--primary-color), #2980B9); border-radius: 6px; margin-bottom: 1rem;"></div>
+                                <h4>Annual Gala Dinner 2025</h4>
+                                <p>Join us for an evening of celebration and networking with fellow members.</p>
+                                <a href="#/blog" class="btn btn-outline btn-sm">Read More <i class="bi bi-arrow-right"></i></a>
+                            </div>
+                            <div class="card">
+                                <div style="width: 100%; height: 200px; background: linear-gradient(135deg, #27AE60, #229954); border-radius: 6px; margin-bottom: 1rem;"></div>
+                                <h4>Scholarship Opportunities</h4>
+                                <p>Explore new scholarship programs available to our club members.</p>
+                                <a href="#/blog" class="btn btn-outline btn-sm">Read More <i class="bi bi-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            `);
+        }
+
+        function renderLogin() {
+            ui.render(`
+                <div class="container py-5">
+                    <div class="card" style="max-width: 450px; margin: 0 auto;">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="bi bi-box-arrow-in-right"></i> Login to TUKAC</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="login-alert"></div>
+                            <form id="login-form">
+                                <div class="form-group">
+                                    <label for="login-email">Email Address</label>
+                                    <input type="email" id="login-email" class="form-control" placeholder="you@example.com" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="login-password">Password</label>
+                                    <input type="password" id="login-password" class="form-control" placeholder="Enter your password" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                                    <i class="bi bi-box-arrow-in-right"></i> Sign In
+                                </button>
+                            </form>
+                        </div>
+                        <div class="card-footer">
+                            <p class="text-center mb-0">
+                                Don't have an account? <a href="#/register">Create one</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `);
+
+            document.getElementById('login-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+                const alertDiv = document.getElementById('login-alert');
+
+                try {
+                    const data = await api.req('/auth/login', {
+                        method: 'POST',
+                        body: { email, password }
+                    });
+
+                    api.setToken(data.token);
+                    api.setUser(data.user);
+                    ui.showAlert('Login successful! Redirecting...', 'success');
+                    setTimeout(() => router.navigate('/dashboard'), 1500);
+                } catch (err) {
+                    alertDiv.innerHTML = `
+                        <div class="alert alert-danger">
+                            <div class="alert-icon"><i class="bi bi-exclamation-circle"></i></div>
+                            <div>${err.message}</div>
+                        </div>
+                    `;
+                }
+            });
+        }
+
+        function renderRegister() {
+            ui.render(`
+                <div class="container py-5">
+                    <div class="card" style="max-width: 500px; margin: 0 auto;">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="bi bi-person-plus"></i> Join TUKAC</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="register-alert"></div>
+                            <form id="register-form">
+                                <div class="form-group">
+                                    <label for="register-name">Full Name</label>
+                                    <input type="text" id="register-name" class="form-control" placeholder="John Doe" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="register-student-id">Student ID</label>
+                                    <input type="text" id="register-student-id" class="form-control" placeholder="e.g. TUK/12345/2024" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="register-email">Email Address</label>
+                                    <input type="email" id="register-email" class="form-control" placeholder="you@tuk.ac.ke" required>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="register-password">Password</label>
+                                        <input type="password" id="register-password" class="form-control" placeholder="••••••••" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="register-confirm">Confirm Password</label>
+                                        <input type="password" id="register-confirm" class="form-control" placeholder="••••••••" required>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                                    <i class="bi bi-check-circle"></i> Create Account
+                                </button>
+                            </form>
+                        </div>
+                        <div class="card-footer">
+                            <p class="text-center mb-0">
+                                Already have an account? <a href="#/login">Sign in</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `);
+
+            document.getElementById('register-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const name = document.getElementById('register-name').value;
+                const studentId = document.getElementById('register-student-id').value;
+                const email = document.getElementById('register-email').value;
+                const password = document.getElementById('register-password').value;
+                const confirm = document.getElementById('register-confirm').value;
+                const alertDiv = document.getElementById('register-alert');
+
+                if (password !== confirm) {
+                    alertDiv.innerHTML = `
+                        <div class="alert alert-danger">
+                            <div class="alert-icon"><i class="bi bi-exclamation-circle"></i></div>
+                            <div>Passwords do not match</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                try {
+                    const data = await api.req('/auth/register', {
+                        method: 'POST',
+                        body: { name, studentId, email, password, confirmPassword: confirm }
+                    });
+
+                    alertDiv.innerHTML = `
+                        <div class="alert alert-success">
+                            <div class="alert-icon"><i class="bi bi-check-circle"></i></div>
+                            <div>${data.message || 'Registration successful! Please log in.'}</div>
+                        </div>
+                    `;
+                    document.getElementById('register-form').reset();
+                    setTimeout(() => router.navigate('/login'), 2000);
+                } catch (err) {
+                    alertDiv.innerHTML = `
+                        <div class="alert alert-danger">
+                            <div class="alert-icon"><i class="bi bi-exclamation-circle"></i></div>
+                            <div>${err.message}</div>
+                        </div>
+                    `;
+                }
+            });
+        }
+
+        function renderDashboard() {
+            const user = api.getUser();
+            ui.render(`
+                <div class="section">
+                    <div class="container">
+                        <div class="section-header">
+                            <div class="d-flex justify-between align-center">
+                                <div>
+                                    <h2>Welcome back, ${user?.name || 'User'}!</h2>
+                                    <p class="text-muted">Here's what's happening with your club activities</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-4 mb-4">
+                            <div class="stat-card">
+                                <h4><i class="bi bi-calendar-check"></i> Events Attended</h4>
+                                <div class="stat-value">8</div>
+                                <div class="stat-change positive"><i class="bi bi-arrow-up"></i> +2 this month</div>
+                            </div>
+                            <div class="stat-card">
+                                <h4><i class="bi bi-people"></i> Connections</h4>
+                                <div class="stat-value">24</div>
+                                <div class="stat-change positive"><i class="bi bi-arrow-up"></i> +5 new connections</div>
+                            </div>
+                            <div class="stat-card">
+                                <h4><i class="bi bi-award"></i> Achievements</h4>
+                                <div class="stat-value">5</div>
+                                <div class="stat-change">Updated regularly</div>
+                            </div>
+                            <div class="stat-card">
+                                <h4><i class="bi bi-star"></i> Rating</h4>
+                                <div class="stat-value">4.8</div>
+                                <div class="stat-change">Out of 5.0</div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-2">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title"><i class="bi bi-calendar"></i> Upcoming Events</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div style="padding: 1rem 0; border-bottom: 1px solid var(--border-color);">
+                                        <h6>TUK Leadership Summit 2025</h6>
+                                        <p class="text-muted mb-0" style="font-size: 0.9rem;"><i class="bi bi-calendar"></i> June 15, 2025</p>
+                                    </div>
+                                    <div style="padding: 1rem 0; border-bottom: 1px solid var(--border-color);">
+                                        <h6>Accessibility Awareness Workshop</h6>
+                                        <p class="text-muted mb-0" style="font-size: 0.9rem;"><i class="bi bi-calendar"></i> June 22, 2025</p>
+                                    </div>
+                                    <div style="padding: 1rem 0;">
+                                        <h6>Annual Gala Dinner</h6>
+                                        <p class="text-muted mb-0" style="font-size: 0.9rem;"><i class="bi bi-calendar"></i> July 5, 2025</p>
+                                    </div>
+                                    <button class="btn btn-outline btn-sm mt-3" onclick="router.navigate('/events')">
+                                        View All Events <i class="bi bi-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title"><i class="bi bi-person"></i> My Profile</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div style="padding: 1rem 0; border-bottom: 1px solid var(--border-color);">
+                                        <p class="text-muted mb-1"><small>Full Name</small></p>
+                                        <p class="mb-0">${user?.name}</p>
+                                    </div>
+                                    <div style="padding: 1rem 0; border-bottom: 1px solid var(--border-color);">
+                                        <p class="text-muted mb-1"><small>Email Address</small></p>
+                                        <p class="mb-0">${user?.email}</p>
+                                    </div>
+                                    <div style="padding: 1rem 0;">
+                                        <p class="text-muted mb-1"><small>Member Since</small></p>
+                                        <p class="mb-0">January 2024</p>
+                                    </div>
+                                    <button class="btn btn-primary btn-sm mt-3" style="width: 100%;">
+                                        <i class="bi bi-pencil"></i> Edit Profile
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `);
+        }
+
+        async function renderEvents() {
+            const gradients = [
+                'linear-gradient(135deg,#3498DB,#2980B9)',
+                'linear-gradient(135deg,#27AE60,#1E8449)',
+                'linear-gradient(135deg,#F39C12,#D68910)',
+                'linear-gradient(135deg,#E67E22,#D35400)'
+            ];
+            ui.render(`
+                <div class="section">
+                    <div class="container">
+                        <div class="section-header">
+                            <h2><i class="bi bi-calendar"></i> Events</h2>
+                            <p>Explore our upcoming events and activities</p>
+                        </div>
+                        <div id="events-list" class="grid grid-2">
+                            <div style="grid-column:1/-1;text-align:center;padding:3rem;">
+                                <i class="bi bi-arrow-repeat" style="font-size:2rem;color:var(--primary-color);"></i>
+                                <p class="text-muted mt-2">Loading events...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `);
+            try {
+                const data = await api.req('/events/public');
+                const events = data.upcomingEvents || [];
+                const list = document.getElementById('events-list');
+                if (events.length === 0) {
+                    list.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:3rem;">
+                        <i class="bi bi-calendar-x" style="font-size:2.5rem;color:var(--text-muted);"></i>
+                        <p class="text-muted mt-2">No upcoming events. Check back soon!</p>
+                    </div>`;
+                    return;
+                }
+                list.innerHTML = events.map((e, i) => `
+                    <div class="card">
+                        <div style="width:100%;height:180px;background:${gradients[i % gradients.length]};border-radius:6px;margin-bottom:1rem;display:flex;align-items:center;justify-content:center;">
+                            <i class="bi bi-calendar-event" style="font-size:3rem;color:rgba(255,255,255,0.8);"></i>
+                        </div>
+                        <div class="card-header">
+                            <h5 class="card-title">${e.title}</h5>
+                            <span class="badge badge-primary"><i class="bi bi-check"></i> Upcoming</span>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted"><i class="bi bi-calendar"></i> ${e.date || 'TBD'} | <i class="bi bi-clock"></i> ${e.time || 'TBD'}</p>
+                            <p>${e.location ? '<i class="bi bi-geo-alt"></i> ' + e.location : ''}${e.capacity ? ' &nbsp;&bull; Capacity: ' + e.capacity : ''}</p>
+                            ${e.description ? '<p class="text-muted">' + e.description + '</p>' : ''}
+                            <p class="text-muted" style="font-size:0.85rem;"><i class="bi bi-people"></i> ${e.rsvpCount || 0} registered</p>
+                        </div>
+                        <div class="card-footer">
+                            ${api.isAuth()
+                                ? '<button class="btn btn-primary btn-sm" onclick="window.rsvpEvent(' + e.id + ', this)"><i class="bi bi-check"></i> RSVP</button>'
+                                : '<button class="btn btn-outline btn-sm" onclick="router.navigate(\'/login\')">Login to RSVP</button>'
+                            }
+                        </div>
+                    </div>`).join('');
+            } catch (err) {
+                const list = document.getElementById('events-list');
+                if (list) list.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:2rem;" class="text-danger">
+                    <i class="bi bi-exclamation-circle" style="font-size:2rem;"></i>
+                    <p>Failed to load events: ${err.message}</p>
+                </div>`;
+            }
+        }
+
+        window.rsvpEvent = async function(id, btn) {
+            if (!api.isAuth()) { router.navigate('/login'); return; }
+            btn.disabled = true;
+            btn.innerHTML = '<i class="bi bi-arrow-repeat"></i> Registering...';
+            try {
+                const res = await api.req('/events/' + id + '/register', { method: 'POST' });
+                ui.showAlert(res.message || 'RSVP successful!', 'success');
+                btn.innerHTML = '<i class="bi bi-check-circle"></i> Registered';
+                btn.className = 'btn btn-success btn-sm';
+            } catch (err) {
+                ui.showAlert(err.message || 'Failed to RSVP', 'danger');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-check"></i> RSVP';
+            }
+        };
+
+        async function renderBlog() {
+            const gradients = [
+                'linear-gradient(135deg,#3498DB,#2980B9)',
+                'linear-gradient(135deg,#27AE60,#1E8449)',
+                'linear-gradient(135deg,#F39C12,#D68910)',
+                'linear-gradient(135deg,#E67E22,#D35400)'
+            ];
+            ui.render(`
+                <div class="section">
+                    <div class="container">
+                        <div class="section-header">
+                            <h2><i class="bi bi-newspaper"></i> Blog</h2>
+                            <p>Stories, insights, and updates from the TUKAC community</p>
+                        </div>
+                        <div id="blog-list" class="grid grid-2">
+                            <div style="grid-column:1/-1;text-align:center;padding:3rem;">
+                                <i class="bi bi-arrow-repeat" style="font-size:2rem;color:var(--primary-color);"></i>
+                                <p class="text-muted mt-2">Loading blog posts...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `);
+            try {
+                const posts = await api.req('/blog/public');
+                const list = document.getElementById('blog-list');
+                if (!posts || posts.length === 0) {
+                    list.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:3rem;">
+                        <i class="bi bi-newspaper" style="font-size:2.5rem;color:var(--text-muted);"></i>
+                        <p class="text-muted mt-2">No blog posts yet. Stay tuned!</p>
+                    </div>`;
+                    return;
+                }
+                list.innerHTML = posts.map((p, i) => `
+                    <div class="card">
+                        <div style="width:100%;height:200px;background:${gradients[i % gradients.length]};border-radius:6px;margin-bottom:1rem;display:flex;align-items:center;justify-content:center;">
+                            <i class="bi bi-file-text" style="font-size:3rem;color:rgba(255,255,255,0.8);"></i>
+                        </div>
+                        <div class="card-header">
+                            <h5 class="card-title">${p.title}</h5>
+                            ${p.category ? '<span class="badge badge-primary"><i class="bi bi-tag"></i> ' + p.category + '</span>' : ''}
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted">
+                                ${p.publishedAt ? '<i class="bi bi-calendar"></i> ' + p.publishedAt.split('T')[0] + ' | ' : ''}
+                                <i class="bi bi-person"></i> ${p.author ? p.author.name : 'TUKAC Team'}
+                            </p>
+                            <p>${p.body ? p.body.substring(0, 120) + (p.body.length > 120 ? '...' : '') : ''}</p>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-outline btn-sm">Read Article <i class="bi bi-arrow-right"></i></button>
+                        </div>
+                    </div>`).join('');
+            } catch (err) {
+                const list = document.getElementById('blog-list');
+                if (list) list.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:2rem;" class="text-danger">
+                    <i class="bi bi-exclamation-circle" style="font-size:2rem;"></i>
+                    <p>Failed to load blog posts: ${err.message}</p>
+                </div>`;
+            }
+        }
+
+        async function renderFinance() {
+            ui.render(`
+                <div class="section">
+                    <div class="container">
+                        <div class="section-header">
+                            <h2><i class="bi bi-cash"></i> Finance Management</h2>
+                            <p>Manage club finances and transactions</p>
+                        </div>
+                        <div id="finance-stats" class="grid grid-4 mb-4">
+                            <div style="grid-column:1/-1;text-align:center;padding:2rem;">
+                                <i class="bi bi-arrow-repeat" style="font-size:2rem;color:var(--primary-color);"></i>
+                                <p class="text-muted mt-2">Loading finance data...</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-2">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title"><i class="bi bi-list"></i> Recent Transactions</h4>
+                                </div>
+                                <div id="tx-table-wrap">
+                                    <p class="text-muted" style="padding:1rem;">Loading...</p>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title"><i class="bi bi-plus-circle"></i> Add Transaction</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div id="finance-msg"></div>
+                                    <form id="tx-form">
+                                        <div class="form-group">
+                                            <label>Date</label>
+                                            <input type="date" id="tx-date" class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Type</label>
+                                            <select id="tx-type" class="form-control">
+                                                <option value="income">Income</option>
+                                                <option value="expense">Expense</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Category</label>
+                                            <select id="tx-category" class="form-control">
+                                                <option>General</option>
+                                                <option>Donations</option>
+                                                <option>Membership Fees</option>
+                                                <option>Venue</option>
+                                                <option>Catering</option>
+                                                <option>Supplies</option>
+                                                <option>Transport</option>
+                                                <option>Marketing</option>
+                                                <option>Grants</option>
+                                                <option>Other</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Description</label>
+                                            <input type="text" id="tx-desc" class="form-control" placeholder="Transaction description" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Amount (KES)</label>
+                                            <input type="number" id="tx-amount" class="form-control" placeholder="0.00" min="0" step="0.01" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary" style="width:100%;">
+                                            <i class="bi bi-plus"></i> Add Transaction
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `);
+
+            async function loadFinanceData() {
+                try {
+                    const data = await api.req('/finance');
+                    document.getElementById('finance-stats').innerHTML = `
+                        <div class="stat-card income">
+                            <h4><i class="bi bi-arrow-down-circle"></i> Total Income</h4>
+                            <div class="stat-value">KES ${data.totalIncome.toLocaleString('en-KE', {minimumFractionDigits:2})}</div>
+                        </div>
+                        <div class="stat-card expense">
+                            <h4><i class="bi bi-arrow-up-circle"></i> Total Expenses</h4>
+                            <div class="stat-value">KES ${data.totalExpenses.toLocaleString('en-KE', {minimumFractionDigits:2})}</div>
+                        </div>
+                        <div class="stat-card" style="border-left-color:${data.balance>=0?'var(--accent-success)':'var(--accent-danger)'}">
+                            <h4><i class="bi bi-wallet2"></i> Club Balance</h4>
+                            <div class="stat-value ${data.balance>=0?'text-success':'text-danger'}">KES ${data.balance.toLocaleString('en-KE', {minimumFractionDigits:2})}</div>
+                        </div>
+                        <div class="stat-card admin">
+                            <h4><i class="bi bi-receipt"></i> Transactions</h4>
+                            <div class="stat-value">${data.transactions.length}</div>
+                            <div class="stat-change">Total recorded</div>
+                        </div>
+                    `;
+
+                    const rows = data.transactions.map(t => `
+                        <tr>
+                            <td>${t.date || ''}</td>
+                            <td>${t.description || ''}</td>
+                            <td><span class="badge ${t.type==='INCOME'?'badge-success':'badge-danger'}">${t.type}</span></td>
+                            <td style="color:${t.type==='INCOME'?'var(--accent-success)':'var(--accent-danger)'};font-weight:700;">
+                                ${t.type==='INCOME'?'+':'-'}KES ${t.amount.toLocaleString('en-KE', {minimumFractionDigits:2})}
+                            </td>
+                        </tr>`).join('');
+
+                    document.getElementById('tx-table-wrap').innerHTML = `
+                        <table class="table">
+                            <thead><tr><th>Date</th><th>Description</th><th>Type</th><th>Amount</th></tr></thead>
+                            <tbody>${rows || '<tr><td colspan="4" class="text-center text-muted">No transactions yet</td></tr>'}</tbody>
+                        </table>`;
+                } catch (err) {
+                    document.getElementById('finance-stats').innerHTML =
+                        `<div style="grid-column:1/-1;" class="text-danger"><p>Failed to load: ${err.message}</p></div>`;
+                }
+            }
+
+            await loadFinanceData();
+
+            document.getElementById('tx-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const msgDiv = document.getElementById('finance-msg');
+                try {
+                    const res = await api.req('/finance', {
+                        method: 'POST',
+                        body: {
+                            type: document.getElementById('tx-type').value,
+                            description: document.getElementById('tx-desc').value,
+                            amount: document.getElementById('tx-amount').value,
+                            category: document.getElementById('tx-category').value,
+                            date: document.getElementById('tx-date').value
+                        }
+                    });
+                    msgDiv.innerHTML = '<div class="alert alert-success"><div class="alert-icon"><i class="bi bi-check-circle"></i></div><div>' + res.message + '</div></div>';
+                    document.getElementById('tx-form').reset();
+                    await loadFinanceData();
+                } catch (err) {
+                    msgDiv.innerHTML = '<div class="alert alert-danger"><div class="alert-icon"><i class="bi bi-exclamation-circle"></i></div><div>' + err.message + '</div></div>';
+                }
+            });
+        }
+
+        async function renderMembers() {
+            ui.render(`
+                <div class="section">
+                    <div class="container">
+                        <div class="section-header">
+                            <div class="d-flex justify-between align-center">
+                                <div>
+                                    <h2><i class="bi bi-people"></i> Members Directory</h2>
+                                    <p>Manage and view all club members</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div id="members-table-wrap" style="padding:2rem;text-align:center;">
+                                <i class="bi bi-arrow-repeat" style="font-size:2rem;color:var(--primary-color);"></i>
+                                <p class="text-muted mt-2">Loading members...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `);
+            try {
+                const data = await api.req('/members');
+                const members = data.members || [];
+                const rows = members.map(m => {
+                    const isPending = m.approvalStatus === 'PENDING';
+                    const isAdmin = m.role === 'chairperson';
+                    return `<tr>
+                        <td><strong>${m.name}</strong></td>
+                        <td>${m.email}</td>
+                        <td><code style="font-size:0.8rem;">${m.studentId || '-'}</code></td>
+                        <td>
+                            ${isPending
+                                ? '<span class="badge badge-warning"><i class="bi bi-clock"></i> Pending</span>'
+                                : '<span class="badge badge-success"><i class="bi bi-check"></i> Active</span>'
+                            }
+                        </td>
+                        <td>
+                            <span class="badge ${isAdmin ? 'badge-admin' : 'badge-primary'}">
+                                ${isAdmin ? '<i class="bi bi-shield"></i> Admin' : m.role}
+                            </span>
+                        </td>
+                        <td style="font-size:0.85rem;color:var(--text-muted);">${m.joinedAt ? m.joinedAt.split('T')[0] : '-'}</td>
+                        <td>
+                            ${isPending
+                                ? '<button class="btn btn-success btn-sm" onclick="window.approveMember(' + m.id + ', this)"><i class="bi bi-check"></i> Approve</button>'
+                                : ''
+                            }
+                        </td>
+                    </tr>`;
+                }).join('');
+
+                document.getElementById('members-table-wrap').innerHTML = `
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th><th>Email</th><th>Student ID</th>
+                                <th>Status</th><th>Role</th><th>Joined</th><th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>${rows || '<tr><td colspan="7" class="text-center text-muted">No members found</td></tr>'}</tbody>
+                    </table>`;
+            } catch (err) {
+                document.getElementById('members-table-wrap').innerHTML =
+                    `<p class="text-danger text-center">Failed to load members: ${err.message}</p>`;
+            }
+        }
+
+        window.approveMember = async function(id, btn) {
+            btn.disabled = true;
+            btn.innerHTML = '<i class="bi bi-arrow-repeat"></i>';
+            try {
+                const res = await api.req('/members/' + id + '/approve', { method: 'POST' });
+                ui.showAlert(res.message || 'Member approved!', 'success');
+                renderMembers();
+            } catch (err) {
+                ui.showAlert(err.message || 'Failed to approve', 'danger');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-check"></i> Approve';
+            }
+        };
+
+        /* ===== APP MODULE ===== */
+        const app = {
+            logout() {
+                api.clearAuth();
+                ui.showAlert('You have been logged out', 'info');
+                router.navigate('/');
+            }
+        };
+    </script>
+</body>
+
+</html>
